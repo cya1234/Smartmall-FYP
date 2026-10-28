@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartMall AI widget</title>
+  <link rel="stylesheet" href="/css/widget.css" />
+</head>
+<body class="widget-body">
+  <div class="w-app">
+    <header class="w-head">
+      <div class="w-brand">
+        <span class="w-logo">◆</span>
+        <div>
+          <div class="w-store" id="w-store">SmartMall</div>
+          <div class="w-sub" id="w-sub">AI 導購助手</div>
+        </div>
+      </div>
+      <button class="w-close" id="w-close" aria-label="關閉">✕</button>
+    </header>
+
+    <nav class="w-tabs">
+      <button class="w-tab active" data-tab="chat">💬 對話</button>
+      <button class="w-tab" data-tab="visual">🖼️ 以圖搜尋</button>
+    </nav>
+
+    <main class="w-body">
+      <section class="w-pane active" id="w-pane-chat">
+        <div class="w-log" id="w-log"></div>
+        <div class="w-sugg" id="w-sugg"></div>
+      </section>
+
+      <section class="w-pane" id="w-pane-visual">
+        <div class="w-drop" id="w-drop">
+          <div class="w-drop-ico">🖼️</div>
+          <p><strong>上傳照片</strong>找出相似單品</p>
+          <input type="file" id="w-file" accept="image/*" hidden />
+        </div>
+        <div class="w-preview" id="w-preview"></div>
+        <div class="w-grid" id="w-grid"></div>
+      </section>
+    </main>
+
+    <form class="w-input" id="w-form">
+      <input id="w-q" type="text" placeholder="描述你的需求…" autocomplete="off" />
+      <button type="submit" aria-label="送出">↑</button>
+    </form>
+  </div>
+  <script type="module" src="/js/widget.js"></script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+{
+  "user": {
+    "id": "u-1001",
+    "name": "陳大文",
+    "name_en": "Tai-man Chan",
+    "avatar": "🧑",
+    "tier": "Gold",
+    "memberSince": "2024-03-01",
+    "city": "Hong Kong",
+    "gender": "Men",
+    "body": {
+      "height": 173,
+      "weight": 70,
+      "chest": 96,
+      "waist": 82,
+      "hips": 97,
+      "shoulder": 45,
+      "inseam": 79,
+      "footLength": 25.5,
+      "bodyType": "regular"
+    },
+    "sizes": {
+      "top": "M",
+      "bottom": "M",
+      "shoe": "EU 41",
+      "headCircumference": 57
+    },
+    "fitPreference": "regular",
+    "stylePreferences": ["Minimal", "Smart Casual", "Classic"],
+    "favoriteColors": ["Navy", "Beige", "Off White", "Charcoal"],
+    "dislikedColors": ["Coral"],
+    "preferredBrands": ["Northward", "Meridian"],
+    "budgetRange": { "min": 300, "max": 1600 }
+  },
+  "wardrobe": [
+    {
+      "productId": "p004",
+      "monthsAgo": 3,
+      "size": "M",
+      "wears": 12,
+      "condition": "good",
+      "note": "常穿，版型偏大但寬鬆剛好"
+    },
+    {
+      "productId": "p005",
+      "monthsAgo": 7,
+      "size": "M",
+      "wears": 21,
+      "condition": "good",
+      "note": "上班主力襯衫"
+    },
+    {
+      "productId": "p010",
+      "monthsAgo": 11,
+      "size": "M",
+      "wears": 34,
+      "condition": "fair",
+      "note": "已穿著一年，顏色略退"
+    },
+    {
+      "productId": "p011",
+      "monthsAgo": 5,
+      "size": "M",
+      "wears": 26,
+      "condition": "good",
+      "note": "日常長褲"
+    },
+    {
+      "productId": "p014",
+      "monthsAgo": 6,
+      "size": "EU 41",
+      "wears": 40,
+      "condition": "fair",
+      "note": "鞋底磨損明顯"
+    },
+    {
+      "productId": "p008",
+      "monthsAgo": 9,
+      "size": "M",
+      "wears": 9,
+      "condition": "good",
+      "note": "秋冬層搭用"
+    },
+    {
+      "productId": "p029",
+      "monthsAgo": 2,
+      "size": "One Size",
+      "wears": 30,
+      "condition": "good",
+      "note": "通勤與運動都用"
+    }
+  ],
+  "returns": [
+    {
+      "productId": "p006",
+      "size": "M",
+      "monthsAgo": 6,
+      "reason": "too_small",
+      "reasonLabel": "尺寸太小",
+      "note": "肩線太窄，穿起來很緊，尤其手臂活動時"
+    },
+    {
+      "productId": "p012",
+      "size": "M",
+      "monthsAgo": 4,
+      "reason": "too_large",
+      "reasonLabel": "尺寸太大",
+      "note": "褲長太長、腰圍偏大，版型明顯偏大"
+    },
+    {
+      "productId": "p009",
+      "size": "M",
+      "monthsAgo": 13,
+      "reason": "too_small",
+      "reasonLabel": "尺寸太小",
+      "note": "肩膀太窄、袖長不足"
+    }
+  ],
+  "preferences": {
+    "avoidColors": ["Coral"],
+    "preferMaterials": ["Linen", "Cotton", "Merino"],
+    "dislikedMaterials": ["Viscose"],
+    "avoidOccasions": []
+  },
+  "recentViews": ["p031", "p032", "p033", "p007", "p039"],
+  "searchHistory": [
+    { "query": "北海道 滑雪 裝備", "monthsAgo": 0 },
+    { "query": "海島婚禮 穿搭", "monthsAgo": 1 },
+    { "query": "防水 外套", "monthsAgo": 1 }
+  ]
+}

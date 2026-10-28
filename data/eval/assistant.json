@@ -1,0 +1,277 @@
+{
+ "cases": 15,
+ "toolAccuracy": 100.0,
+ "groundedRate": 100.0,
+ "containment": 100.0,
+ "results": [
+  {
+   "query": "滑雪外套會唔會減價？",
+   "lang": "zh",
+   "intents": [
+    "price_timing"
+   ],
+   "tools": [
+    "search_products",
+    "forecast_price"
+   ],
+   "engine": "agent",
+   "expectedIntent": "price_timing",
+   "expectedTool": "forecast_price",
+   "toolHit": true,
+   "intentHit": true,
+   "ungroundedNumbers": [],
+   "answer": "我睇緊「高山防水滑雪外套」（HK$920）。價格方面：建議等。未來 30 天內預計下跌約 11.6%，信心 High；最近的購物節是 雙十一 Double 11 14d 104.35 (-11.6%)。現在買很可能買貴。（模型：Meta Prophet）"
+  },
+  {
+   "query": "冬天大褸值唔值得等",
+   "lang": "zh",
+   "intents": [
+    "price_timing"
+   ],
+   "tools": [
+    "search_products",
+    "forecast_price"
+   ],
+   "engine": "agent",
+   "expectedIntent": "price_timing",
+   "expectedTool": "forecast_price",
+   "toolHit": true,
+   "intentHit": true,
+   "ungroundedNumbers": [],
+   "answer": "你指的是哪一件商品？講個名或類別我就可以幫你查。"
+  },
+  {
+   "query": "呢件羽絨幾時最平",
+   "lang": "zh",
+   "intents": [
+    "price_timing"
+   ],
+   "tools": [
+    "search_products",
+    "forecast_price"
+   ],
+   "engine": "agent",
+   "expectedIntent": "price_timing",
+   "expectedTool": "forecast_price",
+   "toolHit": true,
+   "intentHit": true,
+   "ungroundedNumbers": [],
+   "answer": "我睇緊「輕量羽絨外套」（HK$1,474）。價格方面：建議等。未來 30 天內預計下跌約 12.6%，信心 High；最近的購物節是 雙十一 Double 11 14d 165.13 (-12.6%)。現在買很可能買貴。（模型：Meta Prophet）"
+  },
+  {
+   "query": "will the ski jacket get cheaper",
+   "lang": "en",
+   "intents": [
+    "price_timing"
+   ],
+   "tools": [
+    "search_products",
+    "forecast_price"
+   ],
+   "engine": "agent",
+   "expectedIntent": "price_timing",
+   "expectedTool": "forecast_price",
+   "toolHit": true,
+   "intentHit": true,
+   "ungroundedNumbers": [],
+   "answer": "Looking at \"Alpine Shell Ski Jacket\" (US$118). On price: wait. The model expects roughly a 11.6% drop within 30 days (confidence High), closest sale 雙十一 Double 11 14d 104.35 (-11.6%). Buying now likely overpays. (engine: Meta Prophet)"
+  },
+  {
+   "query": "亞麻襯衫有冇貨",
+   "lang": "zh",
+   "intents": [
+    "availability"
+   ],
+   "tools": [
+    "search_products",
+    "check_store_stock"
+   ],
+   "engine": "agent",
+   "expectedIntent": "availability",
+   "expectedTool": "check_store_stock",
+   "toolHit": true,
+   "intentHit": true,
+   "ungroundedNumbers": [],
+   "answer": "我睇緊「亞麻寬鬆襯衫」（HK$429）。庫存方面：線上仲有 11 件，另外 4 間門市共 13 件。最近是尖沙咀店（尖沙咀站 A1 出口，步行 4 分鐘）。即日門市取貨（下午 6 點前下單）。"
+  },
+  {
+   "query": "邊間門市有白色波鞋",
+   "lang": "zh",
+   "intents": [
+    "availability"
+   ],
+   "tools": [
+    "search_products",
+    "check_store_stock"
+   ],
+   "engine": "agent",
+   "expectedIntent": "availability",
+   "expectedTool": "check_store_stock",
+   "toolHit": true,
+   "intentHit": true,
+   "ungroundedNumbers": [],
+   "answer": "我睇緊「經典白皮球鞋」（HK$663）。庫存方面：線上仲有 6 件，另外 4 間門市共 11 件。最近是銅鑼灣店（銅鑼灣站 D2 出口，步行 3 分鐘）。即日門市取貨（下午 6 點前下單）。"
+  },
+  {
+   "query": "where can i pick up the white sneakers",
+   "lang": "en",
+   "intents": [
+    "availability"
+   ],
+   "tools": [
+    "search_products",
+    "check_store_stock"
+   ],
+   "engine": "agent",
+   "expectedIntent": "availability",
+   "expectedTool": "check_store_stock",
+   "toolHit": true,
+   "intentHit": true,
+   "ungroundedNumbers": [],
+   "answer": "Looking at \"Court Leather Sneakers\" (US$85). Stock: 6 left online, plus 11 units across 4 stores. Nearest is Causeway Bay (Causeway Bay MTR Exit D2, 3 min walk). Same-day store pickup (order before 6 pm)."
+  },
+  {
+   "query": "我著咩碼好，黑色西裝外套",
+   "lang": "zh",
+   "intents": [
+    "size"
+   ],
+   "tools": [
+    "search_products",
+    "size_advice"
+   ],
+   "engine": "agent",
+   "expectedIntent": "size",
+   "expectedTool": "size_advice",
+   "toolHit": true,
+   "intentHit": true,
+   "ungroundedNumbers": [],
+   "answer": "我睇緊「羊毛剪裁西裝外套」（HK$1,287）。尺碼方面：建議 L，退貨風險 high。"
+  },
+  {
+   "query": "what size for the merino ski socks",
+   "lang": "en",
+   "intents": [
+    "size"
+   ],
+   "tools": [
+    "search_products",
+    "size_advice"
+   ],
+   "engine": "agent",
+   "expectedIntent": "size",
+   "expectedTool": "size_advice",
+   "toolHit": true,
+   "intentHit": true,
+   "ungroundedNumbers": [],
+   "answer": "Looking at \"Merino Ski Socks\" (US$10). On sizing: M, return risk low."
+  },
+  {
+   "query": "預算2000，下個月去北海道滑雪要著咩",
+   "lang": "zh",
+   "intents": [
+    "outfit"
+   ],
+   "tools": [
+    "recall_wardrobe",
+    "build_outfit"
+   ],
+   "engine": "agent",
+   "expectedIntent": "outfit",
+   "expectedTool": "build_outfit",
+   "toolHit": true,
+   "intentHit": true,
+   "ungroundedNumbers": [],
+   "answer": "你衣櫃已經有「亞麻寬鬆襯衫」（3 個月前買），我會以它為基礎來配。全副裝備最少要 HK$2,106，你的預算 HK$2,000 差一點，所以先配了 1 件（HK$187），還欠 4 類單品。要提高預算，或者我可以先做最必要的幾件。"
+  },
+  {
+   "query": "幫我配一套海島婚禮造型",
+   "lang": "zh",
+   "intents": [
+    "outfit"
+   ],
+   "tools": [
+    "recall_wardrobe",
+    "build_outfit"
+   ],
+   "engine": "agent",
+   "expectedIntent": "outfit",
+   "expectedTool": "build_outfit",
+   "toolHit": true,
+   "intentHit": true,
+   "ungroundedNumbers": [],
+   "answer": "你衣櫃已經有「亞麻寬鬆襯衫」（3 個月前買），我會以它為基礎來配。為你配了 5 件，合共 HK$889。"
+  },
+  {
+   "query": "門市地址喺邊",
+   "lang": "zh",
+   "intents": [
+    "availability",
+    "stores"
+   ],
+   "tools": [
+    "search_products",
+    "check_store_stock",
+    "list_stores"
+   ],
+   "engine": "agent",
+   "expectedIntent": "stores",
+   "expectedTool": "list_stores",
+   "toolHit": true,
+   "intentHit": true,
+   "ungroundedNumbers": [],
+   "answer": "你指的是哪一件商品？講個名或類別我就可以幫你查。我們有 8 間門市：旺角、銅鑼灣、尖沙咀、沙田、荃灣、觀塘、中環、元朗。全都可以即日取貨。"
+  },
+  {
+   "query": "where is your store",
+   "lang": "en",
+   "intents": [
+    "stores"
+   ],
+   "tools": [
+    "list_stores"
+   ],
+   "engine": "agent",
+   "expectedIntent": "stores",
+   "expectedTool": "list_stores",
+   "toolHit": true,
+   "intentHit": true,
+   "ungroundedNumbers": [],
+   "answer": "We have 8 stores: Mong Kok、Causeway Bay、Tsim Sha Tsui、Sha Tin、Tsuen Wan、Kwun Tong、Central、Yuen Long. Same-day pickup at all of them."
+  },
+  {
+   "query": "防曬乳",
+   "lang": "zh",
+   "intents": [
+    "product_search"
+   ],
+   "tools": [
+    "search_products"
+   ],
+   "engine": "agent",
+   "expectedIntent": "product_search",
+   "expectedTool": "search_products",
+   "toolHit": true,
+   "intentHit": true,
+   "ungroundedNumbers": [],
+   "answer": "找到 1 件相關商品，最接近的是「廣譜 SPF50 防曬乳」，HK$203，評分 4.6。"
+  },
+  {
+   "query": "cashmere sweater",
+   "lang": "en",
+   "intents": [
+    "product_search"
+   ],
+   "tools": [
+    "search_products"
+   ],
+   "engine": "agent",
+   "expectedIntent": "product_search",
+   "expectedTool": "search_products",
+   "toolHit": true,
+   "intentHit": true,
+   "ungroundedNumbers": [],
+   "answer": "Found 1 matches. Closest is \"Cashmere Crewneck Sweater\" at US$148, rated 4.8."
+  }
+ ]
+}

@@ -1,0 +1,1093 @@
+{
+ "version": 1,
+ "catalogueSize": 40,
+ "retrievable": 34,
+ "note": "Only products with a real photo can be retrieved; emoji-only entries are excluded from the ground truth so the metric is not penalised for a missing asset.",
+ "counts": {
+  "queries": 94,
+  "pairs": 47,
+  "byLanguage": {
+   "zh": 47,
+   "en": 47
+  },
+  "byType": {
+   "attribute": 68,
+   "colour": 8,
+   "material": 6,
+   "occasion": 12
+  },
+  "byDifficulty": {
+   "easy": 68,
+   "medium": 10,
+   "hard": 16
+  }
+ },
+ "queries": [
+  {
+   "id": "q001",
+   "lang": "zh",
+   "query": "亞麻連身裙",
+   "targets": [
+    "p001"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p001"
+  },
+  {
+   "id": "q002",
+   "lang": "en",
+   "query": "linen dress",
+   "targets": [
+    "p001"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p001"
+  },
+  {
+   "id": "q003",
+   "lang": "zh",
+   "query": "絲質連身裙",
+   "targets": [
+    "p002"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p002"
+  },
+  {
+   "id": "q004",
+   "lang": "en",
+   "query": "silk slip dress",
+   "targets": [
+    "p002"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p002"
+  },
+  {
+   "id": "q005",
+   "lang": "zh",
+   "query": "熱帶印花長洋裝",
+   "targets": [
+    "p003"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p003"
+  },
+  {
+   "id": "q006",
+   "lang": "en",
+   "query": "tropical print maxi dress",
+   "targets": [
+    "p003"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p003"
+  },
+  {
+   "id": "q007",
+   "lang": "zh",
+   "query": "亞麻襯衫",
+   "targets": [
+    "p004"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p004"
+  },
+  {
+   "id": "q008",
+   "lang": "en",
+   "query": "linen shirt",
+   "targets": [
+    "p004"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p004"
+  },
+  {
+   "id": "q009",
+   "lang": "zh",
+   "query": "牛津襯衫",
+   "targets": [
+    "p005"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p005"
+  },
+  {
+   "id": "q010",
+   "lang": "en",
+   "query": "oxford shirt",
+   "targets": [
+    "p005"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p005"
+  },
+  {
+   "id": "q011",
+   "lang": "zh",
+   "query": "喀什米爾毛衣",
+   "targets": [
+    "p006"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p006"
+  },
+  {
+   "id": "q012",
+   "lang": "en",
+   "query": "cashmere sweater",
+   "targets": [
+    "p006"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p006"
+  },
+  {
+   "id": "q013",
+   "lang": "zh",
+   "query": "羽絨外套",
+   "targets": [
+    "p007"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p007"
+  },
+  {
+   "id": "q014",
+   "lang": "en",
+   "query": "down puffer jacket",
+   "targets": [
+    "p007"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p007"
+  },
+  {
+   "id": "q015",
+   "lang": "zh",
+   "query": "羊毛西裝外套",
+   "targets": [
+    "p009"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p008"
+  },
+  {
+   "id": "q016",
+   "lang": "en",
+   "query": "wool blazer",
+   "targets": [
+    "p009"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p008"
+  },
+  {
+   "id": "q017",
+   "lang": "zh",
+   "query": "卡其長褲",
+   "targets": [
+    "p010"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p009"
+  },
+  {
+   "id": "q018",
+   "lang": "en",
+   "query": "khaki chinos",
+   "targets": [
+    "p010"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p009"
+  },
+  {
+   "id": "q019",
+   "lang": "zh",
+   "query": "修身牛仔褲",
+   "targets": [
+    "p011"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p010"
+  },
+  {
+   "id": "q020",
+   "lang": "en",
+   "query": "slim fit jeans",
+   "targets": [
+    "p011"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p010"
+  },
+  {
+   "id": "q021",
+   "lang": "zh",
+   "query": "亞麻寬褲",
+   "targets": [
+    "p012"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p011"
+  },
+  {
+   "id": "q022",
+   "lang": "en",
+   "query": "wide leg linen trousers",
+   "targets": [
+    "p012"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p011"
+  },
+  {
+   "id": "q023",
+   "lang": "zh",
+   "query": "真皮樂福鞋",
+   "targets": [
+    "p013"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p012"
+  },
+  {
+   "id": "q024",
+   "lang": "en",
+   "query": "leather loafers",
+   "targets": [
+    "p013"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p012"
+  },
+  {
+   "id": "q025",
+   "lang": "zh",
+   "query": "白色波鞋",
+   "targets": [
+    "p014"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p013"
+  },
+  {
+   "id": "q026",
+   "lang": "en",
+   "query": "white sneakers",
+   "targets": [
+    "p014"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p013"
+  },
+  {
+   "id": "q027",
+   "lang": "zh",
+   "query": "越野跑鞋",
+   "targets": [
+    "p015"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p014"
+  },
+  {
+   "id": "q028",
+   "lang": "en",
+   "query": "trail running shoes",
+   "targets": [
+    "p015"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p014"
+  },
+  {
+   "id": "q029",
+   "lang": "zh",
+   "query": "綁帶涼鞋",
+   "targets": [
+    "p016"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p015"
+  },
+  {
+   "id": "q030",
+   "lang": "en",
+   "query": "strappy heeled sandals",
+   "targets": [
+    "p016"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p015"
+  },
+  {
+   "id": "q031",
+   "lang": "zh",
+   "query": "切爾西短靴",
+   "targets": [
+    "p017"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p016"
+  },
+  {
+   "id": "q032",
+   "lang": "en",
+   "query": "chelsea boots",
+   "targets": [
+    "p017"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p016"
+  },
+  {
+   "id": "q033",
+   "lang": "zh",
+   "query": "真皮托特包",
+   "targets": [
+    "p019"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p017"
+  },
+  {
+   "id": "q034",
+   "lang": "en",
+   "query": "leather tote bag",
+   "targets": [
+    "p019"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p017"
+  },
+  {
+   "id": "q035",
+   "lang": "zh",
+   "query": "緞面手拿包",
+   "targets": [
+    "p020"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p018"
+  },
+  {
+   "id": "q036",
+   "lang": "en",
+   "query": "satin evening clutch",
+   "targets": [
+    "p020"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p018"
+  },
+  {
+   "id": "q037",
+   "lang": "zh",
+   "query": "指針腕錶",
+   "targets": [
+    "p021"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p019"
+  },
+  {
+   "id": "q038",
+   "lang": "en",
+   "query": "analogue wristwatch",
+   "targets": [
+    "p021"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p019"
+  },
+  {
+   "id": "q039",
+   "lang": "zh",
+   "query": "飛行員太陽眼鏡",
+   "targets": [
+    "p022"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p020"
+  },
+  {
+   "id": "q040",
+   "lang": "en",
+   "query": "aviator sunglasses",
+   "targets": [
+    "p022"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p020"
+  },
+  {
+   "id": "q041",
+   "lang": "zh",
+   "query": "印花絲巾",
+   "targets": [
+    "p023"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p021"
+  },
+  {
+   "id": "q042",
+   "lang": "en",
+   "query": "printed silk scarf",
+   "targets": [
+    "p023"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p021"
+  },
+  {
+   "id": "q043",
+   "lang": "zh",
+   "query": "防曬乳 SPF50",
+   "targets": [
+    "p024"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p022"
+  },
+  {
+   "id": "q044",
+   "lang": "en",
+   "query": "SPF50 sunscreen",
+   "targets": [
+    "p024"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p022"
+  },
+  {
+   "id": "q045",
+   "lang": "zh",
+   "query": "霧面唇膏",
+   "targets": [
+    "p025"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p023"
+  },
+  {
+   "id": "q046",
+   "lang": "en",
+   "query": "matte lipstick set",
+   "targets": [
+    "p025"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p023"
+  },
+  {
+   "id": "q047",
+   "lang": "zh",
+   "query": "保濕精華液",
+   "targets": [
+    "p026"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p024"
+  },
+  {
+   "id": "q048",
+   "lang": "en",
+   "query": "hydrating face serum",
+   "targets": [
+    "p026"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p024"
+  },
+  {
+   "id": "q049",
+   "lang": "zh",
+   "query": "智慧運動手錶",
+   "targets": [
+    "p030"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p025"
+  },
+  {
+   "id": "q050",
+   "lang": "en",
+   "query": "smart sports watch",
+   "targets": [
+    "p030"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p025"
+  },
+  {
+   "id": "q051",
+   "lang": "zh",
+   "query": "滑雪外套",
+   "targets": [
+    "p031"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p026"
+  },
+  {
+   "id": "q052",
+   "lang": "en",
+   "query": "ski jacket",
+   "targets": [
+    "p031"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p026"
+  },
+  {
+   "id": "q053",
+   "lang": "zh",
+   "query": "防水雪褲",
+   "targets": [
+    "p032"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p027"
+  },
+  {
+   "id": "q054",
+   "lang": "en",
+   "query": "waterproof ski pants",
+   "targets": [
+    "p032"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p027"
+  },
+  {
+   "id": "q055",
+   "lang": "zh",
+   "query": "滑雪護目鏡",
+   "targets": [
+    "p033"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p028"
+  },
+  {
+   "id": "q056",
+   "lang": "en",
+   "query": "ski goggles",
+   "targets": [
+    "p033"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p028"
+  },
+  {
+   "id": "q057",
+   "lang": "zh",
+   "query": "滑雪手套",
+   "targets": [
+    "p034"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p029"
+  },
+  {
+   "id": "q058",
+   "lang": "en",
+   "query": "ski gloves",
+   "targets": [
+    "p034"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p029"
+  },
+  {
+   "id": "q059",
+   "lang": "zh",
+   "query": "排汗保暖內層衣",
+   "targets": [
+    "p035"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p030"
+  },
+  {
+   "id": "q060",
+   "lang": "en",
+   "query": "thermal base layer top",
+   "targets": [
+    "p035"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p030"
+  },
+  {
+   "id": "q061",
+   "lang": "zh",
+   "query": "美麗諾滑雪襪",
+   "targets": [
+    "p037"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p031"
+  },
+  {
+   "id": "q062",
+   "lang": "en",
+   "query": "merino wool ski socks",
+   "targets": [
+    "p037"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p031"
+  },
+  {
+   "id": "q063",
+   "lang": "zh",
+   "query": "保暖頸圍",
+   "targets": [
+    "p038"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p032"
+  },
+  {
+   "id": "q064",
+   "lang": "en",
+   "query": "fleece neck gaiter",
+   "targets": [
+    "p038"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p032"
+  },
+  {
+   "id": "q065",
+   "lang": "zh",
+   "query": "刷毛中層衣",
+   "targets": [
+    "p039"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p033"
+  },
+  {
+   "id": "q066",
+   "lang": "en",
+   "query": "fleece midlayer jacket",
+   "targets": [
+    "p039"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p033"
+  },
+  {
+   "id": "q067",
+   "lang": "zh",
+   "query": "防水雪靴",
+   "targets": [
+    "p040"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p034"
+  },
+  {
+   "id": "q068",
+   "lang": "en",
+   "query": "waterproof snow boots",
+   "targets": [
+    "p040"
+   ],
+   "type": "attribute",
+   "difficulty": "easy",
+   "pairId": "p034"
+  },
+  {
+   "id": "q069",
+   "lang": "zh",
+   "query": "黑色西裝外套",
+   "targets": [
+    "p009"
+   ],
+   "type": "colour",
+   "difficulty": "medium",
+   "pairId": "p035"
+  },
+  {
+   "id": "q070",
+   "lang": "en",
+   "query": "black tailored jacket",
+   "targets": [
+    "p009"
+   ],
+   "type": "colour",
+   "difficulty": "medium",
+   "pairId": "p035"
+  },
+  {
+   "id": "q071",
+   "lang": "zh",
+   "query": "藍色滑雪外套",
+   "targets": [
+    "p031"
+   ],
+   "type": "colour",
+   "difficulty": "medium",
+   "pairId": "p036"
+  },
+  {
+   "id": "q072",
+   "lang": "en",
+   "query": "blue ski jacket",
+   "targets": [
+    "p031"
+   ],
+   "type": "colour",
+   "difficulty": "medium",
+   "pairId": "p036"
+  },
+  {
+   "id": "q073",
+   "lang": "zh",
+   "query": "白色皮鞋",
+   "targets": [
+    "p014"
+   ],
+   "type": "colour",
+   "difficulty": "medium",
+   "pairId": "p037"
+  },
+  {
+   "id": "q074",
+   "lang": "en",
+   "query": "white leather shoes",
+   "targets": [
+    "p014"
+   ],
+   "type": "colour",
+   "difficulty": "medium",
+   "pairId": "p037"
+  },
+  {
+   "id": "q075",
+   "lang": "zh",
+   "query": "金色涼鞋",
+   "targets": [
+    "p016"
+   ],
+   "type": "colour",
+   "difficulty": "medium",
+   "pairId": "p038"
+  },
+  {
+   "id": "q076",
+   "lang": "en",
+   "query": "gold sandals",
+   "targets": [
+    "p016"
+   ],
+   "type": "colour",
+   "difficulty": "medium",
+   "pairId": "p038"
+  },
+  {
+   "id": "q077",
+   "lang": "zh",
+   "query": "羊毛材質的禦寒單品",
+   "targets": [
+    "p006",
+    "p009",
+    "p037"
+   ],
+   "type": "material",
+   "difficulty": "hard",
+   "pairId": "p039"
+  },
+  {
+   "id": "q078",
+   "lang": "en",
+   "query": "wool winter warm piece",
+   "targets": [
+    "p006",
+    "p009",
+    "p037"
+   ],
+   "type": "material",
+   "difficulty": "hard",
+   "pairId": "p039"
+  },
+  {
+   "id": "q079",
+   "lang": "zh",
+   "query": "防水材質的滑雪裝備",
+   "targets": [
+    "p031",
+    "p032",
+    "p034"
+   ],
+   "type": "material",
+   "difficulty": "hard",
+   "pairId": "p040"
+  },
+  {
+   "id": "q080",
+   "lang": "en",
+   "query": "waterproof snow gear",
+   "targets": [
+    "p031",
+    "p032",
+    "p034"
+   ],
+   "type": "material",
+   "difficulty": "hard",
+   "pairId": "p040"
+  },
+  {
+   "id": "q081",
+   "lang": "zh",
+   "query": "絲質的正式配件",
+   "targets": [
+    "p023"
+   ],
+   "type": "material",
+   "difficulty": "medium",
+   "pairId": "p041"
+  },
+  {
+   "id": "q082",
+   "lang": "en",
+   "query": "silk formal accessory",
+   "targets": [
+    "p023"
+   ],
+   "type": "material",
+   "difficulty": "medium",
+   "pairId": "p041"
+  },
+  {
+   "id": "q083",
+   "lang": "zh",
+   "query": "去海島婚禮穿什麼",
+   "targets": [
+    "p001",
+    "p002",
+    "p003"
+   ],
+   "type": "occasion",
+   "difficulty": "hard",
+   "pairId": "p042"
+  },
+  {
+   "id": "q084",
+   "lang": "en",
+   "query": "what to wear to a beach wedding",
+   "targets": [
+    "p001",
+    "p002",
+    "p003"
+   ],
+   "type": "occasion",
+   "difficulty": "hard",
+   "pairId": "p042"
+  },
+  {
+   "id": "q085",
+   "lang": "zh",
+   "query": "滑雪要帶什麼",
+   "targets": [
+    "p031",
+    "p032",
+    "p033",
+    "p034"
+   ],
+   "type": "occasion",
+   "difficulty": "hard",
+   "pairId": "p043"
+  },
+  {
+   "id": "q086",
+   "lang": "en",
+   "query": "what to bring on a ski trip",
+   "targets": [
+    "p031",
+    "p032",
+    "p033",
+    "p034"
+   ],
+   "type": "occasion",
+   "difficulty": "hard",
+   "pairId": "p043"
+  },
+  {
+   "id": "q087",
+   "lang": "zh",
+   "query": "上班面試造型",
+   "targets": [
+    "p004",
+    "p005",
+    "p009",
+    "p010"
+   ],
+   "type": "occasion",
+   "difficulty": "hard",
+   "pairId": "p044"
+  },
+  {
+   "id": "q088",
+   "lang": "en",
+   "query": "job interview outfit",
+   "targets": [
+    "p004",
+    "p005",
+    "p009",
+    "p010"
+   ],
+   "type": "occasion",
+   "difficulty": "hard",
+   "pairId": "p044"
+  },
+  {
+   "id": "q089",
+   "lang": "zh",
+   "query": "夏天去海邊",
+   "targets": [
+    "p003",
+    "p016"
+   ],
+   "type": "occasion",
+   "difficulty": "hard",
+   "pairId": "p045"
+  },
+  {
+   "id": "q090",
+   "lang": "en",
+   "query": "summer day at the beach",
+   "targets": [
+    "p003",
+    "p016"
+   ],
+   "type": "occasion",
+   "difficulty": "hard",
+   "pairId": "p045"
+  },
+  {
+   "id": "q091",
+   "lang": "zh",
+   "query": "冬天保暖配件",
+   "targets": [
+    "p037",
+    "p038"
+   ],
+   "type": "occasion",
+   "difficulty": "hard",
+   "pairId": "p046"
+  },
+  {
+   "id": "q092",
+   "lang": "en",
+   "query": "winter warm accessories",
+   "targets": [
+    "p037",
+    "p038"
+   ],
+   "type": "occasion",
+   "difficulty": "hard",
+   "pairId": "p046"
+  },
+  {
+   "id": "q093",
+   "lang": "zh",
+   "query": "情人節禮物",
+   "targets": [
+    "p020",
+    "p023",
+    "p025"
+   ],
+   "type": "occasion",
+   "difficulty": "hard",
+   "pairId": "p047"
+  },
+  {
+   "id": "q094",
+   "lang": "en",
+   "query": "valentines day gift",
+   "targets": [
+    "p020",
+    "p023",
+    "p025"
+   ],
+   "type": "occasion",
+   "difficulty": "hard",
+   "pairId": "p047"
+  }
+ ]
+}

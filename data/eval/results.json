@@ -1,0 +1,965 @@
+{
+ "generatedAt": "2026-10-28T19:42:10",
+ "device": "cuda",
+ "catalogueSize": 34,
+ "queryCount": 94,
+ "queriesByLanguage": {
+  "zh": 47,
+  "en": 47
+ },
+ "metric": "Recall@K and MRR over cosine similarity in the shared image-text space",
+ "translationNote": "Rule-based zh->en fashion glossary. It overlaps with the catalogue vocabulary, so the translated numbers are an optimistic lexicon baseline rather than an upper bound; the human-paired English queries give the ceiling.",
+ "models": {
+  "clip-vitb32-laion2b": {
+   "label": "ViT-B-32 / laion2b (current)",
+   "dim": 512,
+   "paramsM": 151,
+   "loadSeconds": 5.4,
+   "encodeSeconds": 0.4,
+   "perQueryMs": 2.0,
+   "translations": {
+    "亞麻連身裙": "linen dress",
+    "絲質連身裙": "silk dress",
+    "熱帶印花長洋裝": "熱帶印花 maxi dress",
+    "亞麻襯衫": "linen shirt",
+    "牛津襯衫": "牛津 shirt",
+    "喀什米爾毛衣": "cashmere sweater",
+    "羽絨外套": "puffer jacket",
+    "羊毛西裝外套": "wool blazer",
+    "卡其長褲": "khaki trousers",
+    "修身牛仔褲": "修身 jeans",
+    "亞麻寬褲": "linen wide leg trousers",
+    "真皮樂福鞋": "leather loafers",
+    "白色波鞋": "white sneakers",
+    "越野跑鞋": "trail running shoes",
+    "綁帶涼鞋": "綁帶 sandals",
+    "切爾西短靴": "切爾西 ankle boots",
+    "真皮托特包": "leather tote bag",
+    "緞面手拿包": "緞面 clutch",
+    "指針腕錶": "指針 watch",
+    "飛行員太陽眼鏡": "飛行員 sunglasses",
+    "印花絲巾": "印花 silk scarf",
+    "防曬乳 SPF50": "sunscreen 乳 SPF50",
+    "霧面唇膏": "霧面 lipstick",
+    "保濕精華液": "保濕 serum",
+    "智慧運動手錶": "智慧 sports watch",
+    "滑雪外套": "ski jacket",
+    "防水雪褲": "waterproof ski pants",
+    "滑雪護目鏡": "ski goggles",
+    "滑雪手套": "ski gloves",
+    "排汗保暖內層衣": "排汗 thermal base layer",
+    "美麗諾滑雪襪": "merino ski socks",
+    "保暖頸圍": "thermal neck gaiter",
+    "刷毛中層衣": "fleece midlayer",
+    "防水雪靴": "waterproof snow boots",
+    "黑色西裝外套": "black blazer",
+    "藍色滑雪外套": "blue ski jacket",
+    "白色皮鞋": "white 皮 shoes",
+    "金色涼鞋": "gold sandals",
+    "羊毛材質的禦寒單品": "wool 材質 禦寒 piece",
+    "防水材質的滑雪裝備": "waterproof 材質 ski 裝備",
+    "絲質的正式配件": "silk formal accessory",
+    "去海島婚禮穿什麼": "去 beach wedding",
+    "滑雪要帶什麼": "ski 要帶",
+    "上班面試造型": "work interview 造型",
+    "夏天去海邊": "summer 去 beach",
+    "冬天保暖配件": "winter thermal accessory",
+    "情人節禮物": "valentines gift"
+   },
+   "raw": {
+    "overall": {
+     "n": 94,
+     "recall@1": 45.7,
+     "recall@5": 84.0,
+     "recall@10": 90.4,
+     "mrr": 0.637
+    },
+    "byLanguage": {
+     "zh": {
+      "n": 47,
+      "recall@1": 34.0,
+      "recall@5": 70.2,
+      "recall@10": 80.9,
+      "mrr": 0.511
+     },
+     "en": {
+      "n": 47,
+      "recall@1": 57.4,
+      "recall@5": 97.9,
+      "recall@10": 100.0,
+      "mrr": 0.762
+     }
+    },
+    "byType": {
+     "attribute": {
+      "n": 68,
+      "recall@1": 47.1,
+      "recall@5": 85.3,
+      "recall@10": 91.2,
+      "mrr": 0.656
+     },
+     "colour": {
+      "n": 8,
+      "recall@1": 75.0,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.875
+     },
+     "material": {
+      "n": 6,
+      "recall@1": 33.3,
+      "recall@5": 66.7,
+      "recall@10": 83.3,
+      "mrr": 0.455
+     },
+     "occasion": {
+      "n": 12,
+      "recall@1": 25.0,
+      "recall@5": 75.0,
+      "recall@10": 83.3,
+      "mrr": 0.46
+     }
+    },
+    "byDifficulty": {
+     "easy": {
+      "n": 68,
+      "recall@1": 47.1,
+      "recall@5": 85.3,
+      "recall@10": 91.2,
+      "mrr": 0.656
+     },
+     "medium": {
+      "n": 10,
+      "recall@1": 70.0,
+      "recall@5": 90.0,
+      "recall@10": 90.0,
+      "mrr": 0.804
+     },
+     "hard": {
+      "n": 16,
+      "recall@1": 25.0,
+      "recall@5": 75.0,
+      "recall@10": 87.5,
+      "mrr": 0.451
+     }
+    },
+    "failures": [
+     {
+      "query": "亞麻連身裙",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 10,
+      "top1": "p002"
+     },
+     {
+      "query": "熱帶印花長洋裝",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 18,
+      "top1": "p026"
+     },
+     {
+      "query": "喀什米爾毛衣",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 9,
+      "top1": "p007"
+     },
+     {
+      "query": "真皮樂福鞋",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 16,
+      "top1": "p026"
+     },
+     {
+      "query": "滑雪護目鏡",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 14,
+      "top1": "p034"
+     },
+     {
+      "query": "排汗保暖內層衣",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 12,
+      "top1": "p009"
+     },
+     {
+      "query": "美麗諾滑雪襪",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 31,
+      "top1": "p038"
+     },
+     {
+      "query": "保暖頸圍",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 25,
+      "top1": "p026"
+     },
+     {
+      "query": "fleece neck gaiter",
+      "lang": "en",
+      "type": "attribute",
+      "rank": 7,
+      "top1": "p037"
+     },
+     {
+      "query": "刷毛中層衣",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 10,
+      "top1": "p004"
+     },
+     {
+      "query": "羊毛材質的禦寒單品",
+      "lang": "zh",
+      "type": "material",
+      "rank": 9,
+      "top1": "p026"
+     },
+     {
+      "query": "絲質的正式配件",
+      "lang": "zh",
+      "type": "material",
+      "rank": 27,
+      "top1": "p021"
+     }
+    ],
+    "failCount": 15
+   },
+   "translated": {
+    "overall": {
+     "n": 94,
+     "recall@1": 58.5,
+     "recall@5": 97.9,
+     "recall@10": 100.0,
+     "mrr": 0.764
+    },
+    "byLanguage": {
+     "zh": {
+      "n": 47,
+      "recall@1": 59.6,
+      "recall@5": 97.9,
+      "recall@10": 100.0,
+      "mrr": 0.767
+     },
+     "en": {
+      "n": 47,
+      "recall@1": 57.4,
+      "recall@5": 97.9,
+      "recall@10": 100.0,
+      "mrr": 0.762
+     }
+    },
+    "byType": {
+     "attribute": {
+      "n": 68,
+      "recall@1": 58.8,
+      "recall@5": 98.5,
+      "recall@10": 100.0,
+      "mrr": 0.777
+     },
+     "colour": {
+      "n": 8,
+      "recall@1": 75.0,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.875
+     },
+     "material": {
+      "n": 6,
+      "recall@1": 66.7,
+      "recall@5": 83.3,
+      "recall@10": 100.0,
+      "mrr": 0.736
+     },
+     "occasion": {
+      "n": 12,
+      "recall@1": 41.7,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.632
+     }
+    },
+    "byDifficulty": {
+     "easy": {
+      "n": 68,
+      "recall@1": 58.8,
+      "recall@5": 98.5,
+      "recall@10": 100.0,
+      "mrr": 0.777
+     },
+     "medium": {
+      "n": 10,
+      "recall@1": 80.0,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.9
+     },
+     "hard": {
+      "n": 16,
+      "recall@1": 43.8,
+      "recall@5": 93.8,
+      "recall@10": 100.0,
+      "mrr": 0.625
+     }
+    },
+    "failures": [
+     {
+      "query": "fleece neck gaiter",
+      "lang": "en",
+      "type": "attribute",
+      "rank": 7,
+      "top1": "p037"
+     },
+     {
+      "query": "防水材質的滑雪裝備",
+      "lang": "zh",
+      "type": "material",
+      "rank": 6,
+      "top1": "p024"
+     }
+    ],
+    "failCount": 2
+   }
+  },
+  "marqo-fashionCLIP": {
+   "label": "Marqo-FashionCLIP",
+   "dim": 512,
+   "paramsM": 150,
+   "loadSeconds": 2.0,
+   "encodeSeconds": 0.1,
+   "perQueryMs": 0.7,
+   "translations": {
+    "亞麻連身裙": "linen dress",
+    "絲質連身裙": "silk dress",
+    "熱帶印花長洋裝": "熱帶印花 maxi dress",
+    "亞麻襯衫": "linen shirt",
+    "牛津襯衫": "牛津 shirt",
+    "喀什米爾毛衣": "cashmere sweater",
+    "羽絨外套": "puffer jacket",
+    "羊毛西裝外套": "wool blazer",
+    "卡其長褲": "khaki trousers",
+    "修身牛仔褲": "修身 jeans",
+    "亞麻寬褲": "linen wide leg trousers",
+    "真皮樂福鞋": "leather loafers",
+    "白色波鞋": "white sneakers",
+    "越野跑鞋": "trail running shoes",
+    "綁帶涼鞋": "綁帶 sandals",
+    "切爾西短靴": "切爾西 ankle boots",
+    "真皮托特包": "leather tote bag",
+    "緞面手拿包": "緞面 clutch",
+    "指針腕錶": "指針 watch",
+    "飛行員太陽眼鏡": "飛行員 sunglasses",
+    "印花絲巾": "印花 silk scarf",
+    "防曬乳 SPF50": "sunscreen 乳 SPF50",
+    "霧面唇膏": "霧面 lipstick",
+    "保濕精華液": "保濕 serum",
+    "智慧運動手錶": "智慧 sports watch",
+    "滑雪外套": "ski jacket",
+    "防水雪褲": "waterproof ski pants",
+    "滑雪護目鏡": "ski goggles",
+    "滑雪手套": "ski gloves",
+    "排汗保暖內層衣": "排汗 thermal base layer",
+    "美麗諾滑雪襪": "merino ski socks",
+    "保暖頸圍": "thermal neck gaiter",
+    "刷毛中層衣": "fleece midlayer",
+    "防水雪靴": "waterproof snow boots",
+    "黑色西裝外套": "black blazer",
+    "藍色滑雪外套": "blue ski jacket",
+    "白色皮鞋": "white 皮 shoes",
+    "金色涼鞋": "gold sandals",
+    "羊毛材質的禦寒單品": "wool 材質 禦寒 piece",
+    "防水材質的滑雪裝備": "waterproof 材質 ski 裝備",
+    "絲質的正式配件": "silk formal accessory",
+    "去海島婚禮穿什麼": "去 beach wedding",
+    "滑雪要帶什麼": "ski 要帶",
+    "上班面試造型": "work interview 造型",
+    "夏天去海邊": "summer 去 beach",
+    "冬天保暖配件": "winter thermal accessory",
+    "情人節禮物": "valentines gift"
+   },
+   "raw": {
+    "overall": {
+     "n": 94,
+     "recall@1": 41.5,
+     "recall@5": 78.7,
+     "recall@10": 84.0,
+     "mrr": 0.576
+    },
+    "byLanguage": {
+     "zh": {
+      "n": 47,
+      "recall@1": 17.0,
+      "recall@5": 61.7,
+      "recall@10": 68.1,
+      "mrr": 0.366
+     },
+     "en": {
+      "n": 47,
+      "recall@1": 66.0,
+      "recall@5": 95.7,
+      "recall@10": 100.0,
+      "mrr": 0.786
+     }
+    },
+    "byType": {
+     "attribute": {
+      "n": 68,
+      "recall@1": 42.6,
+      "recall@5": 77.9,
+      "recall@10": 83.8,
+      "mrr": 0.585
+     },
+     "colour": {
+      "n": 8,
+      "recall@1": 50.0,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.75
+     },
+     "material": {
+      "n": 6,
+      "recall@1": 0.0,
+      "recall@5": 50.0,
+      "recall@10": 66.7,
+      "mrr": 0.225
+     },
+     "occasion": {
+      "n": 12,
+      "recall@1": 50.0,
+      "recall@5": 83.3,
+      "recall@10": 83.3,
+      "mrr": 0.585
+     }
+    },
+    "byDifficulty": {
+     "easy": {
+      "n": 68,
+      "recall@1": 42.6,
+      "recall@5": 77.9,
+      "recall@10": 83.8,
+      "mrr": 0.585
+     },
+     "medium": {
+      "n": 10,
+      "recall@1": 40.0,
+      "recall@5": 90.0,
+      "recall@10": 90.0,
+      "mrr": 0.639
+     },
+     "hard": {
+      "n": 16,
+      "recall@1": 37.5,
+      "recall@5": 75.0,
+      "recall@10": 81.2,
+      "mrr": 0.499
+     }
+    },
+    "failures": [
+     {
+      "query": "亞麻連身裙",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 19,
+      "top1": "p020"
+     },
+     {
+      "query": "絲質連身裙",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 10,
+      "top1": "p020"
+     },
+     {
+      "query": "silk slip dress",
+      "lang": "en",
+      "type": "attribute",
+      "rank": 6,
+      "top1": "p001"
+     },
+     {
+      "query": "熱帶印花長洋裝",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 34,
+      "top1": "p020"
+     },
+     {
+      "query": "亞麻襯衫",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 32,
+      "top1": "p021"
+     },
+     {
+      "query": "牛津襯衫",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 24,
+      "top1": "p015"
+     },
+     {
+      "query": "卡其長褲",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 16,
+      "top1": "p032"
+     },
+     {
+      "query": "修身牛仔褲",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 29,
+      "top1": "p032"
+     },
+     {
+      "query": "保濕精華液",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 11,
+      "top1": "p022"
+     },
+     {
+      "query": "滑雪外套",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 6,
+      "top1": "p007"
+     },
+     {
+      "query": "防水雪褲",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 24,
+      "top1": "p026"
+     },
+     {
+      "query": "排汗保暖內層衣",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 6,
+      "top1": "p020"
+     }
+    ],
+    "failCount": 20
+   },
+   "translated": {
+    "overall": {
+     "n": 94,
+     "recall@1": 64.9,
+     "recall@5": 95.7,
+     "recall@10": 100.0,
+     "mrr": 0.781
+    },
+    "byLanguage": {
+     "zh": {
+      "n": 47,
+      "recall@1": 63.8,
+      "recall@5": 95.7,
+      "recall@10": 100.0,
+      "mrr": 0.775
+     },
+     "en": {
+      "n": 47,
+      "recall@1": 66.0,
+      "recall@5": 95.7,
+      "recall@10": 100.0,
+      "mrr": 0.786
+     }
+    },
+    "byType": {
+     "attribute": {
+      "n": 68,
+      "recall@1": 69.1,
+      "recall@5": 97.1,
+      "recall@10": 100.0,
+      "mrr": 0.809
+     },
+     "colour": {
+      "n": 8,
+      "recall@1": 62.5,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.812
+     },
+     "material": {
+      "n": 6,
+      "recall@1": 16.7,
+      "recall@5": 66.7,
+      "recall@10": 100.0,
+      "mrr": 0.406
+     },
+     "occasion": {
+      "n": 12,
+      "recall@1": 66.7,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.787
+     }
+    },
+    "byDifficulty": {
+     "easy": {
+      "n": 68,
+      "recall@1": 69.1,
+      "recall@5": 97.1,
+      "recall@10": 100.0,
+      "mrr": 0.809
+     },
+     "medium": {
+      "n": 10,
+      "recall@1": 50.0,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.717
+     },
+     "hard": {
+      "n": 16,
+      "recall@1": 56.2,
+      "recall@5": 87.5,
+      "recall@10": 100.0,
+      "mrr": 0.701
+     }
+    },
+    "failures": [
+     {
+      "query": "silk slip dress",
+      "lang": "en",
+      "type": "attribute",
+      "rank": 6,
+      "top1": "p001"
+     },
+     {
+      "query": "保暖頸圍",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 6,
+      "top1": "p037"
+     },
+     {
+      "query": "防水材質的滑雪裝備",
+      "lang": "zh",
+      "type": "material",
+      "rank": 7,
+      "top1": "p007"
+     },
+     {
+      "query": "waterproof snow gear",
+      "lang": "en",
+      "type": "material",
+      "rank": 8,
+      "top1": "p007"
+     }
+    ],
+    "failCount": 4
+   }
+  },
+  "marqo-fashionSigLIP": {
+   "label": "Marqo-FashionSigLIP",
+   "dim": 768,
+   "paramsM": 203,
+   "loadSeconds": 3.7,
+   "encodeSeconds": 0.1,
+   "perQueryMs": 0.7,
+   "translations": {
+    "亞麻連身裙": "linen dress",
+    "絲質連身裙": "silk dress",
+    "熱帶印花長洋裝": "熱帶印花 maxi dress",
+    "亞麻襯衫": "linen shirt",
+    "牛津襯衫": "牛津 shirt",
+    "喀什米爾毛衣": "cashmere sweater",
+    "羽絨外套": "puffer jacket",
+    "羊毛西裝外套": "wool blazer",
+    "卡其長褲": "khaki trousers",
+    "修身牛仔褲": "修身 jeans",
+    "亞麻寬褲": "linen wide leg trousers",
+    "真皮樂福鞋": "leather loafers",
+    "白色波鞋": "white sneakers",
+    "越野跑鞋": "trail running shoes",
+    "綁帶涼鞋": "綁帶 sandals",
+    "切爾西短靴": "切爾西 ankle boots",
+    "真皮托特包": "leather tote bag",
+    "緞面手拿包": "緞面 clutch",
+    "指針腕錶": "指針 watch",
+    "飛行員太陽眼鏡": "飛行員 sunglasses",
+    "印花絲巾": "印花 silk scarf",
+    "防曬乳 SPF50": "sunscreen 乳 SPF50",
+    "霧面唇膏": "霧面 lipstick",
+    "保濕精華液": "保濕 serum",
+    "智慧運動手錶": "智慧 sports watch",
+    "滑雪外套": "ski jacket",
+    "防水雪褲": "waterproof ski pants",
+    "滑雪護目鏡": "ski goggles",
+    "滑雪手套": "ski gloves",
+    "排汗保暖內層衣": "排汗 thermal base layer",
+    "美麗諾滑雪襪": "merino ski socks",
+    "保暖頸圍": "thermal neck gaiter",
+    "刷毛中層衣": "fleece midlayer",
+    "防水雪靴": "waterproof snow boots",
+    "黑色西裝外套": "black blazer",
+    "藍色滑雪外套": "blue ski jacket",
+    "白色皮鞋": "white 皮 shoes",
+    "金色涼鞋": "gold sandals",
+    "羊毛材質的禦寒單品": "wool 材質 禦寒 piece",
+    "防水材質的滑雪裝備": "waterproof 材質 ski 裝備",
+    "絲質的正式配件": "silk formal accessory",
+    "去海島婚禮穿什麼": "去 beach wedding",
+    "滑雪要帶什麼": "ski 要帶",
+    "上班面試造型": "work interview 造型",
+    "夏天去海邊": "summer 去 beach",
+    "冬天保暖配件": "winter thermal accessory",
+    "情人節禮物": "valentines gift"
+   },
+   "raw": {
+    "overall": {
+     "n": 94,
+     "recall@1": 39.4,
+     "recall@5": 58.5,
+     "recall@10": 68.1,
+     "mrr": 0.499
+    },
+    "byLanguage": {
+     "zh": {
+      "n": 47,
+      "recall@1": 4.3,
+      "recall@5": 17.0,
+      "recall@10": 36.2,
+      "mrr": 0.14
+     },
+     "en": {
+      "n": 47,
+      "recall@1": 74.5,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.858
+     }
+    },
+    "byType": {
+     "attribute": {
+      "n": 68,
+      "recall@1": 38.2,
+      "recall@5": 58.8,
+      "recall@10": 66.2,
+      "mrr": 0.493
+     },
+     "colour": {
+      "n": 8,
+      "recall@1": 37.5,
+      "recall@5": 50.0,
+      "recall@10": 62.5,
+      "mrr": 0.476
+     },
+     "material": {
+      "n": 6,
+      "recall@1": 50.0,
+      "recall@5": 50.0,
+      "recall@10": 66.7,
+      "mrr": 0.551
+     },
+     "occasion": {
+      "n": 12,
+      "recall@1": 41.7,
+      "recall@5": 66.7,
+      "recall@10": 83.3,
+      "mrr": 0.519
+     }
+    },
+    "byDifficulty": {
+     "easy": {
+      "n": 68,
+      "recall@1": 38.2,
+      "recall@5": 58.8,
+      "recall@10": 66.2,
+      "mrr": 0.493
+     },
+     "medium": {
+      "n": 10,
+      "recall@1": 40.0,
+      "recall@5": 50.0,
+      "recall@10": 60.0,
+      "mrr": 0.485
+     },
+     "hard": {
+      "n": 16,
+      "recall@1": 43.8,
+      "recall@5": 62.5,
+      "recall@10": 81.2,
+      "mrr": 0.53
+     }
+    },
+    "failures": [
+     {
+      "query": "亞麻連身裙",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 10,
+      "top1": "p035"
+     },
+     {
+      "query": "絲質連身裙",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 25,
+      "top1": "p035"
+     },
+     {
+      "query": "熱帶印花長洋裝",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 9,
+      "top1": "p035"
+     },
+     {
+      "query": "亞麻襯衫",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 26,
+      "top1": "p035"
+     },
+     {
+      "query": "牛津襯衫",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 20,
+      "top1": "p035"
+     },
+     {
+      "query": "喀什米爾毛衣",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 6,
+      "top1": "p035"
+     },
+     {
+      "query": "羽絨外套",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 31,
+      "top1": "p035"
+     },
+     {
+      "query": "羊毛西裝外套",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 33,
+      "top1": "p035"
+     },
+     {
+      "query": "卡其長褲",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 32,
+      "top1": "p035"
+     },
+     {
+      "query": "修身牛仔褲",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 18,
+      "top1": "p035"
+     },
+     {
+      "query": "亞麻寬褲",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 13,
+      "top1": "p035"
+     },
+     {
+      "query": "真皮樂福鞋",
+      "lang": "zh",
+      "type": "attribute",
+      "rank": 21,
+      "top1": "p035"
+     }
+    ],
+    "failCount": 39
+   },
+   "translated": {
+    "overall": {
+     "n": 94,
+     "recall@1": 73.4,
+     "recall@5": 100.0,
+     "recall@10": 100.0,
+     "mrr": 0.85
+    },
+    "byLanguage": {
+     "zh": {
+      "n": 47,
+      "recall@1": 72.3,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.842
+     },
+     "en": {
+      "n": 47,
+      "recall@1": 74.5,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.858
+     }
+    },
+    "byType": {
+     "attribute": {
+      "n": 68,
+      "recall@1": 73.5,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.853
+     },
+     "colour": {
+      "n": 8,
+      "recall@1": 75.0,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.875
+     },
+     "material": {
+      "n": 6,
+      "recall@1": 66.7,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.792
+     },
+     "occasion": {
+      "n": 12,
+      "recall@1": 75.0,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.847
+     }
+    },
+    "byDifficulty": {
+     "easy": {
+      "n": 68,
+      "recall@1": 73.5,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.853
+     },
+     "medium": {
+      "n": 10,
+      "recall@1": 80.0,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.9
+     },
+     "hard": {
+      "n": 16,
+      "recall@1": 68.8,
+      "recall@5": 100.0,
+      "recall@10": 100.0,
+      "mrr": 0.807
+     }
+    },
+    "failures": [],
+    "failCount": 0
+   }
+  }
+ },
+ "bestTranslated": "marqo-fashionSigLIP"
+}

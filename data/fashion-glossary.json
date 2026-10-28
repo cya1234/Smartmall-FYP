@@ -1,0 +1,52 @@
+{
+  "_note": "Rule-based Traditional-Chinese to English fashion glossary, used to test whether the bottleneck in Chinese retrieval is the language encoder rather than the vision backbone. Written as general fashion vocabulary, NOT derived from the evaluation queries, but it does overlap with the catalogue vocabulary -- so treat the resulting number as an optimistic lexicon baseline, not an upper bound.",
+  "grammar": {
+    "的": "", "穿什麼": "", "什麼": "", "一套": "outfit", "搭配": "outfit"
+  },
+  "garments": {
+    "連身裙": "dress", "洋裝": "dress", "長洋裝": "maxi dress", "短裙": "skirt",
+    "襯衫": "shirt", "T恤": "t-shirt", "毛衣": "sweater", "針織衫": "knit sweater",
+    "外套": "jacket", "西裝外套": "blazer", "羽絨外套": "puffer jacket",
+    "牛仔外套": "denim jacket", "大衣": "coat", "風衣": "trench coat",
+    "長褲": "trousers", "寬褲": "wide leg trousers", "牛仔褲": "jeans",
+    "短褲": "shorts", "內層衣": "base layer", "中層衣": "midlayer",
+    "雪褲": "ski pants", "套裝": "suit", "背心": "vest"
+  },
+  "footwear": {
+    "鞋": "shoes", "球鞋": "sneakers", "波鞋": "sneakers", "運動鞋": "trainers",
+    "樂福鞋": "loafers", "靴": "boots", "短靴": "ankle boots", "雪靴": "snow boots",
+    "涼鞋": "sandals", "高跟鞋": "heels", "拖鞋": "slippers", "跑鞋": "running shoes"
+  },
+  "accessories": {
+    "配件": "accessory", "單品": "piece", "服飾": "apparel", "鞋履": "footwear",
+    "包": "bag", "托特包": "tote bag", "手拿包": "clutch", "背囊": "backpack",
+    "帽": "hat", "草帽": "straw hat", "毛帽": "beanie", "頸圍": "neck gaiter",
+    "圍巾": "scarf", "絲巾": "silk scarf", "手套": "gloves",
+    "襪": "socks", "襪子": "socks", "皮帶": "belt",
+    "眼鏡": "glasses", "太陽眼鏡": "sunglasses", "護目鏡": "goggles",
+    "腕錶": "watch", "手錶": "watch", "耳機": "earbuds", "首飾": "jewellery"
+  },
+  "beauty_home": {
+    "防曬": "sunscreen", "精華液": "serum", "唇膏": "lipstick",
+    "香水": "perfume", "擴香機": "aroma diffuser", "餐具": "dinnerware",
+    "蠟燭": "candle", "護膚": "skincare"
+  },
+  "materials": {
+    "亞麻": "linen", "棉": "cotton", "羊毛": "wool", "喀什米爾": "cashmere",
+    "絲": "silk", "絲質": "silk", "皮革": "leather", "真皮": "leather",
+    "牛仔布": "denim", "羽絨": "down", "刷毛": "fleece", "美麗諾": "merino",
+    "尼龍": "nylon", "防水": "waterproof", "保暖": "thermal", "透氣": "breathable"
+  },
+  "colours": {
+    "黑色": "black", "白色": "white", "紅色": "red", "藍色": "blue",
+    "深藍": "navy", "金色": "gold", "銀色": "silver", "卡其": "khaki",
+    "灰色": "grey", "綠色": "green", "粉紅": "pink", "米色": "beige", "棕色": "brown"
+  },
+  "occasions": {
+    "婚禮": "wedding", "海島": "beach", "海邊": "beach", "夏天": "summer",
+    "冬天": "winter", "面試": "interview", "上班": "work", "派對": "party",
+    "旅行": "travel", "滑雪": "ski", "雪地": "snow", "運動": "sports",
+    "跑步": "running", "越野": "trail", "禮物": "gift", "情人節": "valentines",
+    "正式": "formal", "休閒": "casual", "登山": "hiking"
+  }
+}

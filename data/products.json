@@ -1,0 +1,2245 @@
+[
+  {
+    "id": "p001",
+    "name": "Linen Wrap Dress",
+    "brand": "Aura",
+    "category": "Apparel",
+    "subcategory": "Dress",
+    "price": 89.0,
+    "currency": "USD",
+    "color": "#d8a7b1",
+    "colorName": "Blush Pink",
+    "material": "Linen",
+    "style": [
+      "Elegant",
+      "Breezy",
+      "Feminine"
+    ],
+    "occasion": [
+      "Wedding",
+      "Party",
+      "Date",
+      "Outdoor"
+    ],
+    "season": [
+      "Spring",
+      "Summer"
+    ],
+    "climate": [
+      "Tropical",
+      "Warm"
+    ],
+    "gender": "Women",
+    "emoji": "👗",
+    "rating": 4.6,
+    "reviews": 128,
+    "description": "A breathable linen wrap dress with a flattering tie waist — ideal for warm-weather weddings and garden parties.",
+    "tags": [
+      "wedding",
+      "summer",
+      "lightweight",
+      "tropical",
+      "dress",
+      "outdoor",
+      "elegant",
+      "linen",
+      "women"
+    ],
+    "name_zh": "亞麻綁帶連身裙",
+    "description_zh": "透氣的亞麻綁帶連身裙，腰間綁帶修飾身形，適合炎熱氣候的戶外婚禮與花園派對。",
+    "slots": [
+      "dress"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "low"
+    },
+    "returnRate": 14,
+    "image": "/assets/products/p001.jpg",
+    "imageCredit": "Dresses / Pink"
+  },
+  {
+    "id": "p002",
+    "name": "Silk Slip Dress",
+    "brand": "Aura",
+    "category": "Apparel",
+    "subcategory": "Dress",
+    "price": 129.0,
+    "currency": "USD",
+    "color": "#1f6f5c",
+    "colorName": "Emerald",
+    "material": "Silk",
+    "style": [
+      "Elegant",
+      "Glamorous"
+    ],
+    "occasion": [
+      "Party",
+      "Date",
+      "Formal",
+      "Dinner"
+    ],
+    "season": [
+      "Spring",
+      "Summer",
+      "Autumn"
+    ],
+    "climate": [
+      "Warm",
+      "Mild"
+    ],
+    "gender": "Women",
+    "emoji": "👗",
+    "rating": 4.7,
+    "reviews": 96,
+    "description": "A fluid silk slip dress that drapes beautifully — a timeless choice for evening occasions and dinners.",
+    "tags": [
+      "party",
+      "silk",
+      "evening",
+      "elegant",
+      "date",
+      "dress",
+      "formal",
+      "women"
+    ],
+    "name_zh": "絲質吊帶連身裙",
+    "description_zh": "垂墜感極佳的絲質吊帶裙，適合晚宴與約會場合的經典之選。",
+    "slots": [
+      "dress"
+    ],
+    "fit": {
+      "runs": "small",
+      "stretch": "low"
+    },
+    "returnRate": 18,
+    "image": "/assets/products/p002.jpg",
+    "imageCredit": "Dresses / Blue"
+  },
+  {
+    "id": "p003",
+    "name": "Tropical Print Maxi Dress",
+    "brand": "Isle & Co",
+    "category": "Apparel",
+    "subcategory": "Dress",
+    "price": 74.0,
+    "currency": "USD",
+    "color": "#e86a4a",
+    "colorName": "Coral",
+    "material": "Viscose",
+    "style": [
+      "Bohemian",
+      "Breezy"
+    ],
+    "occasion": [
+      "Outdoor",
+      "Wedding",
+      "Vacation",
+      "Party"
+    ],
+    "season": [
+      "Summer"
+    ],
+    "climate": [
+      "Tropical",
+      "Warm"
+    ],
+    "gender": "Women",
+    "emoji": "👗",
+    "rating": 4.5,
+    "reviews": 143,
+    "description": "A flowing maxi dress in a vivid tropical print, made for resort evenings and outdoor celebrations.",
+    "tags": [
+      "tropical",
+      "summer",
+      "vacation",
+      "maxi",
+      "outdoor",
+      "wedding",
+      "dress",
+      "women",
+      "print"
+    ],
+    "name_zh": "熱帶印花長洋裝",
+    "description_zh": "鮮豔熱帶印花的飄逸長洋裝，為度假晚宴與戶外慶典而生。",
+    "slots": [
+      "dress"
+    ],
+    "fit": {
+      "runs": "large",
+      "stretch": "low"
+    },
+    "returnRate": 16,
+    "image": "/assets/products/p003.jpg",
+    "imageCredit": "Dresses / Pink"
+  },
+  {
+    "id": "p004",
+    "name": "Linen Relaxed Shirt",
+    "brand": "Northward",
+    "category": "Apparel",
+    "subcategory": "Shirt",
+    "price": 55.0,
+    "currency": "USD",
+    "color": "#f5f2ea",
+    "colorName": "Off White",
+    "material": "Linen",
+    "style": [
+      "Casual",
+      "Minimal"
+    ],
+    "occasion": [
+      "Casual",
+      "Office",
+      "Outdoor",
+      "Vacation"
+    ],
+    "season": [
+      "Spring",
+      "Summer"
+    ],
+    "climate": [
+      "Warm",
+      "Tropical"
+    ],
+    "gender": "Men",
+    "emoji": "👔",
+    "rating": 4.4,
+    "reviews": 87,
+    "description": "A relaxed-fit linen shirt that stays cool and crisp in humid weather — the warm-climate wardrobe staple.",
+    "tags": [
+      "linen",
+      "summer",
+      "casual",
+      "shirt",
+      "men",
+      "tropical",
+      "lightweight",
+      "office"
+    ],
+    "name_zh": "亞麻寬鬆襯衫",
+    "description_zh": "寬鬆剪裁的亞麻襯衫，在潮濕悶熱的天氣依然清爽透氣，是暖帶氣候的衣櫥必備。",
+    "slots": [
+      "top"
+    ],
+    "fit": {
+      "runs": "large",
+      "stretch": "none"
+    },
+    "returnRate": 15,
+    "image": "/assets/products/p004.jpg",
+    "imageCredit": "Shirts / White"
+  },
+  {
+    "id": "p005",
+    "name": "Oxford Button-Down",
+    "brand": "Northward",
+    "category": "Apparel",
+    "subcategory": "Shirt",
+    "price": 62.0,
+    "currency": "USD",
+    "color": "#a8c6e8",
+    "colorName": "Sky Blue",
+    "material": "Cotton",
+    "style": [
+      "Smart Casual",
+      "Classic"
+    ],
+    "occasion": [
+      "Office",
+      "Business",
+      "Interview"
+    ],
+    "season": [
+      "Spring",
+      "Autumn"
+    ],
+    "climate": [
+      "Mild"
+    ],
+    "gender": "Men",
+    "emoji": "👔",
+    "rating": 4.6,
+    "reviews": 211,
+    "description": "A crisp oxford-cloth button-down that moves easily from the office to after-work drinks.",
+    "tags": [
+      "office",
+      "business",
+      "shirt",
+      "men",
+      "cotton",
+      "classic",
+      "interview",
+      "smart"
+    ],
+    "name_zh": "牛津紡襯衫",
+    "description_zh": "挺立的牛津紡布料，從辦公室到下班小酌都輕鬆駕馭。",
+    "slots": [
+      "top"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 11,
+    "image": "/assets/products/p005.jpg",
+    "imageCredit": "Shirts / Blue"
+  },
+  {
+    "id": "p006",
+    "name": "Cashmere Crewneck Sweater",
+    "brand": "Meridian",
+    "category": "Apparel",
+    "subcategory": "Sweater",
+    "price": 148.0,
+    "currency": "USD",
+    "color": "#4a4a55",
+    "colorName": "Charcoal",
+    "material": "Cashmere",
+    "style": [
+      "Cozy",
+      "Classic"
+    ],
+    "occasion": [
+      "Casual",
+      "Office"
+    ],
+    "season": [
+      "Winter",
+      "Autumn"
+    ],
+    "climate": [
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "🧶",
+    "rating": 4.8,
+    "reviews": 64,
+    "description": "An ultra-soft cashmere crewneck — a luxurious layer for cold days and quiet evenings.",
+    "tags": [
+      "winter",
+      "cold",
+      "cashmere",
+      "sweater",
+      "cozy",
+      "warm",
+      "unisex",
+      "knit"
+    ],
+    "name_zh": "喀什米爾圓領毛衣",
+    "description_zh": "極致柔軟的喀什米爾圓領毛衣，寒冷天氣的奢華保暖層。",
+    "slots": [
+      "midlayer",
+      "top"
+    ],
+    "fit": {
+      "runs": "small",
+      "stretch": "low"
+    },
+    "returnRate": 19,
+    "image": "/assets/products/p006.jpg",
+    "imageCredit": "Sweaters / Grey"
+  },
+  {
+    "id": "p007",
+    "name": "Down Puffer Jacket",
+    "brand": "Northward",
+    "category": "Apparel",
+    "subcategory": "Jacket",
+    "price": 189.0,
+    "currency": "USD",
+    "color": "#2a3b5c",
+    "colorName": "Navy",
+    "material": "Nylon / Down",
+    "style": [
+      "Sporty",
+      "Functional"
+    ],
+    "occasion": [
+      "Outdoor",
+      "Casual",
+      "Travel"
+    ],
+    "season": [
+      "Winter"
+    ],
+    "climate": [
+      "Cold",
+      "Freezing"
+    ],
+    "gender": "Unisex",
+    "emoji": "🧥",
+    "rating": 4.7,
+    "reviews": 152,
+    "description": "A packable down puffer with a water-repellent shell — built for winter commutes and mountain trips.",
+    "tags": [
+      "winter",
+      "cold",
+      "jacket",
+      "puffer",
+      "down",
+      "outdoor",
+      "warm",
+      "travel",
+      "unisex"
+    ],
+    "name_zh": "輕量羽絨外套",
+    "description_zh": "可收納的羽絨外套配防潑水外層，為冬季通勤與登山行程而生。",
+    "slots": [
+      "outerwear"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 12,
+    "image": "/assets/products/p007.jpg",
+    "imageCredit": "Jackets / Navy Blue"
+  },
+  {
+    "id": "p008",
+    "name": "Vintage Denim Jacket",
+    "brand": "Rodeo",
+    "category": "Apparel",
+    "subcategory": "Jacket",
+    "price": 78.0,
+    "currency": "USD",
+    "color": "#3b5b7a",
+    "colorName": "Indigo",
+    "material": "Denim",
+    "style": [
+      "Casual",
+      "Vintage"
+    ],
+    "occasion": [
+      "Casual",
+      "Outdoor"
+    ],
+    "season": [
+      "Spring",
+      "Autumn"
+    ],
+    "climate": [
+      "Mild",
+      "Cool"
+    ],
+    "gender": "Unisex",
+    "emoji": "🧥",
+    "rating": 4.5,
+    "reviews": 178,
+    "description": "A timeless washed denim jacket that layers over almost anything and only gets better with wear.",
+    "tags": [
+      "denim",
+      "casual",
+      "jacket",
+      "spring",
+      "autumn",
+      "vintage",
+      "unisex",
+      "layer"
+    ],
+    "name_zh": "復古牛仔外套",
+    "description_zh": "經典水洗牛仔外套，幾乎可搭配任何造型，越穿越有味道。",
+    "slots": [
+      "outerwear",
+      "midlayer"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 13
+  },
+  {
+    "id": "p009",
+    "name": "Tailored Wool Blazer",
+    "brand": "Meridian",
+    "category": "Apparel",
+    "subcategory": "Jacket",
+    "price": 165.0,
+    "currency": "USD",
+    "color": "#1c1c22",
+    "colorName": "Black",
+    "material": "Wool",
+    "style": [
+      "Formal",
+      "Classic"
+    ],
+    "occasion": [
+      "Business",
+      "Office",
+      "Interview",
+      "Formal"
+    ],
+    "season": [
+      "Autumn",
+      "Winter",
+      "Spring"
+    ],
+    "climate": [
+      "Mild",
+      "Cool",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "🧥",
+    "rating": 4.7,
+    "reviews": 89,
+    "description": "A sharply tailored wool blazer with a clean silhouette — instant polish for interviews and boardrooms.",
+    "tags": [
+      "blazer",
+      "business",
+      "office",
+      "formal",
+      "interview",
+      "wool",
+      "classic",
+      "unisex"
+    ],
+    "name_zh": "羊毛剪裁西裝外套",
+    "description_zh": "俐落剪裁的羊毛西裝外套，面試與會議場合的瞬間專業感。",
+    "slots": [
+      "outerwear",
+      "top"
+    ],
+    "fit": {
+      "runs": "small",
+      "stretch": "none"
+    },
+    "returnRate": 21,
+    "image": "/assets/products/p009.jpg",
+    "imageCredit": "Jackets / Black"
+  },
+  {
+    "id": "p010",
+    "name": "Stretch Chino Trousers",
+    "brand": "Northward",
+    "category": "Apparel",
+    "subcategory": "Trousers",
+    "price": 69.0,
+    "currency": "USD",
+    "color": "#c8b89a",
+    "colorName": "Beige",
+    "material": "Cotton Stretch",
+    "style": [
+      "Smart Casual",
+      "Classic"
+    ],
+    "occasion": [
+      "Office",
+      "Business",
+      "Casual"
+    ],
+    "season": [
+      "Spring",
+      "Summer",
+      "Autumn"
+    ],
+    "climate": [
+      "Mild",
+      "Warm"
+    ],
+    "gender": "Men",
+    "emoji": "👖",
+    "rating": 4.4,
+    "reviews": 134,
+    "description": "Comfortable stretch chinos with a tailored taper — the reliable bridge between casual and smart.",
+    "tags": [
+      "chinos",
+      "office",
+      "trousers",
+      "men",
+      "business",
+      "smart",
+      "beige",
+      "pants"
+    ],
+    "name_zh": "彈性卡其長褲",
+    "description_zh": "舒適彈性卡其褲配修身錐形剪裁，介於休閒與正式之間的可靠選擇。",
+    "slots": [
+      "bottom"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "high"
+    },
+    "returnRate": 10,
+    "image": "/assets/products/p010.jpg",
+    "imageCredit": "Trousers / Beige"
+  },
+  {
+    "id": "p011",
+    "name": "Slim-Fit Denim Jeans",
+    "brand": "Rodeo",
+    "category": "Apparel",
+    "subcategory": "Trousers",
+    "price": 72.0,
+    "currency": "USD",
+    "color": "#314a6e",
+    "colorName": "Dark Indigo",
+    "material": "Denim",
+    "style": [
+      "Casual"
+    ],
+    "occasion": [
+      "Casual"
+    ],
+    "season": [
+      "Spring",
+      "Autumn",
+      "Winter"
+    ],
+    "climate": [
+      "Mild",
+      "Cool",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "👖",
+    "rating": 4.5,
+    "reviews": 260,
+    "description": "Slim-fit stretch denim in a deep indigo wash — a versatile everyday foundation.",
+    "tags": [
+      "denim",
+      "jeans",
+      "casual",
+      "pants",
+      "unisex",
+      "indigo",
+      "everyday"
+    ],
+    "name_zh": "修身牛仔褲",
+    "description_zh": "深靛藍水洗的修身彈性牛仔褲，百搭的日常基礎款。",
+    "slots": [
+      "bottom"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "high"
+    },
+    "returnRate": 17,
+    "image": "/assets/products/p011.jpg",
+    "imageCredit": "Jeans / Blue"
+  },
+  {
+    "id": "p012",
+    "name": "Wide-Leg Linen Trousers",
+    "brand": "Isle & Co",
+    "category": "Apparel",
+    "subcategory": "Trousers",
+    "price": 64.0,
+    "currency": "USD",
+    "color": "#e3d5b8",
+    "colorName": "Sand",
+    "material": "Linen",
+    "style": [
+      "Breezy",
+      "Bohemian"
+    ],
+    "occasion": [
+      "Outdoor",
+      "Vacation",
+      "Casual",
+      "Wedding"
+    ],
+    "season": [
+      "Summer"
+    ],
+    "climate": [
+      "Tropical",
+      "Warm"
+    ],
+    "gender": "Women",
+    "emoji": "👖",
+    "rating": 4.3,
+    "reviews": 71,
+    "description": "Airy wide-leg linen trousers that keep you cool and polished in tropical heat.",
+    "tags": [
+      "linen",
+      "trousers",
+      "summer",
+      "tropical",
+      "women",
+      "vacation",
+      "breezy",
+      "pants"
+    ],
+    "name_zh": "亞麻寬褲",
+    "description_zh": "飄逸的亞麻寬褲，在熱帶高溫中保持涼爽與俐落。",
+    "slots": [
+      "bottom"
+    ],
+    "fit": {
+      "runs": "large",
+      "stretch": "none"
+    },
+    "returnRate": 20,
+    "image": "/assets/products/p012.jpg",
+    "imageCredit": "Trousers / Beige"
+  },
+  {
+    "id": "p013",
+    "name": "Leather Penny Loafers",
+    "brand": "Meridian",
+    "category": "Footwear",
+    "subcategory": "Shoes",
+    "price": 132.0,
+    "currency": "USD",
+    "color": "#7a4f2b",
+    "colorName": "Brown",
+    "material": "Leather",
+    "style": [
+      "Classic",
+      "Smart Casual"
+    ],
+    "occasion": [
+      "Office",
+      "Business",
+      "Casual"
+    ],
+    "season": [
+      "Spring",
+      "Autumn"
+    ],
+    "climate": [
+      "Mild"
+    ],
+    "gender": "Unisex",
+    "emoji": "👞",
+    "rating": 4.6,
+    "reviews": 103,
+    "description": "Hand-finished leather loafers with a cushioned insole — refined comfort for long days.",
+    "tags": [
+      "loafers",
+      "leather",
+      "office",
+      "business",
+      "shoes",
+      "smart",
+      "classic",
+      "unisex"
+    ],
+    "name_zh": "真皮樂福鞋",
+    "description_zh": "手工收邊的真皮樂福鞋配緩震鞋墊，長時間行走也舒適。",
+    "slots": [
+      "footwear"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 15,
+    "image": "/assets/products/p013.jpg",
+    "imageCredit": "Casual Shoes / Brown"
+  },
+  {
+    "id": "p014",
+    "name": "Court Leather Sneakers",
+    "brand": "Stride",
+    "category": "Footwear",
+    "subcategory": "Shoes",
+    "price": 85.0,
+    "currency": "USD",
+    "color": "#f4f4f2",
+    "colorName": "White",
+    "material": "Leather",
+    "style": [
+      "Minimal",
+      "Casual"
+    ],
+    "occasion": [
+      "Casual",
+      "Office"
+    ],
+    "season": [
+      "Spring",
+      "Summer",
+      "Autumn"
+    ],
+    "climate": [
+      "Mild",
+      "Warm"
+    ],
+    "gender": "Unisex",
+    "emoji": "👟",
+    "rating": 4.7,
+    "reviews": 340,
+    "description": "Clean white leather sneakers that pair with everything — the ultimate everyday shoe.",
+    "tags": [
+      "sneakers",
+      "white",
+      "casual",
+      "shoes",
+      "minimal",
+      "unisex",
+      "everyday"
+    ],
+    "name_zh": "經典白皮球鞋",
+    "description_zh": "簡約白色真皮球鞋，怎麼搭都好看，日常首選。",
+    "slots": [
+      "footwear"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 9,
+    "image": "/assets/products/p014.jpg",
+    "imageCredit": "Casual Shoes / White"
+  },
+  {
+    "id": "p015",
+    "name": "Trail Runner Shoes",
+    "brand": "Stride",
+    "category": "Footwear",
+    "subcategory": "Shoes",
+    "price": 118.0,
+    "currency": "USD",
+    "color": "#3f7d4e",
+    "colorName": "Forest Green",
+    "material": "Mesh / Rubber",
+    "style": [
+      "Sporty",
+      "Functional"
+    ],
+    "occasion": [
+      "Outdoor",
+      "Hiking",
+      "Gym"
+    ],
+    "season": [
+      "Spring",
+      "Summer",
+      "Autumn"
+    ],
+    "climate": [
+      "Mild",
+      "Warm"
+    ],
+    "gender": "Unisex",
+    "emoji": "👟",
+    "rating": 4.5,
+    "reviews": 121,
+    "description": "Grippy, breathable trail runners with a cushioned midsole — ready for the trail or the treadmill.",
+    "tags": [
+      "hiking",
+      "outdoor",
+      "gym",
+      "trail",
+      "shoes",
+      "sporty",
+      "unisex",
+      "running"
+    ],
+    "name_zh": "越野跑鞋",
+    "description_zh": "抓地透氣的越野跑鞋配緩震中底，山徑與跑步機都適用。",
+    "slots": [
+      "footwear"
+    ],
+    "fit": {
+      "runs": "small",
+      "stretch": "low"
+    },
+    "returnRate": 11,
+    "image": "/assets/products/p015.jpg",
+    "imageCredit": "Casual Shoes / Green"
+  },
+  {
+    "id": "p016",
+    "name": "Strappy Block Sandals",
+    "brand": "Isle & Co",
+    "category": "Footwear",
+    "subcategory": "Sandals",
+    "price": 58.0,
+    "currency": "USD",
+    "color": "#c9a227",
+    "colorName": "Gold",
+    "material": "Synthetic / Metal",
+    "style": [
+      "Elegant",
+      "Breezy"
+    ],
+    "occasion": [
+      "Party",
+      "Wedding",
+      "Vacation",
+      "Outdoor"
+    ],
+    "season": [
+      "Summer"
+    ],
+    "climate": [
+      "Tropical",
+      "Warm"
+    ],
+    "gender": "Women",
+    "emoji": "👡",
+    "rating": 4.4,
+    "reviews": 88,
+    "description": "Strappy gold sandals on a walkable block heel — party polish without the pain.",
+    "tags": [
+      "sandals",
+      "gold",
+      "summer",
+      "wedding",
+      "party",
+      "women",
+      "tropical",
+      "shoes"
+    ],
+    "name_zh": "綁帶粗跟涼鞋",
+    "description_zh": "金色綁帶配好走的粗跟，派對造型不必犧牲舒適。",
+    "slots": [
+      "footwear"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "low"
+    },
+    "returnRate": 12,
+    "image": "/assets/products/p016.jpg",
+    "imageCredit": "Sandals / Beige"
+  },
+  {
+    "id": "p017",
+    "name": "Chelsea Ankle Boots",
+    "brand": "Meridian",
+    "category": "Footwear",
+    "subcategory": "Boots",
+    "price": 149.0,
+    "currency": "USD",
+    "color": "#8a5a33",
+    "colorName": "Tan",
+    "material": "Leather",
+    "style": [
+      "Classic",
+      "Smart Casual"
+    ],
+    "occasion": [
+      "Casual",
+      "Office",
+      "Outdoor"
+    ],
+    "season": [
+      "Autumn",
+      "Winter"
+    ],
+    "climate": [
+      "Cool",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "👢",
+    "rating": 4.6,
+    "reviews": 97,
+    "description": "Sleek leather Chelsea boots with elastic side panels — cold-weather style made effortless.",
+    "tags": [
+      "boots",
+      "leather",
+      "autumn",
+      "winter",
+      "shoes",
+      "cold",
+      "classic",
+      "unisex"
+    ],
+    "name_zh": "切爾西短靴",
+    "description_zh": "俐落的真皮切爾西短靴配側邊鬆緊帶，冷天造型輕鬆搞定。",
+    "slots": [
+      "footwear"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 14,
+    "image": "/assets/products/p017.jpg",
+    "imageCredit": "Formal Shoes / Brown"
+  },
+  {
+    "id": "p018",
+    "name": "Wide-Brim Straw Sun Hat",
+    "brand": "Isle & Co",
+    "category": "Accessories",
+    "subcategory": "Hat",
+    "price": 34.0,
+    "currency": "USD",
+    "color": "#e0c48a",
+    "colorName": "Natural Straw",
+    "material": "Straw",
+    "style": [
+      "Breezy",
+      "Bohemian"
+    ],
+    "occasion": [
+      "Outdoor",
+      "Vacation",
+      "Wedding"
+    ],
+    "season": [
+      "Summer"
+    ],
+    "climate": [
+      "Tropical",
+      "Warm"
+    ],
+    "gender": "Women",
+    "emoji": "👒",
+    "rating": 4.3,
+    "reviews": 56,
+    "description": "A wide-brim straw hat that delivers serious sun coverage and instant vacation energy.",
+    "tags": [
+      "hat",
+      "straw",
+      "summer",
+      "tropical",
+      "outdoor",
+      "vacation",
+      "women",
+      "sun"
+    ],
+    "name_zh": "寬簷草帽",
+    "description_zh": "寬簷草帽提供絕佳遮陽效果，一秒切換度假氛圍。",
+    "slots": [
+      "headwear",
+      "accessory"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 8
+  },
+  {
+    "id": "p019",
+    "name": "Structured Leather Tote",
+    "brand": "Meridian",
+    "category": "Accessories",
+    "subcategory": "Bag",
+    "price": 145.0,
+    "currency": "USD",
+    "color": "#b0793c",
+    "colorName": "Camel",
+    "material": "Leather",
+    "style": [
+      "Classic",
+      "Professional"
+    ],
+    "occasion": [
+      "Office",
+      "Business",
+      "Casual"
+    ],
+    "season": [
+      "Spring",
+      "Autumn",
+      "Winter"
+    ],
+    "climate": [
+      "Mild",
+      "Cool"
+    ],
+    "gender": "Women",
+    "emoji": "👜",
+    "rating": 4.7,
+    "reviews": 118,
+    "description": "A structured leather tote with a padded laptop sleeve — work-ready and effortlessly chic.",
+    "tags": [
+      "tote",
+      "leather",
+      "office",
+      "business",
+      "bag",
+      "women",
+      "professional",
+      "work"
+    ],
+    "name_zh": "立體真皮托特包",
+    "description_zh": "附筆電夾層的立體真皮托特包，通勤與商務都俐落有型。",
+    "slots": [
+      "bag"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 10,
+    "image": "/assets/products/p019.jpg",
+    "imageCredit": "Handbags / Brown"
+  },
+  {
+    "id": "p020",
+    "name": "Satin Evening Clutch",
+    "brand": "Aura",
+    "category": "Accessories",
+    "subcategory": "Bag",
+    "price": 49.0,
+    "currency": "USD",
+    "color": "#b8bec4",
+    "colorName": "Silver",
+    "material": "Satin",
+    "style": [
+      "Glamorous",
+      "Elegant"
+    ],
+    "occasion": [
+      "Party",
+      "Formal",
+      "Wedding",
+      "Date"
+    ],
+    "season": [
+      "Spring",
+      "Summer",
+      "Autumn"
+    ],
+    "climate": [
+      "Mild",
+      "Warm"
+    ],
+    "gender": "Women",
+    "emoji": "👛",
+    "rating": 4.4,
+    "reviews": 44,
+    "description": "A shimmering satin clutch sized for the essentials — the finishing touch for evening looks.",
+    "tags": [
+      "clutch",
+      "satin",
+      "party",
+      "formal",
+      "wedding",
+      "women",
+      "evening",
+      "bag"
+    ],
+    "name_zh": "緞面晚宴手拿包",
+    "description_zh": "閃耀的緞面手拿包，恰好裝下必需品，為晚間造型畫龍點睛。",
+    "slots": [
+      "bag"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 12,
+    "image": "/assets/products/p020.jpg",
+    "imageCredit": "Clutches / Silver"
+  },
+  {
+    "id": "p021",
+    "name": "Classic Analog Watch",
+    "brand": "Tempo",
+    "category": "Accessories",
+    "subcategory": "Watch",
+    "price": 195.0,
+    "currency": "USD",
+    "color": "#c0c4cc",
+    "colorName": "Silver",
+    "material": "Stainless Steel",
+    "style": [
+      "Classic",
+      "Formal"
+    ],
+    "occasion": [
+      "Formal",
+      "Office",
+      "Business",
+      "Interview"
+    ],
+    "season": [
+      "Spring",
+      "Summer",
+      "Autumn",
+      "Winter"
+    ],
+    "climate": [
+      "Mild",
+      "Warm",
+      "Cool",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "⌚",
+    "rating": 4.8,
+    "reviews": 76,
+    "description": "A minimalist stainless-steel analog watch with a sapphire crystal — quiet luxury for every day.",
+    "tags": [
+      "watch",
+      "formal",
+      "office",
+      "business",
+      "classic",
+      "unisex",
+      "silver",
+      "accessory"
+    ],
+    "name_zh": "經典指針腕錶",
+    "description_zh": "藍寶石鏡面的簡約不鏽鋼腕錶，低調奢華的日常配件。",
+    "slots": [
+      "accessory"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 7,
+    "image": "/assets/products/p021.jpg",
+    "imageCredit": "Watches / Silver"
+  },
+  {
+    "id": "p022",
+    "name": "Aviator Sunglasses",
+    "brand": "Tempo",
+    "category": "Accessories",
+    "subcategory": "Eyewear",
+    "price": 88.0,
+    "currency": "USD",
+    "color": "#8a6d3b",
+    "colorName": "Gold Frame",
+    "material": "Metal / Acetate",
+    "style": [
+      "Classic",
+      "Cool"
+    ],
+    "occasion": [
+      "Outdoor",
+      "Vacation",
+      "Casual"
+    ],
+    "season": [
+      "Spring",
+      "Summer"
+    ],
+    "climate": [
+      "Tropical",
+      "Warm"
+    ],
+    "gender": "Unisex",
+    "emoji": "🕶️",
+    "rating": 4.5,
+    "reviews": 132,
+    "description": "Polarized aviator sunglasses with UV400 protection — a timeless shape for bright days.",
+    "tags": [
+      "sunglasses",
+      "summer",
+      "outdoor",
+      "vacation",
+      "unisex",
+      "tropical",
+      "uv",
+      "classic"
+    ],
+    "name_zh": "飛行員太陽眼鏡",
+    "description_zh": "偏光 UV400 飛行員太陽眼鏡，經典框型適合豔陽天。",
+    "slots": [
+      "eyewear",
+      "accessory"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 9,
+    "image": "/assets/products/p022.jpg",
+    "imageCredit": "Sunglasses / Gold"
+  },
+  {
+    "id": "p023",
+    "name": "Silk Printed Scarf",
+    "brand": "Aura",
+    "category": "Accessories",
+    "subcategory": "Scarf",
+    "price": 42.0,
+    "currency": "USD",
+    "color": "#7a2233",
+    "colorName": "Burgundy",
+    "material": "Silk",
+    "style": [
+      "Elegant",
+      "Classic"
+    ],
+    "occasion": [
+      "Formal",
+      "Office",
+      "Party"
+    ],
+    "season": [
+      "Autumn",
+      "Winter",
+      "Spring"
+    ],
+    "climate": [
+      "Cool",
+      "Mild"
+    ],
+    "gender": "Women",
+    "emoji": "🧣",
+    "rating": 4.4,
+    "reviews": 39,
+    "description": "A hand-rolled silk scarf in a rich print — a versatile accent that elevates any outfit.",
+    "tags": [
+      "scarf",
+      "silk",
+      "formal",
+      "office",
+      "women",
+      "elegant",
+      "accessory",
+      "print"
+    ],
+    "name_zh": "印花絲巾",
+    "description_zh": "手捲邊的印花絲巾，一條就能提升整體造型質感。",
+    "slots": [
+      "neckwear",
+      "accessory"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 11,
+    "image": "/assets/products/p023.jpg",
+    "imageCredit": "Mufflers / Yellow"
+  },
+  {
+    "id": "p024",
+    "name": "Broad-Spectrum SPF 50 Sunscreen",
+    "brand": "Glow Lab",
+    "category": "Beauty",
+    "subcategory": "Skincare",
+    "price": 26.0,
+    "currency": "USD",
+    "color": "#f4e9d8",
+    "colorName": "Cream",
+    "material": "Skincare",
+    "style": [
+      "Functional"
+    ],
+    "occasion": [
+      "Outdoor",
+      "Vacation",
+      "Casual"
+    ],
+    "season": [
+      "Summer",
+      "Spring"
+    ],
+    "climate": [
+      "Tropical",
+      "Warm"
+    ],
+    "gender": "Unisex",
+    "emoji": "🧴",
+    "rating": 4.6,
+    "reviews": 210,
+    "description": "A weightless, reef-safe SPF 50 sunscreen that vanishes into skin — daily protection for sunny climates.",
+    "tags": [
+      "sunscreen",
+      "spf",
+      "summer",
+      "tropical",
+      "outdoor",
+      "skincare",
+      "unisex",
+      "beach"
+    ],
+    "name_zh": "廣譜 SPF50 防曬乳",
+    "description_zh": "輕盈、海洋友善的 SPF50 防曬乳，擦上後幾乎隱形，豔陽氣候的日常防護。",
+    "slots": [
+      "beauty"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 6,
+    "image": "/assets/products/p024.jpg",
+    "imageCredit": "Perfume and Body Mist / White"
+  },
+  {
+    "id": "p025",
+    "name": "Velvet Matte Lipstick Trio",
+    "brand": "Glow Lab",
+    "category": "Beauty",
+    "subcategory": "Makeup",
+    "price": 38.0,
+    "currency": "USD",
+    "color": "#b0413e",
+    "colorName": "Crimson",
+    "material": "Makeup",
+    "style": [
+      "Glamorous"
+    ],
+    "occasion": [
+      "Party",
+      "Date",
+      "Formal",
+      "Wedding"
+    ],
+    "season": [
+      "Spring",
+      "Summer",
+      "Autumn",
+      "Winter"
+    ],
+    "climate": [
+      "Mild",
+      "Warm",
+      "Cool"
+    ],
+    "gender": "Women",
+    "emoji": "💄",
+    "rating": 4.5,
+    "reviews": 168,
+    "description": "Three long-wear velvet-matte shades in one set — from daytime nude to evening crimson.",
+    "tags": [
+      "lipstick",
+      "makeup",
+      "party",
+      "date",
+      "women",
+      "glamour",
+      "evening",
+      "beauty"
+    ],
+    "name_zh": "絲絨霧面唇膏三件組",
+    "description_zh": "三支長效絲絨霧面唇膏，從日間裸色到晚間緋紅一次擁有。",
+    "slots": [
+      "beauty"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 8,
+    "image": "/assets/products/p025.jpg",
+    "imageCredit": "Lipstick / Red"
+  },
+  {
+    "id": "p026",
+    "name": "Hydrating Face Serum",
+    "brand": "Glow Lab",
+    "category": "Beauty",
+    "subcategory": "Skincare",
+    "price": 54.0,
+    "currency": "USD",
+    "color": "#bfe3d8",
+    "colorName": "Aqua",
+    "material": "Skincare",
+    "style": [
+      "Functional"
+    ],
+    "occasion": [
+      "Casual"
+    ],
+    "season": [
+      "Spring",
+      "Summer",
+      "Autumn",
+      "Winter"
+    ],
+    "climate": [
+      "Mild",
+      "Warm",
+      "Cool",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "🧴",
+    "rating": 4.7,
+    "reviews": 142,
+    "description": "A hyaluronic-acid serum that floods skin with hydration — a daily step for a healthy glow.",
+    "tags": [
+      "serum",
+      "skincare",
+      "hydrating",
+      "unisex",
+      "beauty",
+      "glow",
+      "daily"
+    ],
+    "name_zh": "保濕精華液",
+    "description_zh": "玻尿酸精華液為肌膚大量補水，打造健康光澤的每日一步。",
+    "slots": [
+      "beauty"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 5,
+    "image": "/assets/products/p026.jpg",
+    "imageCredit": "Perfume and Body Mist / Blue"
+  },
+  {
+    "id": "p027",
+    "name": "Ceramic Aroma Diffuser",
+    "brand": "Haven",
+    "category": "Home",
+    "subcategory": "Decor",
+    "price": 46.0,
+    "currency": "USD",
+    "color": "#e7e1d5",
+    "colorName": "Bone White",
+    "material": "Ceramic",
+    "style": [
+      "Minimal",
+      "Cozy"
+    ],
+    "occasion": [
+      "Home"
+    ],
+    "season": [
+      "Spring",
+      "Summer",
+      "Autumn",
+      "Winter"
+    ],
+    "climate": [
+      "Mild",
+      "Warm",
+      "Cool",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "🕯️",
+    "rating": 4.4,
+    "reviews": 93,
+    "description": "An ultrasonic aroma diffuser wrapped in matte ceramic — soft light and scent for any room.",
+    "tags": [
+      "diffuser",
+      "home",
+      "decor",
+      "aroma",
+      "cozy",
+      "unisex",
+      "relax"
+    ],
+    "name_zh": "陶瓷香氛擴香機",
+    "description_zh": "霧面陶瓷外殼的超音波擴香機，為任何空間帶來柔光與香氣。",
+    "slots": [
+      "home"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 7
+  },
+  {
+    "id": "p028",
+    "name": "Stoneware Dinnerware Set",
+    "brand": "Haven",
+    "category": "Home",
+    "subcategory": "Dining",
+    "price": 118.0,
+    "currency": "USD",
+    "color": "#cbd3c4",
+    "colorName": "Sage",
+    "material": "Stoneware",
+    "style": [
+      "Minimal",
+      "Classic"
+    ],
+    "occasion": [
+      "Home",
+      "Party"
+    ],
+    "season": [
+      "Spring",
+      "Summer",
+      "Autumn",
+      "Winter"
+    ],
+    "climate": [
+      "Mild",
+      "Warm",
+      "Cool",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "🍽️",
+    "rating": 4.6,
+    "reviews": 67,
+    "description": "A 16-piece stoneware dinner set in a muted sage glaze — hosting made beautiful.",
+    "tags": [
+      "dinnerware",
+      "home",
+      "dining",
+      "party",
+      "hosting",
+      "unisex",
+      "stoneware"
+    ],
+    "name_zh": "石陶餐具組",
+    "description_zh": "16 件式灰綠釉石陶餐具組，讓宴客也成為一種美感。",
+    "slots": [
+      "home"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 9
+  },
+  {
+    "id": "p029",
+    "name": "True Wireless Earbuds",
+    "brand": "Pulse",
+    "category": "Electronics",
+    "subcategory": "Audio",
+    "price": 99.0,
+    "currency": "USD",
+    "color": "#2f2f36",
+    "colorName": "Matte Black",
+    "material": "Plastic / Silicone",
+    "style": [
+      "Functional",
+      "Minimal"
+    ],
+    "occasion": [
+      "Gym",
+      "Travel",
+      "Casual"
+    ],
+    "season": [
+      "Spring",
+      "Summer",
+      "Autumn",
+      "Winter"
+    ],
+    "climate": [
+      "Mild",
+      "Warm",
+      "Cool",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "🎧",
+    "rating": 4.5,
+    "reviews": 402,
+    "description": "Sweat-resistant wireless earbuds with active noise cancelling and 30-hour battery life.",
+    "tags": [
+      "earbuds",
+      "audio",
+      "gym",
+      "travel",
+      "tech",
+      "unisex",
+      "wireless",
+      "music"
+    ],
+    "name_zh": "真無線藍牙耳機",
+    "description_zh": "抗汗真無線耳機，主動降噪並提供 30 小時續航。",
+    "slots": [
+      "gear"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 6
+  },
+  {
+    "id": "p030",
+    "name": "Smart Fitness Watch",
+    "brand": "Pulse",
+    "category": "Electronics",
+    "subcategory": "Wearable",
+    "price": 149.0,
+    "currency": "USD",
+    "color": "#1f1f26",
+    "colorName": "Graphite",
+    "material": "Aluminum / Silicone",
+    "style": [
+      "Sporty",
+      "Functional"
+    ],
+    "occasion": [
+      "Gym",
+      "Outdoor",
+      "Casual"
+    ],
+    "season": [
+      "Spring",
+      "Summer",
+      "Autumn",
+      "Winter"
+    ],
+    "climate": [
+      "Mild",
+      "Warm",
+      "Cool",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "⌚",
+    "rating": 4.6,
+    "reviews": 318,
+    "description": "A GPS fitness watch with heart-rate tracking, sleep insights, and 10-day battery.",
+    "tags": [
+      "fitness",
+      "watch",
+      "gym",
+      "outdoor",
+      "tech",
+      "unisex",
+      "wearable",
+      "sporty"
+    ],
+    "name_zh": "智慧運動手錶",
+    "description_zh": "GPS 運動手錶，支援心率追蹤、睡眠分析與 10 天續航。",
+    "slots": [
+      "gear",
+      "accessory"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 8,
+    "image": "/assets/products/p030.jpg",
+    "imageCredit": "Watches / Black"
+  },
+  {
+    "id": "p031",
+    "name": "Alpine Shell Ski Jacket",
+    "name_zh": "高山防水滑雪外套",
+    "brand": "Northward",
+    "category": "Winter & Snow",
+    "subcategory": "Ski Jacket",
+    "price": 118.0,
+    "currency": "USD",
+    "color": "#1f4e79",
+    "colorName": "Deep Blue",
+    "material": "Waterproof Shell",
+    "style": [
+      "Sporty",
+      "Functional"
+    ],
+    "occasion": [
+      "Ski",
+      "Outdoor",
+      "Travel"
+    ],
+    "season": [
+      "Winter"
+    ],
+    "climate": [
+      "Freezing",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "🎿",
+    "rating": 4.7,
+    "reviews": 96,
+    "description": "A 20K waterproof, windproof shell with taped seams and a helmet-compatible hood — built for powder days.",
+    "description_zh": "20K 防水防風外殼配壓膠接縫與可戴頭盔的連帽設計，專為粉雪日打造。",
+    "tags": [
+      "ski",
+      "snowboard",
+      "jacket",
+      "waterproof",
+      "winter",
+      "cold",
+      "hokkaido",
+      "shell",
+      "unisex"
+    ],
+    "slots": [
+      "outerwear"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 9,
+    "image": "/assets/products/p031.jpg",
+    "imageCredit": "Jackets / Blue"
+  },
+  {
+    "id": "p032",
+    "name": "Insulated Snow Pants",
+    "name_zh": "保暖防水雪褲",
+    "brand": "Northward",
+    "category": "Winter & Snow",
+    "subcategory": "Ski Pants",
+    "price": 76.0,
+    "currency": "USD",
+    "color": "#2b2f3a",
+    "colorName": "Graphite",
+    "material": "Waterproof Shell / Fleece",
+    "style": [
+      "Sporty",
+      "Functional"
+    ],
+    "occasion": [
+      "Ski",
+      "Outdoor"
+    ],
+    "season": [
+      "Winter"
+    ],
+    "climate": [
+      "Freezing",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "🏂",
+    "rating": 4.6,
+    "reviews": 74,
+    "description": "Fully seam-sealed snow pants with light insulation, reinforced cuffs and boot gaiters.",
+    "description_zh": "全壓膠防水雪褲配輕量保暖層、耐磨褲腳與雪裙設計。",
+    "tags": [
+      "ski",
+      "snowboard",
+      "pants",
+      "waterproof",
+      "winter",
+      "cold",
+      "hokkaido",
+      "unisex"
+    ],
+    "slots": [
+      "bottom"
+    ],
+    "fit": {
+      "runs": "large",
+      "stretch": "low"
+    },
+    "returnRate": 13,
+    "image": "/assets/products/p032.jpg",
+    "imageCredit": "Track Pants / Grey"
+  },
+  {
+    "id": "p033",
+    "name": "Anti-Fog Ski Goggles",
+    "name_zh": "防霧滑雪護目鏡",
+    "brand": "Alpine Co",
+    "category": "Winter & Snow",
+    "subcategory": "Goggles",
+    "price": 42.0,
+    "currency": "USD",
+    "color": "#e8a33d",
+    "colorName": "Amber Lens",
+    "material": "Polycarbonate",
+    "style": [
+      "Sporty",
+      "Functional"
+    ],
+    "occasion": [
+      "Ski",
+      "Outdoor"
+    ],
+    "season": [
+      "Winter"
+    ],
+    "climate": [
+      "Freezing",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "🥽",
+    "rating": 4.5,
+    "reviews": 61,
+    "description": "Dual-layer anti-fog lenses with 100% UV protection and OTG fit over prescription glasses.",
+    "description_zh": "雙層防霧鏡片、100% 抗 UV，可佩戴於近視眼鏡外（OTG）。",
+    "tags": [
+      "goggles",
+      "ski",
+      "snow",
+      "anti-fog",
+      "uv",
+      "winter",
+      "hokkaido",
+      "unisex"
+    ],
+    "slots": [
+      "eyewear"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "none"
+    },
+    "returnRate": 7,
+    "image": "/assets/products/p033.jpg",
+    "imageCredit": "Sunglasses / Black"
+  },
+  {
+    "id": "p034",
+    "name": "Waterproof Ski Gloves",
+    "name_zh": "防水滑雪手套",
+    "brand": "Alpine Co",
+    "category": "Winter & Snow",
+    "subcategory": "Gloves",
+    "price": 24.0,
+    "currency": "USD",
+    "color": "#141821",
+    "colorName": "Black",
+    "material": "Waterproof Shell / Thinsulate",
+    "style": [
+      "Sporty",
+      "Functional"
+    ],
+    "occasion": [
+      "Ski",
+      "Outdoor"
+    ],
+    "season": [
+      "Winter"
+    ],
+    "climate": [
+      "Freezing",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "🧤",
+    "rating": 4.4,
+    "reviews": 88,
+    "description": "Waterproof breathable ski gloves with Thinsulate insulation and touchscreen fingertips.",
+    "description_zh": "防水透氣滑雪手套，內置 Thinsulate 保暖層，指尖支援觸控螢幕。",
+    "tags": [
+      "gloves",
+      "ski",
+      "waterproof",
+      "winter",
+      "cold",
+      "hokkaido",
+      "unisex"
+    ],
+    "slots": [
+      "gloves"
+    ],
+    "fit": {
+      "runs": "small",
+      "stretch": "low"
+    },
+    "returnRate": 8,
+    "image": "/assets/products/p034.jpg",
+    "imageCredit": "Gloves / Black"
+  },
+  {
+    "id": "p035",
+    "name": "Thermal Base Layer Set",
+    "name_zh": "排汗保暖內層衣",
+    "brand": "Stride",
+    "category": "Winter & Snow",
+    "subcategory": "Base Layer",
+    "price": 34.0,
+    "currency": "USD",
+    "color": "#6b7280",
+    "colorName": "Slate",
+    "material": "Merino Blend",
+    "style": [
+      "Functional",
+      "Minimal"
+    ],
+    "occasion": [
+      "Ski",
+      "Outdoor",
+      "Hiking"
+    ],
+    "season": [
+      "Winter"
+    ],
+    "climate": [
+      "Freezing",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "🧥",
+    "rating": 4.6,
+    "reviews": 112,
+    "description": "Merino-blend thermal top and bottom that wick moisture and stay warm even when damp.",
+    "description_zh": "美麗諾混紡保暖內層上衣與長褲，排汗快乾、潮濕時仍能保暖。",
+    "tags": [
+      "base layer",
+      "thermal",
+      "merino",
+      "ski",
+      "winter",
+      "cold",
+      "hokkaido",
+      "unisex"
+    ],
+    "slots": [
+      "baselayer"
+    ],
+    "fit": {
+      "runs": "small",
+      "stretch": "high"
+    },
+    "returnRate": 6,
+    "image": "/assets/products/p035.jpg",
+    "imageCredit": "Innerwear Vests / Grey"
+  },
+  {
+    "id": "p036",
+    "name": "Merino Knit Beanie",
+    "name_zh": "美麗諾羊毛毛帽",
+    "brand": "Meridian",
+    "category": "Winter & Snow",
+    "subcategory": "Beanie",
+    "price": 13.0,
+    "currency": "USD",
+    "color": "#8c4a3f",
+    "colorName": "Rust",
+    "material": "Merino Wool",
+    "style": [
+      "Cozy",
+      "Minimal"
+    ],
+    "occasion": [
+      "Ski",
+      "Outdoor",
+      "Casual"
+    ],
+    "season": [
+      "Winter"
+    ],
+    "climate": [
+      "Freezing",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "🧢",
+    "rating": 4.7,
+    "reviews": 143,
+    "description": "A soft merino beanie with a double-layer band that covers the ears on chairlift rides.",
+    "description_zh": "柔軟美麗諾羊毛毛帽，雙層帽緣完整包覆耳朵，纜車上也暖呼呼。",
+    "tags": [
+      "beanie",
+      "hat",
+      "merino",
+      "winter",
+      "cold",
+      "ski",
+      "hokkaido",
+      "unisex"
+    ],
+    "slots": [
+      "headwear"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "high"
+    },
+    "returnRate": 5
+  },
+  {
+    "id": "p037",
+    "name": "Merino Ski Socks",
+    "name_zh": "美麗諾滑雪襪",
+    "brand": "Stride",
+    "category": "Winter & Snow",
+    "subcategory": "Socks",
+    "price": 10.0,
+    "currency": "USD",
+    "color": "#4b5563",
+    "colorName": "Charcoal",
+    "material": "Merino Wool",
+    "style": [
+      "Functional"
+    ],
+    "occasion": [
+      "Ski",
+      "Outdoor",
+      "Hiking"
+    ],
+    "season": [
+      "Winter"
+    ],
+    "climate": [
+      "Freezing",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "🧦",
+    "rating": 4.5,
+    "reviews": 97,
+    "description": "Cushioned merino ski socks with targeted padding at the shin and heel.",
+    "description_zh": "加厚緩震美麗諾滑雪襪，小腿與腳跟加強防護。",
+    "tags": [
+      "socks",
+      "ski",
+      "merino",
+      "winter",
+      "cold",
+      "hokkaido",
+      "unisex"
+    ],
+    "slots": [
+      "socks"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "high"
+    },
+    "returnRate": 4,
+    "image": "/assets/products/p037.jpg",
+    "imageCredit": "Socks / Grey"
+  },
+  {
+    "id": "p038",
+    "name": "Winter Neck Gaiter",
+    "name_zh": "保暖頸圍",
+    "brand": "Alpine Co",
+    "category": "Winter & Snow",
+    "subcategory": "Neck Gaiter",
+    "price": 12.0,
+    "currency": "USD",
+    "color": "#374151",
+    "colorName": "Slate Grey",
+    "material": "Fleece",
+    "style": [
+      "Functional"
+    ],
+    "occasion": [
+      "Ski",
+      "Outdoor"
+    ],
+    "season": [
+      "Winter"
+    ],
+    "climate": [
+      "Freezing",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "🧣",
+    "rating": 4.4,
+    "reviews": 55,
+    "description": "A fleece-lined neck gaiter that seals out wind and spindrift.",
+    "description_zh": "刷毛內裡保暖頸圍，有效阻擋寒風與雪粉。",
+    "tags": [
+      "gaiter",
+      "neck",
+      "fleece",
+      "winter",
+      "cold",
+      "ski",
+      "hokkaido",
+      "unisex"
+    ],
+    "slots": [
+      "neckwear"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "high"
+    },
+    "returnRate": 5,
+    "image": "/assets/products/p038.jpg",
+    "imageCredit": "Mufflers / Grey"
+  },
+  {
+    "id": "p039",
+    "name": "Fleece Midlayer Pullover",
+    "name_zh": "刷毛保暖中層衣",
+    "brand": "Northward",
+    "category": "Winter & Snow",
+    "subcategory": "Fleece",
+    "price": 48.0,
+    "currency": "USD",
+    "color": "#5b6b52",
+    "colorName": "Moss",
+    "material": "Recycled Fleece",
+    "style": [
+      "Cozy",
+      "Functional"
+    ],
+    "occasion": [
+      "Ski",
+      "Outdoor",
+      "Casual"
+    ],
+    "season": [
+      "Winter",
+      "Autumn"
+    ],
+    "climate": [
+      "Freezing",
+      "Cold",
+      "Cool"
+    ],
+    "gender": "Unisex",
+    "emoji": "🧶",
+    "rating": 4.6,
+    "reviews": 78,
+    "description": "A grid-fleece midlayer that breathes on the climb and insulates on the descent.",
+    "description_zh": "格紋刷毛中層衣，上坡透氣、下坡保暖，滑雪穿搭的關鍵一層。",
+    "tags": [
+      "fleece",
+      "midlayer",
+      "ski",
+      "winter",
+      "cold",
+      "hokkaido",
+      "unisex"
+    ],
+    "slots": [
+      "midlayer"
+    ],
+    "fit": {
+      "runs": "true",
+      "stretch": "low"
+    },
+    "returnRate": 8,
+    "image": "/assets/products/p039.jpg",
+    "imageCredit": "Jackets / Green"
+  },
+  {
+    "id": "p040",
+    "name": "Waterproof Snow Boots",
+    "name_zh": "防水雪靴",
+    "brand": "Stride",
+    "category": "Winter & Snow",
+    "subcategory": "Snow Boots",
+    "price": 92.0,
+    "currency": "USD",
+    "color": "#3f3a33",
+    "colorName": "Brown",
+    "material": "Leather / Rubber",
+    "style": [
+      "Functional",
+      "Classic"
+    ],
+    "occasion": [
+      "Ski",
+      "Outdoor",
+      "Travel"
+    ],
+    "season": [
+      "Winter"
+    ],
+    "climate": [
+      "Freezing",
+      "Cold"
+    ],
+    "gender": "Unisex",
+    "emoji": "🥾",
+    "rating": 4.6,
+    "reviews": 84,
+    "description": "Insulated waterproof snow boots with a high-traction lug sole for icy streets.",
+    "description_zh": "防水保暖雪靴配高抓地力鞋底，結冰路面也走得穩。",
+    "tags": [
+      "boots",
+      "snow",
+      "waterproof",
+      "winter",
+      "cold",
+      "hokkaido",
+      "unisex"
+    ],
+    "slots": [
+      "footwear"
+    ],
+    "fit": {
+      "runs": "small",
+      "stretch": "none"
+    },
+    "returnRate": 14,
+    "image": "/assets/products/p040.jpg",
+    "imageCredit": "Casual Shoes / Black"
+  }
+]
