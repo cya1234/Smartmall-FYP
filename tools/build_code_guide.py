@@ -190,8 +190,8 @@ def main():
               "某個功能要去哪個檔案改。全文約 6,500 行程式碼的摘要，不需要先讀程式碼。")
     table(doc, ["時間", "路線", "讀哪幾節"],
           [["15 分鐘", "只看骨架", "第 1 節（系統是什麼）+ 第 2 節（檔案地圖）"],
-           ["35 分鐘", "理解四項 AI 能力", "第 3 節的 3.1 至 3.4"],
-           ["60 分鐘", "完整讀完", "全部，包含第 6 節「我要改 X 該動哪裡」"]],
+           ["35 分鐘", "理解四項 AI 能力", "第 3 節的 3.1 至 3.4 + 第 4 節的困難總表"],
+           ["60 分鐘", "完整讀完", "全部，包含第 4 節的困難與第 7 節的改動指引"]],
           widths=[2.2, 4.2, 9.2])
     callout(doc, "全部程式碼約 6,500 行，但真正承載技術含量的是其中約 900 行 —— 三個 Python 服務的"
                  "模型呼叫，加上助手的事實層。其餘是店面、資料與介面。")
@@ -395,8 +395,109 @@ CREATE TABLE coupons (
     body(doc, "後台的每個指標都是一條 SQL 聚合：搜尋次數、訪客數、挽留成功率（領券／彈出）、轉化率。"
               "資料庫首次啟動會 seed 七天的示範資料，所以後台不會是空的。")
 
+    # ---------------------------------------------------------------- troubles
+    h1(doc, "4  遇到的困難與怎麼解決的")
+    body(doc, "這一節記錄實際卡住的地方。多數不是「模型不夠好」，而是環境、資料結構與假設錯誤。"
+              "先看總表，再看 4.2 的三個教訓。")
+
+    h2(doc, "4.1  問題總表")
+    table(doc, ["問題", "症狀", "根因", "解法（動到的檔案）"],
+          [["pip 安裝卡死", "628 秒 CPU、零下載", "沙箱禁止寫入 workspace 以外的 site-packages",
+            "改用 workspace venv + uv（.venv/）"],
+           ["CUDA torch 被換掉", "torch.cuda.is_available() = False",
+            "uv 安裝時解析到 CPU 版 torch，覆蓋 2.10.0+cu128",
+            "uv pip uninstall torch；每次裝完都檢查（曾發生兩次）"],
+           ["中文檢索幾乎失效", "中文 R@5 只有 17%（隨機約 15%）",
+            "分詞器把 CJK 壓成同一序列，三個不同查詢得到相同向量",
+            "加入 zh→en 時尚詞彙表（data/fashion-glossary.json）"],
+           ["雙十一預測不出來", "預測只跌 4.2%，實際 18%",
+            "Prophet 年度季節性用傅立葉級數，把單日促銷抹平",
+            "改用 holidays 參數（forecast_service.py 的 SALES）"],
+           ["Prophet 輸給樸素基準", "MAPE 0.37% → 0.61%",
+            "促銷參與改成「每年隨機」，效應逐年翻轉，模型無法學習",
+            "參與度改為商品固有屬性（build_price_history.py）"],
+           ["所有商品建議都一樣", "40 件全部「建議等降價」",
+            "所有商品共用同一份促銷日曆",
+            "加入商品層級的參與率與折扣深度"],
+           ["試穿模型無法使用", "無法上傳人像",
+            "Outfit Anyone 權重從未開源，官方展示只收衣服",
+            "改用 CatVTON（ICLR 2025）"],
+           ["CatVTON 裝不起來", "匯入失敗 / 缺 detectron2",
+            "GitHub repo 的 pipeline 需要 agnostic mask",
+            "改用 HF Space 原始碼的 CatVTONPix2PixPipeline（無需 mask）"],
+           ["通道數不符", "expected 9 channels, but got 8",
+            "pix2pix pipeline 要 8 通道 base，誤用 9 通道的 SD-inpainting",
+            "改用 timbrooks/instruct-pix2pix"],
+           ["fp16 權重載入失敗", "找不到 diffusion_pytorch_model.safetensors",
+            "pipeline 呼叫時沒帶 variant=\"fp16\"，只下載了 fp16 檔",
+            "建 local snapshot 把 fp16 檔改成標準檔名（硬連結，不佔空間）"],
+           ["試穿把臉切掉", "看不到臉／頭頂被裁",
+            "resize_and_crop 置中裁切到 3:4，直式照片上下各被裁",
+            "推論前先補邊（tryon_service.py 的 fit_to_target）"],
+           ["造型盒配錯品類", "滑雪情境配出牛仔外套",
+            "只按預算取最便宜，沒有相關性門檻",
+            "加入 score ≥ max(2.5, top×0.5) 的門檻（blindbox.js）"],
+           ["瑕疵分類永遠回傳褪色", "所有照片都判「褪色」",
+            "絕對閾值對不同光線的照片不成立",
+            "改為與乾淨照片的「超額量」相對比較（support.js）"],
+           ["助手聽不懂中文", "整句被當成一個 token，永遠 0 結果",
+            "中文沒有空格，whitespace 分詞失效",
+            "改用 CJK 二元組切詞（lib/agent/tools.js）"],
+           ["助手弄丟記憶功能", "回歸測試失敗：不再提及衣櫃",
+            "改寫成 agent 時漏掉舊版行為",
+            "補上 recall_wardrobe 工具（tools.js + index.js）"],
+           ["答案出現「無依據」數字", "HK$889 被判為非事實",
+            "組句器自己做幣別換算（×7.8）",
+            "把換算搬進工具，只輸出已格式化的事實"],
+           ["簡報文字看不見", "深色底上深色字",
+            "沿用來源範本主題色",
+            "整份改為淺色文字 + 黃色重點"],
+           ["英文簡報標題全大寫", "RESULT 1: IMAGE SEARCH",
+            "範本 title style 帶 cap=\"all\"，中文沒有大小寫所以從未發現",
+            "對每個 run 設 cap=\"none\""],
+           ["模型權重會撐爆 GitHub", "push 會失敗",
+            "data/models 有 4 GB，且未被 .gitignore 排除",
+            "加入 data/models/ 與 *.safetensors 規則"]],
+          widths=[3.4, 3.6, 5.0, 5.2], size=8.2)
+
+    h2(doc, "4.2  三個值得記住的教訓")
+
+    body(doc, "① 症狀出現在 A，根因常在 B。", bold_lead=None)
+    body(doc, "「中文搜尋很爛」看起來是模型問題，換更強的模型反而更差（84% → 58.5%）。"
+              "真正的原因要一個探針才看得出來：")
+    code(doc, """# 三個完全不同的查詢，向量竟然一樣
+for q in ['滑雪外套', '滑雪護目鏡', '真皮樂福鞋']:
+    print(model.encode_text(q))     # 幾乎完全相同
+
+# 而同一模型在英文上是 100%
+print(model.encode_text('ski jacket'))""")
+    body(doc, "沒有這個探針，就會一直在「換模型」的方向上燒時間。"
+              "教訓：先確認「輸入有沒有被正確讀進去」，再討論模型好壞。")
+
+    body(doc, "② 環境問題比程式問題更花時間。", bold_lead=None)
+    body(doc, "同一件事發生兩次：安裝 open_clip 與 diffusers 時，套件管理器都自動把 CUDA 版 torch "
+              "換成 CPU 版。程式碼完全沒問題，但整個推論層變成龜速或直接失敗。")
+    code(doc, """.venv\\Scripts\\python.exe -c "import torch; print(torch.__version__, torch.cuda.is_available())"
+# 2.14.1+cpu False        ← 壞了
+# 2.10.0+cu128 True       ← 修好後
+
+# 修法
+.venv\\Scripts\\python.exe -m pip uninstall torch torchvision""")
+    callout(doc, "現在每次安裝任何套件後，第一件事就是跑上面那行檢查。這一條已寫進 SETUP.md。")
+
+    body(doc, "③ 回歸測試會抓到你以為不重要的東西。", bold_lead=None)
+    body(doc, "把助手改寫成工具呼叫架構後，所有新功能都通過，但舊的回歸測試失敗了 —— "
+              "它記得「以你三個月前買的亞麻襯衫為基礎」。這是專案的差異化功能之一，"
+              "在改寫時被無聲地丟掉了。")
+    body(doc, "修法不是刪掉那個測試，而是把記憶做成一個工具（recall_wardrobe），讓新架構也能用到它。"
+              "教訓：測試失敗時，先問「是不是真的掉了功能」，再問「測試是不是過時了」。")
+
+    body(doc, "還有一個無法解決的限制，必須誠實記錄：這台機器無法啟動 headless Chrome"
+              "（sandbox 阻擋 crashpad），所以整個專案的網頁外觀都沒有經過視覺驗證，"
+              "只能靠「零個亮色背景、語法正確、135 項測試通過」來間接確認。")
+
     # ---------------------------------------------------------------- frontend
-    h1(doc, "4  前端怎麼運作")
+    h1(doc, "5  前端怎麼運作")
     body(doc, "沒有框架、沒有建置步驟。瀏覽器直接載入 ES module。")
     table(doc, ["機制", "在哪裡", "怎麼做"],
           [["路由", "app.js 的 render()", "監聽 hashchange，用 switch 分派到 views/*.js"],
@@ -407,7 +508,7 @@ CREATE TABLE coupons (
           widths=[2.6, 4.4, 9.6])
 
     # ---------------------------------------------------------------- verify
-    h1(doc, "5  怎麼驗證它還能跑")
+    h1(doc, "6  怎麼驗證它還能跑")
     code(doc, """# 七個套件、135 項檢查
 foreach ($t in "site_regression","visual_e2e","stores_e2e","forecast_e2e",
                "analytics_e2e","widget_e2e","tryon_e2e") {
@@ -421,7 +522,7 @@ foreach ($t in "site_regression","visual_e2e","stores_e2e","forecast_e2e",
     body(doc, "服務沒開時，相依的測試會跳過或降級而不是失敗 —— 所以部分安裝也能誠實回報。")
 
     # ---------------------------------------------------------------- how to change
-    h1(doc, "6  我要改 X，該動哪裡")
+    h1(doc, "7  我要改 X，該動哪裡")
     table(doc, ["我想改…", "動這個檔案", "注意"],
           [["商品資料", "data/products.json", "改了要重建索引：tools/build_clip_index.py"],
            ["任何中英文文案", "public/js/i18n.js", "zh 與 en 兩塊都要加"],
@@ -436,7 +537,7 @@ foreach ($t in "site_regression","visual_e2e","stores_e2e","forecast_e2e",
           widths=[3.6, 6.4, 6.6])
 
     # ---------------------------------------------------------------- glossary
-    h1(doc, "7  名詞表")
+    h1(doc, "8  名詞表")
     table(doc, ["名詞", "一句話解釋"],
           [["CLIP", "把圖片與文字映射到同一個向量空間的模型，所以可以用文字找圖片"],
            ["FAISS", "Facebook 的向量檢索庫；本專案用 IndexFlatIP 做精確餘弦搜尋"],
