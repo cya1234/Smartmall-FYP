@@ -1,0 +1,466 @@
+"""Build the one-hour code-reading guide for SmartMall.
+
+Audience: the author, a week later, or a supervisor who wants to understand what
+was built without reading 6,500 lines. Every number and file size below was
+measured from the repository.
+
+Run:  <bundled python> tools/build_code_guide.py
+"""
+import os
+from docx import Document
+from docx.enum.table import WD_TABLE_ALIGNMENT
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+from docx.shared import Pt, Cm, RGBColor
+
+ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+OUT = os.path.join(ROOT, "程式導讀 - 一小時讀懂 SmartMall.docx")
+
+LATIN = "Calibri"
+MONO = "Consolas"
+CJK = "Microsoft JhengHei"
+ACCENT = RGBColor(0x35, 0x2C, 0xA8)
+CODE_BG = "F4F4F7"
+BOX_BG = "EEF3FF"
+
+
+def set_fonts(rpr):
+    rf = rpr.rFonts
+    if rf is None:
+        rf = OxmlElement("w:rFonts")
+        rpr.append(rf)
+    rf.set(qn("w:eastAsia"), CJK)
+    rf.set(qn("w:ascii"), LATIN)
+    rf.set(qn("w:hAnsi"), LATIN)
+
+
+def shade(paragraph, fill):
+    pPr = paragraph._p.get_or_add_pPr()
+    shd = OxmlElement("w:shd")
+    shd.set(qn("w:val"), "clear")
+    shd.set(qn("w:fill"), fill)
+    pPr.append(shd)
+
+
+def setup(doc):
+    for name in ("Normal", "Heading 1", "Heading 2", "Heading 3", "Title"):
+        try:
+            st = doc.styles[name]
+        except KeyError:
+            continue
+        st.font.name = LATIN
+        if st.element.rPr is None:
+            st.element.get_or_add_rPr()
+        set_fonts(st.element.rPr)
+    doc.styles["Normal"].font.size = Pt(10)
+    doc.styles["Normal"].paragraph_format.space_after = Pt(5)
+    doc.styles["Normal"].paragraph_format.line_spacing = 1.22
+    for name, size in (("Heading 1", 15), ("Heading 2", 12.5), ("Title", 24)):
+        try:
+            doc.styles[name].font.size = Pt(size)
+            doc.styles[name].font.color.rgb = ACCENT
+        except KeyError:
+            pass
+    for s in doc.sections:
+        s.top_margin = Cm(2.0)
+        s.bottom_margin = Cm(2.0)
+        s.left_margin = Cm(2.2)
+        s.right_margin = Cm(2.2)
+
+
+def h1(doc, text):
+    p = doc.add_heading(text, level=1)
+    p.paragraph_format.space_before = Pt(14)
+    p.paragraph_format.space_after = Pt(5)
+    return p
+
+
+def h2(doc, text):
+    p = doc.add_heading(text, level=2)
+    p.paragraph_format.space_before = Pt(9)
+    p.paragraph_format.space_after = Pt(3)
+    return p
+
+
+def body(doc, text, bold_lead=None):
+    p = doc.add_paragraph()
+    if bold_lead:
+        r = p.add_run(bold_lead)
+        r.bold = True
+    p.add_run(text)
+    return p
+
+
+def bullet(doc, text, bold_lead=None):
+    p = doc.add_paragraph(style="List Bullet")
+    p.paragraph_format.left_indent = Cm(0.7)
+    p.paragraph_format.space_after = Pt(2)
+    if bold_lead:
+        r = p.add_run(bold_lead)
+        r.bold = True
+    p.add_run(text)
+    return p
+
+
+def code(doc, text, size=8.5):
+    p = doc.add_paragraph()
+    p.paragraph_format.left_indent = Cm(0.4)
+    p.paragraph_format.space_before = Pt(3)
+    p.paragraph_format.space_after = Pt(6)
+    p.paragraph_format.line_spacing = 1.1
+    shade(p, CODE_BG)
+    for i, line in enumerate(text.rstrip("\n").split("\n")):
+        if i:
+            p.add_run().add_break()
+        r = p.add_run(line)
+        r.font.name = MONO
+        r.font.size = Pt(size)
+        r.font.color.rgb = RGBColor(0x22, 0x22, 0x2A)
+    return p
+
+
+def callout(doc, text, bold_lead="重點： "):
+    p = doc.add_paragraph()
+    p.paragraph_format.left_indent = Cm(0.3)
+    p.paragraph_format.space_before = Pt(4)
+    p.paragraph_format.space_after = Pt(7)
+    shade(p, BOX_BG)
+    pPr = p._p.get_or_add_pPr()
+    bdr = OxmlElement("w:pBdr")
+    left = OxmlElement("w:left")
+    left.set(qn("w:val"), "single")
+    left.set(qn("w:sz"), "18")
+    left.set(qn("w:space"), "6")
+    left.set(qn("w:color"), "352CA8")
+    bdr.append(left)
+    pPr.append(bdr)
+    if bold_lead:
+        r = p.add_run(bold_lead)
+        r.bold = True
+        r.font.color.rgb = ACCENT
+    p.add_run(text)
+    return p
+
+
+def table(doc, headers, rows, widths=None, size=8.8):
+    t = doc.add_table(rows=1, cols=len(headers))
+    t.style = "Light Grid Accent 1"
+    t.alignment = WD_TABLE_ALIGNMENT.CENTER
+    for i, htxt in enumerate(headers):
+        c = t.rows[0].cells[i]
+        c.text = ""
+        r = c.paragraphs[0].add_run(htxt)
+        r.bold = True
+        r.font.size = Pt(size)
+    for row in rows:
+        cells = t.add_row().cells
+        for i, v in enumerate(row):
+            cells[i].text = ""
+            r = cells[i].paragraphs[0].add_run(str(v))
+            r.font.size = Pt(size)
+    if widths:
+        for row in t.rows:
+            for i, w in enumerate(widths):
+                row.cells[i].width = Cm(w)
+    doc.add_paragraph().paragraph_format.space_after = Pt(1)
+    return t
+
+
+def main():
+    doc = Document()
+    setup(doc)
+
+    t = doc.add_paragraph()
+    t.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r = t.add_run("SmartMall 程式導讀")
+    r.bold = True
+    r.font.size = Pt(24)
+    r.font.color.rgb = ACCENT
+    s = doc.add_paragraph()
+    s.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    rs = s.add_run("一小時讀懂：做了什麼、怎麼做到、程式碼在哪裡、每段在做什麼")
+    rs.font.size = Pt(13)
+    rs.font.color.rgb = RGBColor(0x44, 0x44, 0x44)
+    doc.add_paragraph()
+
+    # ---------------------------------------------------------------- how to read
+    h1(doc, "0  怎麼讀這份文件")
+    body(doc, "這份文件假設你一小時後要能回答三個問題：這個系統做了什麼、關鍵技術怎麼實現、"
+              "某個功能要去哪個檔案改。全文約 6,500 行程式碼的摘要，不需要先讀程式碼。")
+    table(doc, ["時間", "路線", "讀哪幾節"],
+          [["15 分鐘", "只看骨架", "第 1 節（系統是什麼）+ 第 2 節（檔案地圖）"],
+           ["35 分鐘", "理解四項 AI 能力", "第 3 節的 3.1 至 3.4"],
+           ["60 分鐘", "完整讀完", "全部，包含第 6 節「我要改 X 該動哪裡」"]],
+          widths=[2.2, 4.2, 9.2])
+    callout(doc, "全部程式碼約 6,500 行，但真正承載技術含量的是其中約 900 行 —— 三個 Python 服務的"
+                 "模型呼叫，加上助手的事實層。其餘是店面、資料與介面。")
+
+    # ---------------------------------------------------------------- what
+    h1(doc, "1  這個系統是什麼")
+
+    h2(doc, "1.1  一句話")
+    body(doc, "一個面向香港中小型服飾零售商的 AI 電商系統：客人描述場合就有整套搭配、上傳照片就找到同款、"
+              "買之前知道價格會不會跌、線上缺貨時知道哪間門市有、下單前就提醒你這個尺碼可能不合。")
+
+    h2(doc, "1.2  為什麼要分成四個服務")
+    body(doc, "這是整個專案最重要的架構決定。四個服務各自獨立啟動，其中三個會載入機器學習模型。")
+    table(doc, ["服務", "埠", "技術", "載入時間", "關掉會怎樣"],
+          [["網站", "3000", "Node.js 內建模組", "即時", "（這是主體）"],
+           ["視覺搜尋", "8001", "Marqo-FashionSigLIP + FAISS", "約 5 秒", "退回顏色比對"],
+           ["價格預測", "8002", "Meta Prophet", "約 2 秒", "退回線性趨勢"],
+           ["虛擬試穿", "8003", "CatVTON（GPU）", "約 15 秒", "退回顏色疊加預覽"]],
+          widths=[2.8, 1.2, 6.2, 2.2, 4.2])
+    callout(doc, "任何一個 AI 服務關掉，網站都還能用。這不是巧合，是設計目標 —— 每個功能都有明確的降級路徑。"
+                 "這也是為什麼示範時不怕某個服務啟動失敗。")
+
+    h2(doc, "1.3  一次搜尋的資料流")
+    body(doc, "以「上傳照片找同款」為例，資料經過四層：")
+    code(doc, """瀏覽器  ──POST /api/visual-search──▶  server.js（路由）
+                                            │
+                                            ▼
+                                  lib/visualSearch.js（決策：CLIP 還是顏色）
+                                            │
+                                            ▼ HTTP
+                          ai-service/visual_search_service.py（模型）
+                                            │
+                        ① 中文查詢 → 英文術語（詞彙表）
+                        ② 圖片 + 文字 → CLIP 向量，加權融合
+                        ③ FAISS 內積檢索
+                                            │
+                                            ▼ 回傳 id + 相似度
+                            lib/clipClient.js（分數換算成 0-100%）
+                                            │
+                                            ▼
+                                  前端 productCard 顯示""")
+    body(doc, "四層的分工是：Node 只做路由與 I/O、lib 決定用哪個模型、Python 跑模型、前端只負責畫。")
+
+    # ---------------------------------------------------------------- file map
+    h1(doc, "2  檔案地圖：每個檔案在做什麼")
+
+    h2(doc, "2.1  後端核心")
+    table(doc, ["檔案", "行數", "職責", "什麼時候會讀它"],
+          [["server.js", "472", "HTTP 路由、靜態檔、20+ 個 API 端點", "加 API、改路由"],
+           ["lib/store.js", "144", "商品目錄、個人檔案、幣別換算", "改商品資料結構"],
+           ["lib/analytics.js", "274", "SQLite 事件庫、優惠券、商戶後台統計", "改後台指標"],
+           ["lib/memory.js", "215", "衣櫃、退貨紀錄、長期偏好", "改記憶邏輯"],
+           ["lib/blindbox.js", "421", "依場合與預算組整套裝備", "改造型盒"],
+           ["lib/assistant.js", "503", "舊版模板助手（現在是備援）", "只在 agent 失敗時跑"]],
+          widths=[3.4, 1.1, 7.4, 4.6])
+
+    h2(doc, "2.2  四個 AI 能力對應的檔案")
+    table(doc, ["能力", "Node 端", "Python 端", "模型"],
+          [["視覺搜尋", "visualSearch.js (120)\nclipClient.js (54)", "visual_search_service.py (257)", "Marqo-FashionSigLIP"],
+           ["價格預測", "forecast.js (142)\nprophetClient.js (41)", "forecast_service.py (339)", "Meta Prophet"],
+           ["虛擬試穿", "tryon.js (111)", "tryon_service.py (198)", "CatVTON MaskFree"],
+           ["助手", "agent/tools.js (244)\nagent/router.js (121)\nagent/index.js (230)", "（無）", "規則式路由 + 7 個工具"]],
+          widths=[2.6, 4.6, 4.6, 4.2])
+
+    h2(doc, "2.3  其餘模組")
+    table(doc, ["檔案", "行數", "做什麼"],
+          [["lib/stores.js", "105", "八間門市、跨店庫存、haversine 距離"],
+           ["lib/returnPredict.js", "133", "依身型與退貨史預測退貨風險、建議尺碼"],
+           ["lib/support.js", "242", "退貨流程、瑕疵分類、退貨單"],
+           ["lib/priceAgent.js", "173", "七平台比價與議價對話（模擬）"],
+           ["lib/resale.js", "214", "二手刊登描述與定價"],
+           ["lib/social.js", "193", "好友私密投票"],
+           ["lib/clipClient.js", "54", "CLIP 服務的 HTTP 客戶端 + 分數校準"]],
+          widths=[3.6, 1.2, 11.8])
+
+    h2(doc, "2.4  前端")
+    table(doc, ["檔案", "行數", "做什麼"],
+          [["public/js/app.js", "131", "SPA 路由、頁首搜尋、初始化"],
+           ["public/js/i18n.js", "630", "全站中英文字典（最大的一個檔，內容是字串）"],
+           ["public/js/views/*.js", "2,507（15 檔）", "每個頁面一個檔"],
+           ["public/js/widget.js", "245", "嵌入式面板（iframe 內執行）"],
+           ["public/js/chart.js", "88", "手寫 SVG 折線圖（含信賴區間）"],
+           ["public/js/exitIntent.js", "154", "離開意圖偵測與優惠券"],
+           ["public/css/styles.css", "791", "全部樣式，深色主題在 :root"]],
+          widths=[4.4, 2.6, 9.6])
+    callout(doc, "i18n.js 佔 630 行但幾乎都是字串，不是邏輯。讀程式時可以整檔跳過。",
+            bold_lead="提醒： ")
+
+    h2(doc, "2.5  工具與測試")
+    body(doc, "tools/ 目錄有 36 個檔案，分成三類：")
+    bullet(doc, "評估：eval_retrieval.py、eval_forecast.py、eval_assistant.py —— 產生論文裡的三張表")
+    bullet(doc, "測試：test_site_regression.py 等 7 個套件，共 135 項檢查")
+    bullet(doc, "產生器：build_price_history.py、prepare_catvton_base.py、build_interim_report.py —— 產生資料與文件")
+
+    # ---------------------------------------------------------------- deep dives
+    h1(doc, "3  五個核心技術，怎麼做到的")
+
+    h2(doc, "3.1  視覺搜尋：真正的發現是「中文沒被編碼」")
+    body(doc, "直覺做法是「換一個更強的時尚模型」。我們實測後發現這是錯的。")
+    body(doc, "先建立 94 條中英雙語查詢（47 對）作為評測集，然後比較三個模型：")
+    table(doc, ["模型", "Recall@1", "Recall@5", "中文 R@5", "英文 R@5"],
+          [["原本的 CLIP（ViT-B-32）", "45.7%", "84.0%", "70.2%", "97.9%"],
+           ["Marqo-FashionCLIP", "41.5%", "78.7%", "61.7%", "95.7%"],
+           ["Marqo-FashionSigLIP", "39.4%", "58.5%", "17.0%", "100.0%"]],
+          widths=[5.4, 2.4, 2.4, 2.4, 2.4])
+    body(doc, "三個不同中文查詢（滑雪外套／滑雪護目鏡／真皮樂福鞋）產生完全相同的向量與排序。"
+              "分詞器把中日韓文字壓成同一序列 —— 等於沒有讀進去。而同一模型在英文上是 100%。")
+    body(doc, "所以修法不是換模型，是在編碼前先把中文查詢轉成英文時尚術語：")
+    code(doc, """# ai-service/visual_search_service.py
+def translate_query(text):
+    # 以 120 條詞彙表做最長匹配替換
+    # 「滑雪外套」→「ski jacket」；「亞麻」→「linen」
+    ...
+    return translated or text
+
+def encode_text(text):
+    text = translate_query(text)          # ← 關鍵的一行
+    tok = _state["tokenizer"]([text]).to(_state["device"])
+    f = _state["model"].encode_text(tok)
+    return f / f.norm(dim=-1, keepdim=True)""")
+    body(doc, "加上這一行之後：Recall@1 45.7% → 73.4%，Recall@5 84.0% → 100.0%。")
+    callout(doc, "論文的價值就在這裡：廠商宣稱的 +57% 在這份中文查詢集上不成立，"
+                 "而真正的瓶頸是語言對齊，不是視覺模型。")
+
+    h2(doc, "3.2  價格預測：把促銷日曆當成節日回歸量")
+    body(doc, "Prophet 預設的年度季節性是傅立葉級數，會把「單日」促銷抹平到整個月。"
+              "以雙十一為例，預設設定只預測下跌 4.2%，實際是 18%。")
+    body(doc, "解法是把促銷日當成明確的節日（holidays 參數），讓每一天有自己的係數：")
+    code(doc, """# ai-service/forecast_service.py
+SALES = [
+    ("double11",    "11-11", 2, 1, "雙十一 Double 11"),
+    ("black-friday","11-27", 1, 3, "黑色星期五 Black Friday"),
+    ("christmas",   "12-25", 3, 2, "聖誕節 Christmas"),
+    ...
+]
+# 每一天送入 Prophet 成為一個 dummy regressor
+rows.append({"holiday": name, "ds": pd.Timestamp(f"{y}-{md}"),
+             "lower_window": -lo, "upper_window": hi})
+
+m = Prophet(holidays=pd.DataFrame(rows), ...)""")
+    body(doc, "結果：40 件商品留出法比較，MAE 0.28、MAPE 0.34%，勝過線性基準（1.25%）"
+              "與樸素基準（0.50%），40 件中勝出 38 件。")
+    body(doc, "誠實的限制：價格序列是合成的，且促銷日期對模型已知，所以這是上限值。"
+              "可主張的是「建模促銷日曆優於忽略它」，不是「真實資料上誤差 0.34%」。")
+
+    h2(doc, "3.3  虛擬試穿：兩個坑")
+    body(doc, "第一個坑：最知名的 Outfit Anyone 權重沒有開源，官方展示只允許上傳衣服、人像為預設，"
+              "做不到「客人上傳自己的照片」。改用 CatVTON（ICLR 2025）。")
+    body(doc, "第二個坑：CatVTON 的 GitHub repo 需要 agnostic mask（要 detectron2），"
+              "而在 Windows 上裝不起來。正解是使用 Hugging Face Space 原始碼裡的 "
+              "CatVTONPix2PixPipeline —— 它把人物與衣服的 latent 直接拼接，完全不需要 mask。")
+    body(doc, "另外要注意 base model 的通道數：pix2pix 版需要 8 通道（instruct-pix2pix），"
+              "用一般的 SD-inpainting（9 通道）會報 expected 9 channels, but got 8。")
+    body(doc, "第三個坑是使用者實際遇到的：臉被切掉。原因是 pipeline 的 resize_and_crop 會置中裁切到 3:4，"
+              "而直式手機照片比 3:4 高，上下各被裁掉一段，上面那一段就是頭。修法是先補邊：")
+    code(doc, """# ai-service/tryon_service.py
+def fit_to_target(img, tw=WIDTH, th=HEIGHT):
+    # 先把照片補成 3:4，pipeline 的裁切就變成空操作
+    if w / h < target:                    # 太高 → 補左右
+        new_w, new_h = int(round(h * target)), h
+    ...
+    backdrop = backdrop.filter(ImageFilter.GaussianBlur(28))   # 模糊背景
+    backdrop.paste(img, ((new_w - w) // 2, (new_h - h) // 2))  # 人像置中
+    return backdrop""")
+    body(doc, "效能：768×1024、20 步約 21 秒、峰值記憶體 3.57 GiB（RTX 4070 12 GB）。")
+
+    h2(doc, "3.4  助手：讓幻覺在結構上不可能")
+    body(doc, "一般做法是叫語言模型回答商品問題，它會編造價格。這專案的做法是讓模型只負責選擇工具與措辭，"
+              "所有數字來自工具：")
+    code(doc, """問題 ──▶ 路由（規則式） ──▶ 工具計劃 ──▶ 執行 ──▶ 事實 ──▶ 組句 ──▶ 答案
+
+工具回傳的是「已格式化的數字」：
+  facts.push({ label: 'totalDisplay', value: 'HK$889' })
+  facts.push({ label: 'onlineStock',  value: '8' })
+  facts.push({ label: 'dropPct',      value: '11.6' })
+
+組句器只讀這些事實，完全不做算術運算。
+→ 文字與虛構數字之間沒有路徑。""")
+    body(doc, "七個工具：search_products、check_store_stock、forecast_price、size_advice、"
+              "build_outfit、recall_wardrobe、list_stores。")
+    body(doc, "多工具串接靠一個佔位符：路由先產生 search_products，把結果的 top id 代入後續工具的 "
+              "$find.top。")
+    code(doc, """// lib/agent/index.js
+if (params.productId === '$find.top') {
+  if (!findTopId) { /* 沒有商品就跳過，不猜 */ }
+  params.productId = findTopId;
+}""")
+    body(doc, "評估：15 條中英問題，工具選擇 15/15、事實可追溯 15/15、自助完成 15/15。")
+
+    h2(doc, "3.5  商戶後台：用 Node 內建 SQLite，零依賴")
+    body(doc, "不引入 npm 套件，直接用 Node 的 node:sqlite。事件表與優惠券表：")
+    code(doc, """// lib/analytics.js
+CREATE TABLE events (
+  id INTEGER PRIMARY KEY, tenant TEXT, session TEXT,
+  type TEXT, label TEXT, value REAL, meta TEXT, createdAt TEXT
+);
+CREATE TABLE coupons (
+  code TEXT PRIMARY KEY, tenant TEXT, discountPct REAL,
+  status TEXT, issuedAt TEXT, appliedAt TEXT
+);""")
+    body(doc, "後台的每個指標都是一條 SQL 聚合：搜尋次數、訪客數、挽留成功率（領券／彈出）、轉化率。"
+              "資料庫首次啟動會 seed 七天的示範資料，所以後台不會是空的。")
+
+    # ---------------------------------------------------------------- frontend
+    h1(doc, "4  前端怎麼運作")
+    body(doc, "沒有框架、沒有建置步驟。瀏覽器直接載入 ES module。")
+    table(doc, ["機制", "在哪裡", "怎麼做"],
+          [["路由", "app.js 的 render()", "監聽 hashchange，用 switch 分派到 views/*.js"],
+           ["雙語", "i18n.js", "t(key) 查字典；切換語言時重畫整頁"],
+           ["圖表", "chart.js", "手寫 SVG 折線，含 Prophet 的 80% 信賴區間陰影"],
+           ["深色主題", "styles.css 的 :root", "改 CSS 變數即可全站生效"],
+           ["動畫", "styles.css 末段", "路由淡入、卡片交錯、hover 上移，並尊重 prefers-reduced-motion"]],
+          widths=[2.6, 4.4, 9.6])
+
+    # ---------------------------------------------------------------- verify
+    h1(doc, "5  怎麼驗證它還能跑")
+    code(doc, """# 七個套件、135 項檢查
+foreach ($t in "site_regression","visual_e2e","stores_e2e","forecast_e2e",
+               "analytics_e2e","widget_e2e","tryon_e2e") {
+  .venv\\Scripts\\python.exe "tools\\test_$t.py" "http://127.0.0.1:3000"
+}
+
+# 重現論文的三張表
+.venv\\Scripts\\python.exe tools\\eval_retrieval.py
+.venv\\Scripts\\python.exe tools\\eval_forecast.py
+.venv\\Scripts\\python.exe tools\\eval_assistant.py""")
+    body(doc, "服務沒開時，相依的測試會跳過或降級而不是失敗 —— 所以部分安裝也能誠實回報。")
+
+    # ---------------------------------------------------------------- how to change
+    h1(doc, "6  我要改 X，該動哪裡")
+    table(doc, ["我想改…", "動這個檔案", "注意"],
+          [["商品資料", "data/products.json", "改了要重建索引：tools/build_clip_index.py"],
+           ["任何中英文文案", "public/js/i18n.js", "zh 與 en 兩塊都要加"],
+           ["顏色 / 間距 / 圓角", "public/css/styles.css 的 :root", "改變數即可全站生效"],
+           ["某個頁面的版面", "public/js/views/<頁面>.js", "一個檔案一個頁面"],
+           ["加一個新頁面", "views/ 新增檔 + app.js 的 switch + i18n", "三處都要改"],
+           ["視覺搜尋的模型", "ai-service/visual_search_service.py 的 MODEL", "換模型必須重建索引"],
+           ["價格預測的邏輯", "ai-service/forecast_service.py 的 SALES / _fit", "改完看 eval_forecast"],
+           ["助手的理解能力", "lib/agent/router.js 的關鍵詞", "工具與組句不用動"],
+           ["助手能回答的事實", "lib/agent/tools.js", "新增工具要同時加 facts"],
+           ["門市資料", "data/stores.json", "庫存由 lib/stores.js 依 id 決定"]],
+          widths=[3.6, 6.4, 6.6])
+
+    # ---------------------------------------------------------------- glossary
+    h1(doc, "7  名詞表")
+    table(doc, ["名詞", "一句話解釋"],
+          [["CLIP", "把圖片與文字映射到同一個向量空間的模型，所以可以用文字找圖片"],
+           ["FAISS", "Facebook 的向量檢索庫；本專案用 IndexFlatIP 做精確餘弦搜尋"],
+           ["Recall@K", "前 K 個結果中包含正確答案的比例，越高越好"],
+           ["MRR", "正確答案排名的倒數平均，衡量「排得多前面」"],
+           ["留出法 (holdout)", "藏起最後一段資料不訓練，只用來評分，避免自我感覺良好"],
+           ["MAE / MAPE", "平均絕對誤差 / 平均絕對百分比誤差，越小越準"],
+           ["holiday regressor", "把特定日期當成特徵，讓模型學到「這天會特別」"],
+           ["降級 (degradation)", "服務失效時退回一個仍可用的替代方案，而不是報錯"],
+           ["事實 (facts)", "工具回傳的結構化數字，組句器只能引用這些"],
+           ["O2O", "線上到線下：線上缺貨時引導到實體門市"],
+           ["FFP / 事實可追溯率", "答案中的每個數字都能對應到某次工具呼叫"]]  ,
+          widths=[3.4, 13.2])
+
+    doc.add_paragraph()
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r = p.add_run("— 完 —")
+    r.font.color.rgb = RGBColor(0x88, 0x88, 0x88)
+
+    doc.save(OUT)
+    print(f"  saved {OUT}")
+    return OUT
+
+
+if __name__ == "__main__":
+    main()
