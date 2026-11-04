@@ -92,8 +92,13 @@ check("double-apply is idempotent", code == 200 and a2.get("alreadyApplied") is 
 
 print("\n== 6. funnel reflects the live visitor ==")
 f = s4["funnels"]["exitIntent"]
-check("funnel has 4 stages", len(f) == 4, [x["stage"] for x in f])
-check("funnel is monotonic-ish", f[0]["count"] >= f[1]["count"], f"{f[0]['count']} >= {f[1]['count']}")
+# Three stages: checkout is not a subset of coupon claims, so it cannot sit inside a
+# nested funnel without making the percentages meaningless.
+check("funnel has 3 nested stages", len(f) == 3, [x["stage"] for x in f])
+counts = [x["count"] for x in f]
+check("funnel is monotonic", all(a >= b for a, b in zip(counts, counts[1:])), counts)
+check("coupon usage rate is a real percentage",
+      0 <= s4["rates"]["couponApplyRate"] <= 100, f"{s4['rates']['couponApplyRate']}%")
 
 print("\n== 7. dashboard + new assets are served ==")
 for path, needle in [
