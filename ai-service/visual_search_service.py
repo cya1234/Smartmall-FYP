@@ -264,6 +264,13 @@ class Handler(BaseHTTPRequestHandler):
                     out["tookMs"] = round((time.time() - t) * 1000, 1)
                 return self._send(200, out)
 
+            if self.path.startswith("/aesthetic"):
+                with _lock:
+                    t = time.time()
+                    out = aesthetic(body.get("image") or "", body.get("wardrobeIds") or [])
+                    out["tookMs"] = round((time.time() - t) * 1000, 1)
+                return self._send(200, out)
+
             if self.path.startswith("/embed"):
                 np = _state["np"]
                 if body.get("image"):
@@ -278,6 +285,169 @@ class Handler(BaseHTTPRequestHandler):
         except Exception as e:
             traceback.print_exc()
             self._send(500, {"error": str(e)})
+
+
+# ------------------------------------------------------------ aesthetic score --
+# "Does this outfit suit you?" is a two-part question: does it match the shopper's
+# usual style, and is it a well-formed look. The style half is measured against the
+# wardrobe's own CLIP centroid — the same embedding space the visual search uses, so
+# the score is grounded in the shopper's actual purchases rather than a generic
+# taste model. The composition half is measured with colour statistics and category
+# anchors.
+#
+# This is deliberately NOT an LLM judge. StyleTailor (AAAI 2026) shows what a
+# VLM-Artist judge adds, but a 7B vision model does not fit on the same 12 GB card
+# as CatVTON, and an unvalidated LLM score is a vibe rather than a benchmark. The
+# four sub-scores below are reproducible and cheap; /aesthetic/vlm is the plug point
+# for a judge backend when one is available.
+CATEGORY_PROMPTS = {
+    "top": ["a shirt", "a t-shirt", "a sweater", "a blouse", "a knit top"],
+    "bottom": ["trousers", "jeans", "a skirt", "shorts"],
+    "shoes": ["shoes", "sneakers", "boots", "loafers"],
+    "outerwear": ["a coat", "a jacket", "a blazer"],
+    "accessory": ["a bag", "sunglasses", "a hat", "a scarf"],
+}
+CATEGORY_THRESHOLD = 0.03   # SigLIP 768-d image/text cosines live around -0.02..0.08
+
+# Image/image cosines for garments sit far higher than the text pair — related items
+# land around 0.6-0.8. The mapping below is calibrated on that band so a wardrobe
+# staple scores in the high 80s rather than pinning at 100.
+STYLE_LO, STYLE_HI = 0.40, 0.85
+
+
+def _category_hits(vec):
+    """Which garment categories this photo looks like, via text anchors."""
+    np = _state["np"]
+    present = {}
+    for cat, prompts in CATEGORY_PROMPTS.items():
+        best = 0.0
+        for p in prompts:
+            t = encode_text(p)
+            best = max(best, float(np.dot(vec, t)))
+        present[cat] = round(best, 4)
+    hits = [c for c, v in present.items() if v >= CATEGORY_THRESHOLD]
+    return hits, present
+
+
+def _palette(b64):
+    """Dominant-hue count and neutral share from the photo itself."""
+    import colorsys
+    from PIL import Image
+    raw = base64.b64decode(b64.split(",")[-1])
+    im = Image.open(io.BytesIO(raw)).convert("RGB").resize((96, 96))
+    q = im.quantize(colors=8, method=Image.Quantize.MEDIANCUT).convert("RGB")
+    cols = sorted(q.getcolors(96 * 96) or [], reverse=True)
+    total = sum(c for c, _ in cols) or 1
+
+    hues, neutral, top = [], 0.0, []
+    for cnt, rgb in cols:
+        share = cnt / total
+        r, g, b = rgb
+        top.append({"hex": "#%02x%02x%02x" % (r, g, b), "share": round(share, 3)})
+        if share < 0.05:
+            continue
+        h, s, v = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
+        if s < 0.18 or v < 0.12 or v > 0.95:
+            neutral += share
+        else:
+            hues.append(h * 360)
+
+    clusters = []
+    for h in sorted(hues):
+        if clusters and h - clusters[-1][-1] <= 30:
+            clusters[-1].append(h)
+        else:
+            clusters.append([h])
+    if len(clusters) > 1 and (360 - clusters[-1][-1] + clusters[0][0]) <= 30:
+        clusters = clusters[:-1] + [clusters[0] + clusters[-1]]
+    return {"distinctHues": len(clusters), "neutralShare": round(neutral, 3), "colours": top[:5]}
+
+
+def aesthetic(b64, wardrobe_ids=None):
+    np = _state["np"]
+    vec, size = encode_image(b64)
+
+    # ---- style match: cosine to the wardrobe centroid --------------------
+    wardrobe_ids = [str(x) for x in (wardrobe_ids or [])]
+    entries = _state["meta"]["entries"]
+    row_of = {}
+    for i, e in enumerate(entries):
+        row_of[str(e.get("id"))] = i
+
+    cents = []
+    for pid in wardrobe_ids:
+        r = row_of.get(pid)
+        if r is None:
+            continue
+        try:
+            v = np.asarray(_state["index"].reconstruct(r), dtype="float32")
+        except Exception:
+            continue
+        n = np.linalg.norm(v)
+        if n > 0:
+            cents.append(v / n)
+
+    if cents:
+        centroid = np.mean(cents, axis=0)
+        centroid = centroid / (np.linalg.norm(centroid) or 1.0)
+        sim = float(np.dot(vec, centroid))
+        style = max(0.0, min(100.0, (sim - STYLE_LO) / (STYLE_HI - STYLE_LO) * 100.0))
+        per_item = sorted(
+            ((float(np.dot(vec, c)), pid) for c, pid in zip(cents, [p for p in wardrobe_ids if p in row_of])),
+            reverse=True,
+        )[:3]
+    else:
+        sim, style, per_item = None, 0.0, []
+
+    # ---- composition: does it look like a complete outfit ----------------
+    hits, anchor_scores = _category_hits(vec)
+    required = [c for c in ("top", "bottom", "shoes") if c in hits]
+    coverage = len(required) / 3 * 100
+    if "outerwear" in hits:
+        coverage = min(100.0, coverage + 10)
+
+    # ---- palette: hue spread and neutral balance ------------------------
+    pal = _palette(b64)
+    palette = 100.0
+    if pal["distinctHues"] > 3:
+        palette -= (pal["distinctHues"] - 3) * 16
+    if pal["neutralShare"] < 0.12:
+        palette -= 12
+    if pal["neutralShare"] > 0.95:
+        palette -= 8
+    palette = max(0.0, min(100.0, palette))
+
+    overall = round(0.55 * style + 0.25 * coverage + 0.20 * palette)
+
+    if overall >= 78:
+        verdict = "excellent"
+    elif overall >= 64:
+        verdict = "good"
+    elif overall >= 50:
+        verdict = "fair"
+    else:
+        verdict = "adjust"
+
+    return {
+        "score": overall,
+        "verdict": verdict,
+        "subscores": {
+            "style": round(style),
+            "coverage": round(coverage),
+            "palette": round(palette),
+        },
+        "detail": {
+            "styleSimilarity": None if sim is None else round(sim, 4),
+            "wardrobeUsed": len(cents),
+            "closestOwned": [{"id": pid, "similarity": round(s, 4)} for s, pid in per_item],
+            "categories": hits,
+            "anchors": anchor_scores,
+            "palette": pal,
+            "imageSize": list(size),
+        },
+        "weights": {"style": 0.55, "coverage": 0.25, "palette": 0.20},
+        "judge": "deterministic-clip",
+    }
 
 
 def main():

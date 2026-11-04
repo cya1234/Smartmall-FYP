@@ -23,6 +23,7 @@ import {
   startSession as startSurvey, answer as answerSurvey, finish as finishSurvey,
   spin as spinSurvey, profileSummary, resetPreferences as resetSurvey,
 } from './lib/survey.js';
+import { scoreOutfit, aestheticStatus } from './lib/aesthetic.js';
 import { runTryOn, tryOnStatus } from './lib/tryon.js';
 import { buildBlindBox, detectScenario, SCENARIOS } from './lib/blindbox.js';
 import { runPriceAgent, PLATFORMS } from './lib/priceAgent.js';
@@ -508,6 +509,20 @@ async function handleApi(req, res, pathname) {
     }
     if (method === 'POST' && parts[2] === 'reset') {
       return sendJson(res, 200, resetSurvey());
+    }
+  }
+
+  // ---- Fashion AesRec score: does today's outfit suit this shopper? --------
+  if (parts[1] === 'aesthetic') {
+    if (method === 'GET' && parts[2] === 'status') {
+      return sendJson(res, 200, await aestheticStatus());
+    }
+    if (method === 'POST' && parts[2] === 'score') {
+      const body = JSON.parse((await readBody(req)) || '{}');
+      if (!body.image) return sendJson(res, 400, { error: 'image required' });
+      const url = new URL(req.url, 'http://localhost');
+      const out = await scoreOutfit(body.image, { lang: url.searchParams.get('lang') || 'zh' });
+      return sendJson(res, out.online ? 200 : 503, out);
     }
   }
 
