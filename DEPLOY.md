@@ -1,109 +1,118 @@
-# Showing SmartMall away from this PC
+# Showing SmartMall away from home
 
-The site is four processes on one machine. To present it somewhere else you have to
-decide which of the two things you need: **the real models**, or **just the site**.
+The constraint that decides everything: **the PC at home will not be running**, because
+you may not remember to leave it on. So any option that depends on it is out.
 
-| | Option A — GPU pod | Option B — free Node host | Option C — static snapshot | Option D — tunnel home |
-|---|---|---|---|---|
-| Real AI (CatVTON, SigLIP, Prophet) | ✅ | ❌ fallbacks only | ❌ pre-computed | ✅ |
-| Needs this PC on | ❌ | ❌ | ❌ | ✅ |
-| Works offline / on iPad | ❌ | ❌ | ✅ | ❌ |
-| Cost per demo | ~US$0.30–0.70 | free | free | free |
-| Setup time | ~20 min first time | ~10 min | ~15 min | ~2 min |
+That leaves two shapes:
 
-**Short answer:** if the professor must see real virtual try-on, use **A**. If the PC
-can stay switched on at home, **D** is free and identical to local. **B** is for
-"send a friend a link". **C** is for a tablet with no internet.
+| | **Option A — a pod you stop, not destroy** | **Option B — free Node host** |
+|---|---|---|
+| Real AI (CatVTON, SigLIP, Prophet) | ✅ | ❌ fallbacks only |
+| Needs the PC at home | ❌ | ❌ |
+| Start it from your phone | ✅ one tap | always on |
+| Stable URL across demos | ✅ while the pod exists | ✅ |
+| Cost | ~US$2/mo idle + ~US$0.50 per demo | free |
 
----
-
-## Option D — tunnel from home (only if the PC can stay on)
-
-Cheapest way to get the real thing. One command, no accounts:
-
-```powershell
-# in the SmartMall folder
-cloudflared tunnel --url http://localhost:3000
-```
-
-It prints a `https://something.trycloudflare.com` URL that works anywhere. The URL
-changes every restart. Close the window to revoke it. The site is only reachable
-while both the tunnel and `start-with-ai.bat` are running.
-
-Do not leave this up unattended: there is no password. Add one, or use Option A.
+**Recommendation: Option A.** It is the only one that shows the real virtual try-on,
+and it is the one that keeps working when you forgot to prepare anything at home.
 
 ---
 
-## Option A — a GPU pod (real AI, no PC at home)
+## Option A — a pod you stop, not destroy
 
-Rent by the hour, present, then destroy. On RunPod pick a **RTX 4090** community
-pod with a PyTorch template (~US$0.34–0.69/hr); on Vast.ai the same card is often
-US$0.15–0.30/hr. A 30-minute demo costs well under a dollar.
+The trick is that a **stopped** pod keeps its disk, its pod id, and therefore its
+public URL. So you install everything once, then each demo is: open the RunPod app →
+start the pod → wait ~60 s → open the same URL you used last time.
+
+### One-time setup (~25 minutes, at home on this PC is fine)
+
+1. Create a **network volume** (20 GB is plenty: ~7 GB of models plus the repo) and
+   a pod with an **RTX 4090** and a PyTorch template, both in the same region.
+2. Open the pod's web terminal and run:
 
 ```bash
-# 1. get the code
-git clone https://github.com/<you>/SmartMall.git && cd SmartMall
-
-# 2. python deps (the template already has a CUDA-matched torch)
-pip install -r requirements.txt
-python -c "import torch; print(torch.cuda.is_available())"   # must print True
-
-# 3. models — 6.7 GB, one time. On RunPod attach a network volume at /workspace so
-#    you only download once, then re-use it on every future pod.
-python - <<'PY'
-import os
-os.environ["HF_HOME"] = os.path.abspath(".cache/hf")
-from huggingface_hub import snapshot_download
-snapshot_download("Marqo/marqo-fashionSigLIP")
-snapshot_download("timbrooks/instruct-pix2pix", allow_patterns=["*fp16*", "*.json", "tokenizer/*"])
-PY
-python tools/prepare_catvton_base.py     # places the CatVTON weights
-
-# 4. run everything
-bash start-all.sh
+export VOLUME=/workspace              # wherever the volume is mounted
+export SMARTMALL_REPO=https://github.com/<you>/SmartMall.git
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/<you>/SmartMall/main/bootstrap-pod.sh)"
 ```
 
-Then expose port 3000: RunPod gives you a **Connect → HTTP service** URL for the
-port directly, which is the simplest path because it terminates TLS for you.
+If you would rather not depend on that URL, clone first and run it locally:
 
-Notes:
-- `HOST` already defaults to `0.0.0.0`, so the server is reachable from outside.
-- `start-all.sh --no-tryon` starts without CatVTON when you only need the shop.
-- Destroy the pod when finished — billing is per second while it exists.
+```bash
+git clone "$SMARTMALL_REPO" /workspace/SmartMall
+cd /workspace/SmartMall && bash bootstrap-pod.sh
+```
+
+`bootstrap-pod.sh` verifies the GPU, installs the pinned dependencies, **checks that
+torch can see CUDA** (the failure that cost hours on Windows), downloads the 6.7 GB of
+models onto the volume, and prepares the CatVTON base. It stops with a clear error
+rather than letting you demo a site that silently falls back.
+
+3. In the pod settings, expose **HTTP port 3000**. RunPod gives you
+   `https://<pod-id>-3000.proxy.runpod.net` — this is your demo URL.
+4. Run the site once, check the four status endpoints, then **stop the pod**.
+
+### Every demo after that
+
+1. On your phone, open the RunPod app or site → **Start** the pod.
+2. Wait about a minute (the container boots; models load on first request).
+3. Open the saved URL, run one throwaway try-on to warm the pipeline.
+4. Present. When finished, **Stop** the pod — never Terminate, or the volume's pod id
+   goes with it and the URL changes.
+
+While the pod is stopped the URL returns a gateway error. That is expected; it comes
+back the moment the pod is running again.
+
+### Cost, honestly
+
+- Volume storage: 20 GB ≈ **US$2/month** whether running or stopped.
+- Compute: RTX 4090 community ≈ **US$0.34–0.69/hr**. A 45-minute demo ≈ **US$0.30–0.50**.
+- Forgetting to stop it for a day is the expensive mistake: ~US$12. Set a reminder.
+
+### If you would rather not manage a pod
+
+Rent from **Vast.ai** instead (same card, often US$0.15–0.30/hr). It has no phone app,
+so start the instance from the browser; URLs are stable per instance while it is not
+destroyed.
 
 ---
 
 ## Option B — free Node host (no AI, but always online)
 
-The Node layer has zero dependencies, so it deploys instantly to Render, Railway or
-Fly. Every AI feature has an explicit fallback, so the site stays fully usable:
+Use this as a **backup link**, not as the main demo: it works everywhere, instantly,
+with no pod to start, but the models are absent.
+
+The Node layer has zero dependencies, so it deploys straight to Render, Railway or Fly.
+Every AI feature has an explicit fallback:
 
 | Feature | Without the AI service |
 |---|---|
 | Visual search | colour heuristic instead of CLIP |
 | Price forecast | linear trend instead of Prophet |
 | Virtual try-on | colour overlay preview instead of CatVTON |
-| Aesthetic score | returns 503, the page says the service is offline |
+| Aesthetic score | returns 503; the page says the service is offline |
 
-Render free tier spins down after ~15 minutes idle, so the first request during a
-demo takes ~50 seconds. Use the cheapest paid tier (~US$7/mo) for a real demo.
+Render's free tier sleeps after ~15 minutes idle, so the first hit during a demo takes
+~50 s. Use the cheapest paid tier (~US$7/mo) if it matters.
 
 ```
 Build command : (none)
 Start command : node server.js
-Environment   : PORT is provided by the host
 ```
+
+This is also the safe thing to send to a friend: it cannot break, because there is no
+GPU to be missing.
 
 ---
 
-## Option C — a static snapshot (offline, iPad, no server)
+## Option C — a static snapshot (offline, iPad, no internet at all)
 
-Not built yet. Would need `tools/export_demo.js` to call every API once and freeze
-the responses into a JSON bundle, plus a demo flag in `public/js/api.js` that reads
-from that bundle instead of the network. Try-on and aesthetic scoring could then
-only show pre-generated results for fixed sample photos, clearly labelled.
+Not built. Would need `tools/export_demo.js` to call every API once and freeze the
+responses into a JSON bundle, plus a demo flag in `public/js/api.js`. Try-on and
+aesthetic scoring could then only replay pre-generated results for fixed sample
+photos, clearly labelled as such.
 
-Worth it only if you need to demonstrate where there is no internet at all.
+Only worth it if the demo location has no usable network.
 
 ---
 
@@ -116,8 +125,8 @@ curl -s localhost:3000/api/tryon/status           # expect "online":true
 curl -s localhost:3000/api/aesthetic/status       # expect "online":true
 ```
 
-If any says `online:false`, that feature will silently fall back — the site will
-still work, but do not claim the model is running. Check `.cache/logs/` for why.
+If any says `online:false` the feature is silently falling back. The site still works,
+but do not claim the model is running — check `.cache/logs/` for the reason.
 
-Then do **one throwaway try-on** before the meeting: the first generation loads the
-pipeline and takes ~15 s longer than the rest.
+Then do **one throwaway try-on**: the first generation loads the pipeline and takes
+~15 s longer than every later one.
