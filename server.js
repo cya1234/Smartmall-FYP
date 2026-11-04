@@ -21,7 +21,7 @@ import { prophetHealth, prophetEval, prophetBaseUrl } from './lib/prophetClient.
 import { getStores, getStore, availability, pickupInfo } from './lib/stores.js';
 import {
   startSession as startSurvey, answer as answerSurvey, finish as finishSurvey,
-  profileSummary, resetPreferences as resetSurvey,
+  spin as spinSurvey, profileSummary, resetPreferences as resetSurvey,
 } from './lib/survey.js';
 import { runTryOn, tryOnStatus } from './lib/tryon.js';
 import { buildBlindBox, detectScenario, SCENARIOS } from './lib/blindbox.js';
@@ -499,6 +499,11 @@ async function handleApi(req, res, pathname) {
     if (method === 'POST' && parts[2] === 'finish') {
       const body = JSON.parse((await readBody(req)) || '{}');
       const r = finishSurvey({ sessionId: body.sessionId, session: body.session || null });
+      return sendJson(res, r.ok ? 200 : 400, r);
+    }
+    if (method === 'POST' && parts[2] === 'spin') {
+      const body = JSON.parse((await readBody(req)) || '{}');
+      const r = spinSurvey({ sessionId: body.sessionId, session: body.session || null });
       return sendJson(res, r.ok ? 200 : 400, r);
     }
     if (method === 'POST' && parts[2] === 'reset') {
