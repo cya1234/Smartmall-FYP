@@ -55,7 +55,11 @@ def load():
     import open_clip
     import faiss
 
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from device_util import pick_device, device_name, memory_gb, enable_mps_fallback
+    enable_mps_fallback()
+
+    device = pick_device(torch)
     model, _, preprocess = open_clip.create_model_and_transforms(MODEL, pretrained=PRETRAINED, device=device)
     model.eval()
     tokenizer = open_clip.get_tokenizer(MODEL)
@@ -73,6 +77,8 @@ def load():
         model.encode_text(tokenizer(["warmup"]).to(device))
     if device == "cuda":
         torch.cuda.synchronize()
+    elif device == "mps":
+        torch.mps.synchronize()
 
     _state.update({
         "ready": True, "torch": torch, "np": np, "model": model, "preprocess": preprocess,
@@ -80,7 +86,7 @@ def load():
         "dim": index.d,
     })
     print(f"  model   {MODEL} / {PRETRAINED}", flush=True)
-    print(f"  device  {device}" + (f" ({torch.cuda.get_device_name(0)})" if device == "cuda" else ""), flush=True)
+    print(f"  device  {device} ({device_name(torch, device) or 'n/a'})", flush=True)
     print(f"  index   {index.ntotal} vectors, dim {index.d}, built {meta.get('builtAt')}", flush=True)
 
 
@@ -234,7 +240,8 @@ class Handler(BaseHTTPRequestHandler):
                 "model": MODEL,
                 "pretrained": PRETRAINED,
                 "device": _state["device"],
-                "gpu": _state["torch"].cuda.get_device_name(0) if _state["device"] == "cuda" else None,
+                "gpu": (_state["torch"] is not None and _state.get("device") in ("cuda", "mps")
+                        and __import__("device_util").device_name(_state["torch"], _state["device"])) or None,
                 "indexed": _state["index"].ntotal,
                 "dim": _state["dim"],
                 "builtAt": m.get("builtAt"),

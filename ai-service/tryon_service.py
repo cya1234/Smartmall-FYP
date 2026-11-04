@@ -32,6 +32,11 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 os.environ.setdefault("HF_HOME", os.path.join(ROOT, ".cache", "hf"))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from device_util import (  # noqa: E402
+    pick_device, pick_dtype, device_name, memory_gb, generator, enable_mps_fallback,
+)
+enable_mps_fallback()
 
 SPACE = os.path.join(ROOT, "ai-service", "vendor", "catvton_space")
 sys.path.insert(0, SPACE)
@@ -58,19 +63,22 @@ def load():
             f"{BASE_CKPT} missing - run tools/prepare_catvton_base.py first")
 
     t0 = time.time()
+    device = pick_device(torch)
     pipe = CatVTONPix2PixPipeline(
         base_ckpt=BASE_CKPT,
         attn_ckpt=ATTN_CKPT,
         attn_ckpt_version=ATTN_VERSION,
-        weight_dtype=torch.float16,
-        device="cuda",
+        weight_dtype=pick_dtype(torch, device),
+        device=device,
         skip_safety_check=True,
-        use_tf32=True,
+        # TF32 is an NVIDIA-only matmul mode; enabling it on MPS/CPU is meaningless.
+        use_tf32=(device == "cuda"),
     )
-    _state.update(pipe=pipe, torch=torch, ready=True)
-    vram = torch.cuda.memory_allocated() / 2**30 if torch.cuda.is_available() else 0
+    _state.update(pipe=pipe, torch=torch, ready=True, device=device)
+    vram = memory_gb(torch, device)
     print(f"  model    CatVTON MaskFree / {ATTN_VERSION}", flush=True)
-    print(f"  loaded   {time.time()-t0:.1f}s   vram {vram:.2f} GiB", flush=True)
+    print(f"  device   {device} ({device_name(torch, device) or 'n/a'})", flush=True)
+    print(f"  loaded   {time.time()-t0:.1f}s   vram {vram if vram is not None else 0:.2f} GiB", flush=True)
 
 
 def _decode(value):
@@ -141,7 +149,7 @@ def tryon(person, garment, steps=DEFAULT_STEPS, seed=42):
             guidance_scale=2.5,
             height=HEIGHT,
             width=WIDTH,
-            generator=torch.Generator(device="cuda").manual_seed(int(seed)),
+            generator=generator(torch, _state.get("device"), int(seed)),
         )[0]
         took = time.time() - t0
     return out, took
@@ -165,11 +173,12 @@ class Handler(BaseHTTPRequestHandler):
         path = self.path.split("?")[0]
         if path.rstrip("/") == "/health":
             torch = _state.get("torch")
+            dev = _state.get("device")
             gpu = None
             vram = None
-            if torch is not None and torch.cuda.is_available():
-                gpu = torch.cuda.get_device_name(0)
-                vram = round(torch.cuda.memory_allocated() / 2**30, 2)
+            if torch is not None and dev:
+                gpu = device_name(torch, dev)
+                vram = memory_gb(torch, dev)
             return self._send(200, {
                 "ok": _state["ready"],
                 "engine": "catvton-maskfree",
@@ -177,7 +186,7 @@ class Handler(BaseHTTPRequestHandler):
                 "base": os.path.basename(BASE_CKPT),
                 "resolution": f"{WIDTH}x{HEIGHT}",
                 "defaultSteps": DEFAULT_STEPS,
-                "device": "cuda",
+                "device": dev or "unknown",
                 "gpu": gpu,
                 "vramGiB": vram,
                 "error": _state.get("error"),

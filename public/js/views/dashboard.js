@@ -140,7 +140,9 @@ export async function render(root, ctx) {
                 <tbody>${coupons.slice(0, 8).map((c) => `
                   <tr>
                     <td class="coupon-code">${esc(c.code)}</td>
-                    <td>${c.discountPct}%</td>
+                    <td>${esc(c.kind === 'amount'
+                      ? (isZh() ? `HK$${c.amountHkd}` : `US$${(c.amountHkd / 7.8).toFixed(2)}`)
+                      : `${c.discountPct}%`)}</td>
                     <td><span class="badge ${c.status === 'applied' ? 'badge-good' : 'badge-info'}">
                       ${esc(c.status === 'applied' ? (isZh() ? '已使用' : 'Used') : (isZh() ? '已發出' : 'Issued'))}
                     </span></td>
