@@ -446,6 +446,136 @@ foreach ($t in "site_regression","visual_e2e","stores_e2e","forecast_e2e",
            ["Grounding", "Every number in an answer traces back to a tool call"]],
           widths=[3.4, 13.2])
 
+    # -------------------------------------------------------- 9 update
+    h1(doc, "9  What was added after the interim report")
+    body(doc, "Sections 1 to 8 were written at the interim point. This section records "
+              "what came after: three features, Mac support, deployment, and the six bugs "
+              "that turned up along the way.")
+
+    h2(doc, "9.1  Three new features")
+
+    table(doc, ["Feature", "URL", "The problem it solves", "Core mechanism"],
+          [["Virtual closet", "#/closet", "What you bought disappears from the site",
+            "One-click try-on of owned items; the photo is downscaled to 720 px and kept in the browser, never uploaded"],
+           ["Preference survey + prize wheel", "#/survey", "Cold start: nothing is known about a new shopper",
+            "Three pairwise questions → Bradley-Terry learning → a wheel pays a HK$1–10 coupon"],
+           ["Fashion AesRec score", "#/aesthetic", "\"Does this suit me?\" had no answer",
+            "Wardrobe vector comparison + category detection + colour analysis → 0–100 with reasons"]],
+          widths=[3.0, 1.8, 5.0, 7.0])
+
+    body(doc, "All three share one idea: replace a generic model with the shopper's own data. "
+              "The closet uses what they bought, the survey uses the choices they made, and the "
+              "score uses the centroid of their wardrobe.")
+
+    h2(doc, "9.2  How they work")
+
+    body(doc, "① Virtual closet: keep the photo in the browser")
+    code(doc, """// public/js/closetPhoto.js
+// localStorage is about 5 MB; a phone photo is 4 MB and will not fit
+const scale = Math.min(1, 720 / Math.max(img.width, img.height));
+canvas.toDataURL('image/jpeg', 0.82);   // about 120 KB
+
+// the try-on page restores it on mount, so "one-click" really is one click
+const saved = loadPhoto();
+if (saved) { /* load silently, no toast */ }""")
+    body(doc, "The decision that matters is that the photo is never uploaded. It goes straight "
+              "to the local CatVTON process, and the closet page says so — which is what makes "
+              "the privacy argument concrete rather than a slogan.")
+
+    body(doc, "② Preference survey: compare, do not rate — and pay for information")
+    code(doc, """// lib/survey.js
+// Bradley-Terry: P(A beats B) = sigmoid(s_A - s_B)
+const p = 1 / (1 + Math.exp(-(score(winner) - score(loser))));
+const delta = 0.35 * (1 - p);
+state.scores[winner] += delta;
+state.scores[loser]  -= delta;
+
+// pick the pair the model is least sure about and has seen least
+uncertainty = closeness(1/(1+gap*2.5)) * novelty(1/sqrt(1+seen)) + noise""")
+    body(doc, "The quote has two terms: how uncertain this set of answers was, and how much the "
+              "model already knew. Using only the first term paid every new shopper the maximum — "
+              "a bug I actually hit (see 9.3).")
+
+    body(doc, "③ Prize wheel: the server decides, the odds are published")
+    code(doc, """// lib/survey.js — the client only animates; it is told the index
+let r = (randomInt(0, 1_000_000) / 1_000_000) * total;   // weighted draw
+// better answers shift weight from the small prizes to the big ones
+weights = [20-boost, 22-boost, 20-boost, 16, 10+, 6+, 3+, 3]""")
+    body(doc, "This is a design principle, not a detail: the browser cannot change the outcome, "
+              "and the wheel lists the real percentage of every segment. A draw with hidden odds "
+              "is a dark pattern.")
+
+    body(doc, "④ Aesthetic score: split \"does it suit me\" into three measurable parts")
+    code(doc, """# ai-service/visual_search_service.py
+style    = cos(photo, wardrobe centroid)      # how close to your usual style
+coverage = categories detected (top/bottom/shoes/outer)   # is it a complete look
+palette  = distinct hue count + neutral share # does the colour work
+score    = 0.55*style + 0.25*coverage + 0.20*palette""")
+    body(doc, "Deliberately not an LLM score. A 7B vision model does not fit on the same 12 GB "
+              "card as CatVTON (already 3.6 GB), and an unvalidated LLM score is a vibe rather "
+              "than a benchmark. Every number here can be recomputed and traced.")
+
+    h2(doc, "9.3  Difficulties from this stretch")
+
+    table(doc, ["Problem", "Symptom", "Root cause", "Fix"],
+          [["Survey coupons polluted retention", "155.6% retention, funnel inverted",
+            "both campaigns wrote coupon_issued; the funnel counted every claim",
+            "filter by the source in event metadata; survey coupons get their own metric"],
+           ["Funnel showed 206%", "claimed 16, applied 33",
+            "numerator counted every applied coupon, denominator only exit-intent",
+            "compute applied from the coupon rows; checkout is not a subset, so it left the funnel"],
+           ["Cash coupons showed 0%", "CASH8-PGWAL · 0%",
+            "the table only read discountPct; cash coupons use amountHkd",
+            "branch on kind to show HK$8 or 10%"],
+           ["Reward was always HK$10", "every session hit the ceiling",
+            "a brand-new shopper is maximally informative, so the curve saturated",
+            "add novelty decay: the more the model knows, the less the next answer is worth"],
+           ["Whole page turned invisible", "closet page 95% transparent",
+            "animation used fill-mode both; an async re-render restarted it at opacity 0",
+            "fill-mode none for route transitions; transform-only for grid children"],
+           ["Survey returned one question", "occasional short sessions",
+            "a category with two items offers one pair; the retry loop gave up",
+            "exclude already-asked pairs at selection time"],
+           ["Aesthetic score was always 75", "two different photos, same score",
+            "assumed SigLIP text cosines of 0.22 and image cosines of 0–0.6; measured 0.03 and 0.6–0.8",
+            "re-measured both scales and recalibrated"],
+           ["Demo dashboard emptied after a week", "10 searches left",
+            "seeded history was written at install time and aged out of the 7-day window",
+            "if no seeded row is inside the window, delete the seeded rows and lay down a fresh one"]],
+          widths=[3.2, 3.4, 4.6, 5.4], size=8.2)
+
+    body(doc, "One problem was not about code: the sandbox's ACL runner lost its temp directory, "
+              "so every command returned --temp is not an existing directory and nothing could be "
+              "run for a whole turn. Only files could be written; nothing could be verified.")
+
+    body(doc, "Another: headless Chrome cannot start on this machine "
+              "(platform_channel.cc Check failed: access denied), because the sandbox's restricted "
+              "token blocks the IPC channels Chrome needs for its child processes. The workaround is "
+              "to run it outside the sandbox: the user runs tools/shots.ps1 in their own terminal "
+              "and I read the resulting PNGs.")
+
+    h2(doc, "9.4  Seeing the site for the first time")
+
+    body(doc, "Until then every screen had only been verified structurally: no light backgrounds, "
+              "valid syntax, passing tests. Once tools/shots.ps1 made screenshots possible, the first "
+              "look found something no test could ever catch:")
+    code(doc, """survey page: the two cards stacked vertically, "or" floating in empty space
+cause:  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr))
+        inner width 670px; 3 x 220 + 2 x 16 = 692 > 670 -> only two columns fit
+fix:    fixed two columns, with "or" as an absolutely centred badge""")
+    callout(doc, "A test can prove something is not broken; it cannot prove something is visible. "
+                 "Transparency, stacking and broken layout all passed 185 checks.")
+
+    h2(doc, "9.5  Size, now")
+
+    table(doc, ["", "At the interim report", "Now"],
+          [["Python services", "3", "3 (plus an /aesthetic endpoint)"],
+           ["Pages", "12", "15"],
+           ["Automated checks", "135 across 7 suites", "185 across 9 suites"],
+           ["Documents", "report + deck", "plus the code guide, DEPLOY.md, DEMO.md"],
+           ["Hardware", "Windows + RTX 4070", "same, but the code now supports Apple Silicon"]],
+          widths=[4.0, 5.4, 7.2])
+
     doc.add_paragraph()
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
