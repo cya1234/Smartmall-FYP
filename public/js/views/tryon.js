@@ -1,6 +1,7 @@
 // js/views/tryon.js — virtual try-on (simulated diffusion) + private friend voting.
 import { postJSON, getJSON } from '../api.js';
 import { toast, hexA, esc, pName, t, isZh, mediaInner } from '../ui.js';
+import { loadPhoto, savePhoto, toStorableDataUrl } from '../closetPhoto.js';
 
 export function render(root, ctx) {
   const garments = ctx.products.filter((p) => ['Dress', 'Shirt', 'Sweater', 'Jacket', 'Ski Jacket', 'Fleece', 'Trousers', 'Ski Pants'].includes(p.subcategory));
@@ -100,6 +101,8 @@ export function render(root, ctx) {
         resultImg.removeAttribute('src');
         canvas.classList.remove('hidden');
         drawPreview();
+        // Remember the photo for the virtual closet, downscaled to fit storage.
+        try { savePhoto(toStorableDataUrl(img)); } catch { /* quota or private mode */ }
         toast(isZh() ? '照片已載入，選擇服飾即可試穿' : 'Photo loaded — pick a garment');
       };
       img.src = e.target.result;
@@ -203,6 +206,21 @@ export function render(root, ctx) {
       pollHost.innerHTML = `<div class="card">${esc(t('common.retry'))}</div>`;
     }
   });
+
+  // Restore the photo saved by the virtual closet, so a returning shopper can try
+  // something on in one click instead of uploading again. Silent: no toast, and a
+  // failure just leaves the upload placeholder in place.
+  const savedPhoto = loadPhoto();
+  if (savedPhoto) {
+    const img = new Image();
+    img.onload = () => {
+      photo = img;
+      placeholder.classList.add('hidden');
+      canvas.classList.remove('hidden');
+      drawPreview();
+    };
+    img.src = savedPhoto;
+  }
 }
 
 export function renderPoll(host, poll, ctx) {

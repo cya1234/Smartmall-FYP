@@ -20,7 +20,16 @@ export async function render(root, ctx) {
 
   const coupon = getClaimedCoupon();
   const subtotal = lines.reduce((s, l) => s + l.product.price * l.qty, 0);
-  const discount = coupon ? Math.round(subtotal * (coupon.discountPct / 100) * 100) / 100 : 0;
+  // Two coupon kinds: the exit-intent offer is a percentage; the preference-survey
+  // reward is a fixed HK dollar amount. Catalogue prices are in USD, so cash is
+  // converted at the fixed HKD rate before it is applied.
+  const cashCoupon = Boolean(coupon && (coupon.kind === 'amount' || coupon.amountHkd));
+  const discount = !coupon ? 0 : (cashCoupon
+    ? Math.round(Math.min(subtotal, (coupon.amountHkd || 0) / 7.8) * 100) / 100
+    : Math.round(subtotal * ((coupon.discountPct || 0) / 100) * 100) / 100);
+  const discountLabel = cashCoupon
+    ? `−${isZh() ? `HK$${coupon.amountHkd}` : `US$${(coupon.amountHkd / 7.8).toFixed(2)}`}`
+    : `−${coupon?.discountPct || 0}%`;
   const net = Math.max(0, subtotal - discount);
 
   // Hong Kong delivery options (fees stored in USD, shown in the active currency).
@@ -80,7 +89,7 @@ export async function render(root, ctx) {
           <div class="summary-line"><span>${esc(t('common.subtotal'))}</span><span>${fmtPrice(subtotal)}</span></div>
           ${coupon ? `<div class="coupon-apply">
             <span>🎟️ ${esc(isZh() ? '優惠券已套用' : 'Coupon applied')} <span class="code">${esc(coupon.code)}</span></span>
-            <strong>−${fmtPrice(discount)} (−${coupon.discountPct}%)</strong>
+            <strong>−${fmtPrice(discount)} (${discountLabel})</strong>
           </div>` : ''}
           <div class="summary-line"><span>${esc(t('common.shipping'))} · ${esc(isZh() ? chosen.zh : chosen.en)}</span><span>${shipping === 0 ? esc(t('common.free')) : fmtPrice(shipping)}</span></div>
           <div class="summary-line total"><span>${esc(t('common.total'))}</span><span>${fmtPrice(total)}</span></div>

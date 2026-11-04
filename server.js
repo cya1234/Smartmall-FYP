@@ -19,6 +19,10 @@ import { runVisualSearch, visualSearchStatus } from './lib/visualSearch.js';
 import { forecastProduct } from './lib/forecast.js';
 import { prophetHealth, prophetEval, prophetBaseUrl } from './lib/prophetClient.js';
 import { getStores, getStore, availability, pickupInfo } from './lib/stores.js';
+import {
+  startSession as startSurvey, answer as answerSurvey, finish as finishSurvey,
+  profileSummary, resetPreferences as resetSurvey,
+} from './lib/survey.js';
 import { runTryOn, tryOnStatus } from './lib/tryon.js';
 import { buildBlindBox, detectScenario, SCENARIOS } from './lib/blindbox.js';
 import { runPriceAgent, PLATFORMS } from './lib/priceAgent.js';
@@ -29,17 +33,22 @@ import { predictReturnRisk, predictCartRisk } from './lib/returnPredict.js';
 import { startSession, analyzePhoto, submitReturn, getReturns as getReturnForms, returnStats, RETURN_REASONS } from './lib/support.js';
 import {
   trackEvent, issueCoupon, applyCoupon, getCoupon, getSummary, getRecentEvents, getCoupons,
-  seedIfEmpty, resetAnalytics, DEMO_TENANT,
+  seedIfEmpty, refreshSeedIfStale, resetAnalytics, DEMO_TENANT,
 } from './lib/analytics.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = join(__dirname, 'public');
 const PORT = Number(process.env.PORT) || 3000;
 
-// Lay down demo history once so the merchant dashboard is never empty.
+// Lay down demo history so the merchant dashboard is never empty, and refresh it
+// when the seeded window has aged out (otherwise the dashboard empties after a
+// few days because the demo rows fall outside the 7-day reporting window).
 try {
-  const seedResult = seedIfEmpty();
-  if (seedResult.seeded) console.log(`  analytics: seeded ${seedResult.events} demo events (${seedResult.days} days)`);
+  const seedResult = refreshSeedIfStale();
+  if (seedResult.seeded) {
+    console.log(`  analytics: ${seedResult.refreshed ? 'refreshed' : 'seeded'} `
+      + `${seedResult.events} demo events (${seedResult.days} days)`);
+  }
 } catch (err) {
   console.warn('  analytics: seeding skipped —', err.message);
 }
@@ -461,6 +470,39 @@ async function handleApi(req, res, pathname) {
     if (parts[2] === 'one' && parts[3]) {
       const s = getStore(parts[3]);
       return s ? sendJson(res, 200, s) : sendJson(res, 404, { error: 'not found' });
+    }
+  }
+
+  // ---- Preference survey: pay for information -----------------------------
+  // A few pairwise questions ("which would you wear?") reward a HK$1-10 coupon
+  // whose value scales with how much the answers actually taught the model.
+  if (parts[1] === 'survey') {
+    if (method === 'GET' && parts[2] === 'profile') {
+      return sendJson(res, 200, profileSummary());
+    }
+    if (method === 'POST' && parts[2] === 'start') {
+      const body = JSON.parse((await readBody(req)) || '{}');
+      return sendJson(res, 200, startSurvey({
+        lang: body.lang || 'zh',
+        n: Number(body.n) || 3,
+        session: body.session || null,
+      }));
+    }
+    if (method === 'POST' && parts[2] === 'answer') {
+      const body = JSON.parse((await readBody(req)) || '{}');
+      const r = answerSurvey({
+        sessionId: body.sessionId, questionId: body.questionId,
+        choice: body.choice, session: body.session || null,
+      });
+      return sendJson(res, r.ok ? 200 : 400, r);
+    }
+    if (method === 'POST' && parts[2] === 'finish') {
+      const body = JSON.parse((await readBody(req)) || '{}');
+      const r = finishSurvey({ sessionId: body.sessionId, session: body.session || null });
+      return sendJson(res, r.ok ? 200 : 400, r);
+    }
+    if (method === 'POST' && parts[2] === 'reset') {
+      return sendJson(res, 200, resetSurvey());
     }
   }
 

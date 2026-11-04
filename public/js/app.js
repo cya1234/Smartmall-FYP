@@ -18,6 +18,8 @@ import { render as memory } from './views/memory.js';
 import { render as support } from './views/support.js';
 import { render as dashboard } from './views/dashboard.js';
 import { render as stores } from './views/stores.js';
+import { render as closet } from './views/closet.js';
+import { render as survey } from './views/survey.js';
 import { render as cart } from './views/cart.js';
 import { initExitIntent } from './exitIntent.js';
 
@@ -48,7 +50,7 @@ function setActiveNav(route) {
     '': '', shop: 'shop', assistant: 'assistant', visual: 'visual', forecast: 'forecast',
     tryon: 'tryon', cart: 'cart', product: 'shop', blindbox: 'blindbox',
     priceagent: 'priceagent', resale: 'resale', memory: 'memory', support: 'support',
-    dashboard: 'dashboard', stores: 'stores',
+    dashboard: 'dashboard', stores: 'stores', closet: 'closet',
   };
   const active = map[route] ?? '';
   document.querySelectorAll('.main-nav a[data-nav]').forEach((a) => {
@@ -87,6 +89,8 @@ async function render() {
     case 'visual': visual(app, ctx); break;
     case 'forecast': await forecast(app, ctx); break;
     case 'tryon': tryon(app, ctx); break;
+    case 'closet': await closet(app, ctx); break;
+    case 'survey': await survey(app, ctx); break;
     case 'priceagent': priceagent(app, ctx); break;
     case 'resale': resale(app, ctx); break;
     case 'memory': memory(app, ctx); break;

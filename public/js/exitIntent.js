@@ -40,6 +40,11 @@ function saveCoupon(c) {
   try { localStorage.setItem(COUPON_KEY, JSON.stringify(c)); } catch { /* ignore */ }
 }
 
+/** Let other flows (the preference survey) hand a coupon to the cart. */
+export function rememberCoupon(c) {
+  saveCoupon(c);
+}
+
 function alreadyShown() {
   try { return sessionStorage.getItem(SHOWN_KEY) === '1'; } catch { return false; }
 }
