@@ -30,15 +30,16 @@ $chrome = $chromeCandidates | Where-Object { Test-Path $_ } | Select-Object -Fir
 if (-not $chrome) { Write-Error "No Chrome or Edge found. Install one, or pass a browser path."; exit 1 }
 
 $all = [ordered]@{
-  home      = "#/"
-  shop      = "#/shop"
-  product   = "#/product/p004"
-  closet    = "#/closet"
-  survey    = "#/survey"
-  aesthetic = "#/aesthetic"
-  tryon     = "#/tryon"
-  dashboard = "#/dashboard"
-  stores    = "#/stores"
+  home       = "#/"
+  shop       = "#/shop"
+  product    = "#/product/p004"
+  closet     = "#/closet"
+  survey     = "#/survey"
+  surveyDemo = "#/survey/demo"
+  aesthetic  = "#/aesthetic"
+  tryon      = "#/tryon"
+  dashboard  = "#/dashboard"
+  stores     = "#/stores"
 }
 
 $names = if ($Pages.Count) { $Pages } else { $all.Keys }

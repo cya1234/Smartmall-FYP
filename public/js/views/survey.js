@@ -58,10 +58,17 @@ function wheelSvg(segments) {
 }
 
 function itemCard(item, side) {
+  // Product photos are studio cut-outs on white. Giving the tile a white background
+  // makes them read as product tiles instead of glaring rectangles on the dark card.
+  const imgBg = item.image ? '#fff' : 'var(--surface-2)';
   return `<button data-side="${side}"
       style="padding:0;border:1px solid var(--line);border-radius:16px;overflow:hidden;
-             background:var(--surface);cursor:pointer;text-align:left;display:flex;flex-direction:column">
-    <span style="display:flex;align-items:center;justify-content:center;height:230px;background:var(--surface-2)">
+             background:var(--surface);cursor:pointer;text-align:left;display:flex;flex-direction:column;
+             transition:transform .18s ease, border-color .18s ease"
+      onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='var(--brand)'"
+      onmouseout="this.style.transform='';this.style.borderColor='var(--line)'">
+    <span style="display:flex;align-items:center;justify-content:center;height:210px;
+                 background:${imgBg};padding:8px">
       ${item.image
         ? `<img src="${esc(item.image)}" alt="" style="width:100%;height:100%;object-fit:contain" />`
         : `<span style="font-size:3rem">${item.emoji || '🛍️'}</span>`}
@@ -80,8 +87,9 @@ export async function render(root, ctx) {
     phase: 'loading', data: null, index: 0, finish: null,
     spin: null, angle: 0, busy: false, error: null,
   };
-
-  const pairsStyle = 'display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:20px';
+  // #/survey/demo answers the questions itself so the wheel can be screenshotted
+  // or shown in a hurry without clicking through.
+  const demoMode = location.hash.replace(/^#/, '').startsWith('/survey/demo');
 
   // ---------------------------------------------------------------- paint ---
   function paint() {
@@ -282,12 +290,15 @@ export async function render(root, ctx) {
       <div class="card" style="margin-top:18px">
         <h3 style="margin:0 0 2px;text-align:center">${esc(t('survey.question'))}</h3>
         <p class="muted small" style="margin:0;text-align:center">${esc(t('survey.questionSub'))}</p>
-        <div style="${pairsStyle}">
+        <div style="position:relative;display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px">
           ${itemCard(q.left, 'left')}
-          <div style="text-align:center;color:var(--muted);font-size:0.8rem;align-self:center">
+          ${itemCard(q.right, 'right')}
+          <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+                      padding:6px 12px;border-radius:99px;background:var(--surface);
+                      border:1px solid var(--line);color:var(--muted);font-size:0.78rem;
+                      white-space:nowrap;pointer-events:none">
             ${esc(t('survey.or'))}
           </div>
-          ${itemCard(q.right, 'right')}
         </div>
         <div style="text-align:center;margin-top:16px">
           <button class="btn btn-ghost btn-sm" data-skip>${esc(t('survey.skip'))}</button>
@@ -355,6 +366,19 @@ export async function render(root, ctx) {
       state.phase = 'error';
     }
     paint();
+    if (demoMode && state.phase === 'question') await autoRun();
+  }
+
+  async function autoRun() {
+    for (const q of state.data.questions) {
+      try {
+        await postJSON('/api/survey/answer', {
+          sessionId: state.data.sessionId, questionId: q.id,
+          choice: Math.random() < 0.5 ? 'left' : 'right', session: sessionId(),
+        });
+      } catch { /* keep going */ }
+    }
+    await settle();
   }
 
   await start();

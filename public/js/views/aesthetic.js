@@ -49,7 +49,7 @@ export async function render(root, ctx) {
     const r = state.result;
 
     root.innerHTML = `<section class="container" style="max-width:820px">
-      <h1 class="section-title">🪞 ${esc(t('aes.title'))}</h1>
+      <h1 class="section-title">📸 ${esc(t('aes.title'))}</h1>
       <p class="section-sub">${esc(t('aes.sub'))}</p>
 
       <div class="card">
