@@ -83,9 +83,28 @@ else:
 print("\n== product photos ==")
 withimg = [p for p in products if p.get("image")]
 raw = urllib.request.urlopen(BASE + withimg[0]["image"], timeout=20).read()
-check("photos served", raw[:2] == b"\xff\xd8" and len(raw) > 5000, f"{len(withimg)} photos, {len(raw)//1024}KB")
+# photos are JPEG, the six drawn illustrations are PNG
+is_image = raw[:2] == b"\xff\xd8" or raw[:4] == b"\x89PNG"
+check("photos served", is_image and len(raw) > 5000, f"{len(withimg)} photos, {len(raw)//1024}KB")
+
 missing = [p["id"] for p in products if not p.get("image")]
-check("emoji fallback for unmatchable items", len(missing) == 6, ",".join(missing))
+check("every product has an image", not missing, ",".join(missing) or f"all {len(products)}")
+
+# The six items that used to fall back to an emoji now have drawn illustrations.
+drawn = ["p008", "p018", "p027", "p028", "p029", "p036"]
+broken = []
+for pid in drawn:
+    item = next((x for x in products if x["id"] == pid), None)
+    if not item or not item.get("image"):
+        broken.append(pid)
+        continue
+    try:
+        blob = urllib.request.urlopen(BASE + item["image"], timeout=15).read()
+        if not (blob[:4] == b"\x89PNG" and len(blob) > 2000):
+            broken.append(pid)
+    except Exception:
+        broken.append(pid)
+check("drawn illustrations served", not broken, ",".join(broken) or "6/6")
 
 print(f"\n  {'ALL SITE CHECKS PASSED' if not fails else 'FAILURES: ' + ', '.join(fails)}")
 sys.exit(1 if fails else 0)

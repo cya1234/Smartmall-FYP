@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-28T19:42:10",
+ "generatedAt": "2026-11-10T23:24:09",
  "device": "cuda",
  "catalogueSize": 34,
  "queryCount": 94,
@@ -14,9 +14,9 @@
    "label": "ViT-B-32 / laion2b (current)",
    "dim": 512,
    "paramsM": 151,
-   "loadSeconds": 5.4,
+   "loadSeconds": 5.5,
    "encodeSeconds": 0.4,
-   "perQueryMs": 2.0,
+   "perQueryMs": 1.9,
    "translations": {
     "亞麻連身裙": "linen dress",
     "絲質連身裙": "silk dress",
@@ -332,8 +332,8 @@
    "dim": 512,
    "paramsM": 150,
    "loadSeconds": 2.0,
-   "encodeSeconds": 0.1,
-   "perQueryMs": 0.7,
+   "encodeSeconds": 0.2,
+   "perQueryMs": 0.9,
    "translations": {
     "亞麻連身裙": "linen dress",
     "絲質連身裙": "silk dress",
@@ -662,9 +662,9 @@
    "label": "Marqo-FashionSigLIP",
    "dim": 768,
    "paramsM": 203,
-   "loadSeconds": 3.7,
-   "encodeSeconds": 0.1,
-   "perQueryMs": 0.7,
+   "loadSeconds": 3.6,
+   "encodeSeconds": 0.2,
+   "perQueryMs": 0.8,
    "translations": {
     "亞麻連身裙": "linen dress",
     "絲質連身裙": "silk dress",

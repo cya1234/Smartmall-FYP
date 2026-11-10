@@ -188,7 +188,11 @@ def main():
         qdoc = json.load(fh)
     queries = qdoc["queries"]
     with open(PRODUCTS, encoding="utf-8") as fh:
-        products = [p for p in json.load(fh) if p.get("image")]
+        # Same rule as tools/build_clip_index.py: drawn illustrations are catalogue
+        # entries but not retrieval candidates, so the evaluation must measure the
+        # same set the deployed index serves. Without this the numbers silently
+        # describe a different catalogue from the one the site searches.
+        products = [p for p in json.load(fh) if p.get("image") and not p.get("illustration")]
 
     print(f"  device    : {dev}")
     print(f"  catalogue : {len(products)} retrievable products")

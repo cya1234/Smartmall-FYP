@@ -40,16 +40,25 @@ def main():
     with open(PRODUCTS, encoding="utf-8") as fh:
         products = json.load(fh)
 
-    # Only products that actually have a photo can be indexed visually.
+    # Only products with a real photograph are indexed. The six drawn illustrations
+    # are in the catalogue but deliberately kept out of the retrieval index: they sit
+    # in a different part of the embedding space from studio photographs and were
+    # taking top-1 away from real photos ("a blue ski jacket" started returning the
+    # illustrated denim jacket). Measured cost of leaving them in: Recall@5 100% -> 98.9%.
     indexable = []
+    skipped = []
     for p in products:
         rel = p.get("image")
         if not rel:
             continue
+        if p.get("illustration"):
+            skipped.append(p["id"])
+            continue
         path = os.path.join(PUBLIC, rel.lstrip("/").replace("/", os.sep))
         if os.path.exists(path):
             indexable.append((p, path))
-    print(f"  {len(indexable)} / {len(products)} products have a photo")
+    print(f"  {len(indexable)} / {len(products)} products indexed"
+          + (f" ({len(skipped)} illustrations kept out: {', '.join(skipped)})" if skipped else ""))
 
     print(f"  loading {MODEL} / {PRETRAINED} ...")
     t = time.time()

@@ -398,6 +398,7 @@
   },
   {
     "id": "p008",
+    "image": "/assets/products/p008.png",
     "name": "Vintage Denim Jacket",
     "brand": "Rodeo",
     "category": "Apparel",
@@ -448,7 +449,8 @@
       "runs": "true",
       "stretch": "none"
     },
-    "returnRate": 13
+    "returnRate": 13,
+    "illustration": true
   },
   {
     "id": "p009",
@@ -958,6 +960,7 @@
   },
   {
     "id": "p018",
+    "image": "/assets/products/p018.png",
     "name": "Wide-Brim Straw Sun Hat",
     "brand": "Isle & Co",
     "category": "Accessories",
@@ -1008,7 +1011,8 @@
       "runs": "true",
       "stretch": "none"
     },
-    "returnRate": 8
+    "returnRate": 8,
+    "illustration": true
   },
   {
     "id": "p019",
@@ -1473,6 +1477,7 @@
   },
   {
     "id": "p027",
+    "image": "/assets/products/p027.png",
     "name": "Ceramic Aroma Diffuser",
     "brand": "Haven",
     "category": "Home",
@@ -1524,10 +1529,12 @@
       "runs": "true",
       "stretch": "none"
     },
-    "returnRate": 7
+    "returnRate": 7,
+    "illustration": true
   },
   {
     "id": "p028",
+    "image": "/assets/products/p028.png",
     "name": "Stoneware Dinnerware Set",
     "brand": "Haven",
     "category": "Home",
@@ -1580,10 +1587,12 @@
       "runs": "true",
       "stretch": "none"
     },
-    "returnRate": 9
+    "returnRate": 9,
+    "illustration": true
   },
   {
     "id": "p029",
+    "image": "/assets/products/p029.png",
     "name": "True Wireless Earbuds",
     "brand": "Pulse",
     "category": "Electronics",
@@ -1638,7 +1647,8 @@
       "runs": "true",
       "stretch": "none"
     },
-    "returnRate": 6
+    "returnRate": 6,
+    "illustration": true
   },
   {
     "id": "p030",
@@ -1975,6 +1985,7 @@
   },
   {
     "id": "p036",
+    "image": "/assets/products/p036.png",
     "name": "Merino Knit Beanie",
     "name_zh": "美麗諾羊毛毛帽",
     "brand": "Meridian",
@@ -2024,7 +2035,8 @@
       "runs": "true",
       "stretch": "high"
     },
-    "returnRate": 5
+    "returnRate": 5,
+    "illustration": true
   },
   {
     "id": "p037",

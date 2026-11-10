@@ -3,7 +3,7 @@
   "pretrained": null,
   "dim": 768,
   "device": "cuda",
-  "builtAt": "2026-10-28T19:37:12",
+  "builtAt": "2026-11-10T23:20:41",
   "count": 34,
   "entries": [
     {
@@ -415,36 +415,5 @@
       "emoji": "🥾"
     }
   ],
-  "notIndexed": [
-    {
-      "id": "p008",
-      "name": "Vintage Denim Jacket",
-      "reason": "no photo"
-    },
-    {
-      "id": "p018",
-      "name": "Wide-Brim Straw Sun Hat",
-      "reason": "no photo"
-    },
-    {
-      "id": "p027",
-      "name": "Ceramic Aroma Diffuser",
-      "reason": "no photo"
-    },
-    {
-      "id": "p028",
-      "name": "Stoneware Dinnerware Set",
-      "reason": "no photo"
-    },
-    {
-      "id": "p029",
-      "name": "True Wireless Earbuds",
-      "reason": "no photo"
-    },
-    {
-      "id": "p036",
-      "name": "Merino Knit Beanie",
-      "reason": "no photo"
-    }
-  ]
+  "notIndexed": []
 }
