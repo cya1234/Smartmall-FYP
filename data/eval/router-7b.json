@@ -1,0 +1,595 @@
+{
+  "generatedAt": "2026-11-16T17:34:41Z",
+  "llm": {
+    "enabled": true,
+    "ok": true,
+    "model": "qwen2.5:7b-instruct"
+  },
+  "rules": {
+    "router": "rules",
+    "cases": 15,
+    "intentAccuracy": 93.3,
+    "toolAccuracy": 100.0,
+    "fellBack": 15,
+    "meanLatencyMs": 0.0,
+    "rows": [
+      {
+        "query": "滑雪外套會唔會減價？",
+        "lang": "zh",
+        "expectedIntents": [
+          "price_timing"
+        ],
+        "expectedTool": "forecast_price",
+        "intents": [
+          "price_timing"
+        ],
+        "tools": [
+          "search_products",
+          "forecast_price"
+        ],
+        "source": "rules",
+        "latencyMs": 0,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "冬天大褸值唔值得等",
+        "lang": "zh",
+        "expectedIntents": [
+          "price_timing"
+        ],
+        "expectedTool": "forecast_price",
+        "intents": [
+          "price_timing"
+        ],
+        "tools": [
+          "search_products",
+          "forecast_price"
+        ],
+        "source": "rules",
+        "latencyMs": 0,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "呢件羽絨幾時最平",
+        "lang": "zh",
+        "expectedIntents": [
+          "price_timing"
+        ],
+        "expectedTool": "forecast_price",
+        "intents": [
+          "price_timing"
+        ],
+        "tools": [
+          "search_products",
+          "forecast_price"
+        ],
+        "source": "rules",
+        "latencyMs": 0,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "will the ski jacket get cheaper",
+        "lang": "en",
+        "expectedIntents": [
+          "price_timing"
+        ],
+        "expectedTool": "forecast_price",
+        "intents": [
+          "price_timing"
+        ],
+        "tools": [
+          "search_products",
+          "forecast_price"
+        ],
+        "source": "rules",
+        "latencyMs": 0,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "亞麻襯衫有冇貨",
+        "lang": "zh",
+        "expectedIntents": [
+          "availability"
+        ],
+        "expectedTool": "check_store_stock",
+        "intents": [
+          "availability"
+        ],
+        "tools": [
+          "search_products",
+          "check_store_stock"
+        ],
+        "source": "rules",
+        "latencyMs": 0,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "邊間門市有白色波鞋",
+        "lang": "zh",
+        "expectedIntents": [
+          "availability"
+        ],
+        "expectedTool": "check_store_stock",
+        "intents": [
+          "availability"
+        ],
+        "tools": [
+          "search_products",
+          "check_store_stock"
+        ],
+        "source": "rules",
+        "latencyMs": 0,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "where can i pick up the white sneakers",
+        "lang": "en",
+        "expectedIntents": [
+          "availability"
+        ],
+        "expectedTool": "check_store_stock",
+        "intents": [
+          "availability"
+        ],
+        "tools": [
+          "search_products",
+          "check_store_stock"
+        ],
+        "source": "rules",
+        "latencyMs": 0,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "我著咩碼好，黑色西裝外套",
+        "lang": "zh",
+        "expectedIntents": [
+          "size"
+        ],
+        "expectedTool": "size_advice",
+        "intents": [
+          "size"
+        ],
+        "tools": [
+          "search_products",
+          "size_advice"
+        ],
+        "source": "rules",
+        "latencyMs": 0,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "what size for the merino ski socks",
+        "lang": "en",
+        "expectedIntents": [
+          "size"
+        ],
+        "expectedTool": "size_advice",
+        "intents": [
+          "size"
+        ],
+        "tools": [
+          "search_products",
+          "size_advice"
+        ],
+        "source": "rules",
+        "latencyMs": 0,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "預算2000，下個月去北海道滑雪要著咩",
+        "lang": "zh",
+        "expectedIntents": [
+          "outfit"
+        ],
+        "expectedTool": "build_outfit",
+        "intents": [
+          "outfit"
+        ],
+        "tools": [
+          "recall_wardrobe",
+          "build_outfit"
+        ],
+        "source": "rules",
+        "latencyMs": 0,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "幫我配一套海島婚禮造型",
+        "lang": "zh",
+        "expectedIntents": [
+          "outfit"
+        ],
+        "expectedTool": "build_outfit",
+        "intents": [
+          "outfit"
+        ],
+        "tools": [
+          "recall_wardrobe",
+          "build_outfit"
+        ],
+        "source": "rules",
+        "latencyMs": 0,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "門市地址喺邊",
+        "lang": "zh",
+        "expectedIntents": [
+          "stores"
+        ],
+        "expectedTool": "list_stores",
+        "intents": [
+          "availability",
+          "stores"
+        ],
+        "tools": [
+          "search_products",
+          "check_store_stock",
+          "list_stores"
+        ],
+        "source": "rules",
+        "latencyMs": 0,
+        "intentHit": false,
+        "toolHit": true
+      },
+      {
+        "query": "where is your store",
+        "lang": "en",
+        "expectedIntents": [
+          "stores"
+        ],
+        "expectedTool": "list_stores",
+        "intents": [
+          "stores"
+        ],
+        "tools": [
+          "list_stores"
+        ],
+        "source": "rules",
+        "latencyMs": 0,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "防曬乳",
+        "lang": "zh",
+        "expectedIntents": [
+          "product_search"
+        ],
+        "expectedTool": "search_products",
+        "intents": [
+          "product_search"
+        ],
+        "tools": [
+          "search_products"
+        ],
+        "source": "rules",
+        "latencyMs": 0,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "cashmere sweater",
+        "lang": "en",
+        "expectedIntents": [
+          "product_search"
+        ],
+        "expectedTool": "search_products",
+        "intents": [
+          "product_search"
+        ],
+        "tools": [
+          "search_products"
+        ],
+        "source": "rules",
+        "latencyMs": 0,
+        "intentHit": true,
+        "toolHit": true
+      }
+    ]
+  },
+  "llmRouter": {
+    "router": "llm",
+    "cases": 15,
+    "intentAccuracy": 100.0,
+    "toolAccuracy": 100.0,
+    "fellBack": 0,
+    "meanLatencyMs": 158.2,
+    "rows": [
+      {
+        "query": "滑雪外套會唔會減價？",
+        "lang": "zh",
+        "expectedIntents": [
+          "price_timing"
+        ],
+        "expectedTool": "forecast_price",
+        "intents": [
+          "price_timing"
+        ],
+        "tools": [
+          "search_products",
+          "forecast_price"
+        ],
+        "source": "llm",
+        "latencyMs": 149,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "冬天大褸值唔值得等",
+        "lang": "zh",
+        "expectedIntents": [
+          "price_timing"
+        ],
+        "expectedTool": "forecast_price",
+        "intents": [
+          "price_timing"
+        ],
+        "tools": [
+          "search_products",
+          "forecast_price"
+        ],
+        "source": "llm",
+        "latencyMs": 138,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "呢件羽絨幾時最平",
+        "lang": "zh",
+        "expectedIntents": [
+          "price_timing"
+        ],
+        "expectedTool": "forecast_price",
+        "intents": [
+          "price_timing"
+        ],
+        "tools": [
+          "search_products",
+          "forecast_price"
+        ],
+        "source": "llm",
+        "latencyMs": 134,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "will the ski jacket get cheaper",
+        "lang": "en",
+        "expectedIntents": [
+          "price_timing"
+        ],
+        "expectedTool": "forecast_price",
+        "intents": [
+          "price_timing"
+        ],
+        "tools": [
+          "search_products",
+          "forecast_price"
+        ],
+        "source": "llm",
+        "latencyMs": 136,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "亞麻襯衫有冇貨",
+        "lang": "zh",
+        "expectedIntents": [
+          "availability"
+        ],
+        "expectedTool": "check_store_stock",
+        "intents": [
+          "availability"
+        ],
+        "tools": [
+          "search_products",
+          "check_store_stock"
+        ],
+        "source": "llm",
+        "latencyMs": 127,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "邊間門市有白色波鞋",
+        "lang": "zh",
+        "expectedIntents": [
+          "availability"
+        ],
+        "expectedTool": "check_store_stock",
+        "intents": [
+          "availability"
+        ],
+        "tools": [
+          "search_products",
+          "check_store_stock"
+        ],
+        "source": "llm",
+        "latencyMs": 122,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "where can i pick up the white sneakers",
+        "lang": "en",
+        "expectedIntents": [
+          "availability"
+        ],
+        "expectedTool": "check_store_stock",
+        "intents": [
+          "availability"
+        ],
+        "tools": [
+          "search_products",
+          "check_store_stock"
+        ],
+        "source": "llm",
+        "latencyMs": 237,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "我著咩碼好，黑色西裝外套",
+        "lang": "zh",
+        "expectedIntents": [
+          "size"
+        ],
+        "expectedTool": "size_advice",
+        "intents": [
+          "size"
+        ],
+        "tools": [
+          "search_products",
+          "size_advice"
+        ],
+        "source": "llm",
+        "latencyMs": 180,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "what size for the merino ski socks",
+        "lang": "en",
+        "expectedIntents": [
+          "size"
+        ],
+        "expectedTool": "size_advice",
+        "intents": [
+          "size"
+        ],
+        "tools": [
+          "search_products",
+          "size_advice"
+        ],
+        "source": "llm",
+        "latencyMs": 136,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "預算2000，下個月去北海道滑雪要著咩",
+        "lang": "zh",
+        "expectedIntents": [
+          "outfit"
+        ],
+        "expectedTool": "build_outfit",
+        "intents": [
+          "outfit"
+        ],
+        "tools": [
+          "recall_wardrobe",
+          "build_outfit"
+        ],
+        "source": "llm",
+        "latencyMs": 151,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "幫我配一套海島婚禮造型",
+        "lang": "zh",
+        "expectedIntents": [
+          "outfit"
+        ],
+        "expectedTool": "build_outfit",
+        "intents": [
+          "outfit"
+        ],
+        "tools": [
+          "recall_wardrobe",
+          "build_outfit"
+        ],
+        "source": "llm",
+        "latencyMs": 225,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "門市地址喺邊",
+        "lang": "zh",
+        "expectedIntents": [
+          "stores"
+        ],
+        "expectedTool": "list_stores",
+        "intents": [
+          "stores"
+        ],
+        "tools": [
+          "list_stores"
+        ],
+        "source": "llm",
+        "latencyMs": 210,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "where is your store",
+        "lang": "en",
+        "expectedIntents": [
+          "stores"
+        ],
+        "expectedTool": "list_stores",
+        "intents": [
+          "stores"
+        ],
+        "tools": [
+          "list_stores"
+        ],
+        "source": "llm",
+        "latencyMs": 137,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "防曬乳",
+        "lang": "zh",
+        "expectedIntents": [
+          "product_search"
+        ],
+        "expectedTool": "search_products",
+        "intents": [
+          "product_search"
+        ],
+        "tools": [
+          "search_products"
+        ],
+        "source": "llm",
+        "latencyMs": 148,
+        "intentHit": true,
+        "toolHit": true
+      },
+      {
+        "query": "cashmere sweater",
+        "lang": "en",
+        "expectedIntents": [
+          "product_search"
+        ],
+        "expectedTool": "search_products",
+        "intents": [
+          "product_search"
+        ],
+        "tools": [
+          "search_products"
+        ],
+        "source": "llm",
+        "latencyMs": 143,
+        "intentHit": true,
+        "toolHit": true
+      }
+    ]
+  },
+  "deltaIntent": 6.7,
+  "tookMs": 2600
+}

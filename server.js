@@ -32,7 +32,7 @@ import { createPoll, getPolls, getPoll, simulateVotes, castVote, GROUPS, socialI
 import { getMemoryContext, getInsights, getWardrobeCoverage } from './lib/memory.js';
 import { predictReturnRisk, predictCartRisk } from './lib/returnPredict.js';
 import { route as routeQuery } from './lib/agent/router.js';
-import { routeWithLLM, llmHealth } from './lib/agent/llmRouter.js';
+import { routeWithLLM, llmHealth, warmLLM } from './lib/agent/llmRouter.js';
 import { startSession, analyzePhoto, submitReturn, getReturns as getReturnForms, returnStats, RETURN_REASONS } from './lib/support.js';
 import {
   trackEvent, issueCoupon, applyCoupon, getCoupon, getSummary, getRecentEvents, getCoupons,
@@ -599,6 +599,17 @@ server.listen(PORT, HOST, () => {
 
   console.log('\n  SmartMall is running');
   console.log(`  Bound to ${HOST}:${PORT}\n`);
+
+  // Load the local model now rather than on the first question: a cold completion
+  // takes ~53 s, which would exceed the classification timeout and silently fall
+  // back. Fire-and-forget so startup is never blocked by a slow model.
+  if (process.env.ASSISTANT_LLM === '1' || process.env.ASSISTANT_LLM === 'true') {
+    warmLLM().then((r) => {
+      console.log(r.warmed
+        ? `  llm      ${r.model} warm in ${(r.ms / 1000).toFixed(1)}s`
+        : `  llm      warmup skipped (${r.reason}) — the rule router will answer`);
+    });
+  }
   for (const u of urls) console.log(`  ${u.label.padEnd(34)} ${u.url}`);
   console.log('\n  Share a "same Wi-Fi" URL with friends on your network, or the');
   console.log('  Tailscale URL with friends who have joined your tailnet.');

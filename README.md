@@ -361,34 +361,53 @@ the rule router answers exactly as before.
 | `LLM_MODEL` | `qwen2.5:3b-instruct` | |
 | `LLM_TIMEOUT_MS` | `2500` | exceed it and the rules take over |
 
-Why a small model is enough: classification is a few dozen output tokens, so 1.5B–3B fits beside
-CatVTON in the same 12 GB. Anything that has to *write* the answer would need 7B and would break the
-grounding guarantee.
+Why a small model is enough: classification is a few dozen output tokens, so the model can stay
+small — and it has to, because it shares one 12 GB card with CatVTON. Anything that had to *write*
+the answer would need a model that does not fit.
 
 ```bash
-# on a machine with internet
-ollama pull qwen2.5:3b-instruct
+ollama pull qwen2.5:3b-instruct          # 1.9 GB
 
-# then, in the project
 ASSISTANT_LLM=1 LLM_MODEL=qwen2.5:3b-instruct node server.js
-
-# is it reachable?
-curl -s localhost:3000/api/assistant/llm
-
-# compare the two routers on the 15 labelled questions
-python tools/eval_router.py
+curl -s localhost:3000/api/assistant/llm # is the model reachable?
+python tools/eval_router.py              # both routers, same 15 questions
 ```
 
-**Measured so far:** with no model installed, every question falls back and the assistant's numbers
-are identical to the rule router's (15/15 fell back, +0.5 ms). With a real model the comparison has
-not been run yet — `tools/eval_router.py` exists for exactly that, and prints a warning when the
-results came from the mock rather than a real model.
+**Measured on an RTX 4070 (12 GB).** Both routers scored on the same 15 labelled questions
+(`data/eval/router-3b.json`, `router-7b.json`):
 
-Tests that do not need a model (`tools/mock_llm_server.py` plays any failure mode):
+| Router | Intent acc. | Tool acc. | Latency | VRAM (all services loaded) | Try-on alongside |
+|---|---|---|---|---|---|
+| rules (no model) | 93.3% | **100%** | 0.1 ms | — | yes, 22.5 s |
+| + qwen2.5:3b (1.9 GB) | 93.3% | 93.3% | 135 ms | **7541 MiB** | **yes, 22.5 s** |
+| + qwen2.5:7b (4.7 GB) | **100%** | **100%** | 158 ms | **11565 MiB** | **no — times out** |
+
+Read that table carefully, because it is the opposite of the usual "add an LLM and everything
+improves" story:
+
+- **The 3B ties the rules on intent** and is *worse* on tool selection. It fixes the one question the
+  rules miss (`門市地址喺邊` → `stores`) and misses one the rules get (`邊間門市有白色波鞋` →
+  `stores` instead of `availability`). Net: no gain, 135 ms slower.
+- **The 7B is genuinely better** — 100% on both — and **cannot be used with the try-on**: with both
+  loaded the GPU sits at 11565 of 12282 MiB and generation no longer finishes inside the client
+  timeout. It loads; it cannot work.
+- **Prompt tuning mattered more than model size.** The first 3B prompt scored 86.7%; adding explicit
+  Cantonese cues and the rule "a budget alone is not a `price_timing` question" took it to 93.3%
+  with no model change.
+
+The fair caveat: the rule router was *developed* against these 15 questions, so its 93.3% is
+optimistic — the set is a dev set as much as a test set. The LLM saw none of them. A larger held-out
+set is the next step, and `tools/eval_router.py` is what would run it.
+
+Practical conclusion: keep the rules as the default. Offer the 3B as an opt-in for phrasings the
+rules miss, and treat the 7B as a "try-on disabled" mode — the accuracy is real, the coexistence is
+not.
+
+Tests that need no model (`tools/mock_llm_server.py` plays every failure mode):
 
 ```bash
-python tools/mock_llm_server.py --port 11434 &     # or start it in another window
-node tools/test_router_llm.mjs 11434               # 13 checks, all passing
+python tools/mock_llm_server.py --port 11434 &
+node tools/test_router_llm.mjs 11434               # 13 checks
 ```
 
 ## Swapping in real AI

@@ -601,22 +601,35 @@ fix:    fixed two columns, with "or" as an absolutely centred badge""")
     body(doc, "Not fastidiousness — a hard constraint on both compute and trust. Measured on "
               "this machine:")
 
-    table(doc, ["State", "VRAM used", "Headroom for an LLM"],
-          [["Desktop apps only", "2371 MiB", "—"],
-           ["CLIP + CatVTON loaded", "5672 MiB", "about 6.1 GB"],
-           ["During a try-on (peak)", "about 7800 MiB", "about 3.9 GB"]],
-          widths=[5.4, 4.0, 5.4])
+    table(doc, ["State", "VRAM used", "Left over"],
+          [["Desktop apps only", "2018 MiB", "—"],
+           ["CLIP + CatVTON (no LLM)", "5672 MiB", "about 6.6 GB"],
+           ["+ qwen2.5:3b (1.9 GB)", "7541 MiB", "about 4.7 GB"],
+           ["+ qwen2.5:7b (4.7 GB)", "11565 MiB", "about 0.7 GB"]],
+          widths=[5.6, 4.2, 5.0])
 
-    table(doc, ["Model (4-bit)", "Real footprint", "Co-exists with CatVTON?"],
-          [["0.5B", "about 0.6 GB", "yes, easily"],
-           ["1.5B", "about 1.5 GB", "yes"],
-           ["3B", "about 2.8 GB", "yes, just"],
-           ["7B", "about 5.5 GB", "no — only on its own"]],
-          widths=[4.6, 4.0, 6.2])
+    body(doc, "The last row is the answer: the 7B loads, but try-on then times out because the "
+              "card runs out of memory. Not \"slower\" — it does not finish.")
 
-    body(doc, "Classification costs a few dozen output tokens, so 1.5B–3B is enough. Anything "
-              "that has to write the answer needs 7B, which does not fit in 3.9 GB — and would "
-              "destroy the structural no-hallucination guarantee.")
+    h2(doc, "10.2b  Measured: bigger model, better accuracy, worse coexistence")
+
+    table(doc, ["Router", "Intent", "Tool", "Latency", "Works with try-on?"],
+          [["rules (no model)", "93.3%", "100%", "0.1 ms", "yes, 22.5 s"],
+           ["qwen2.5:3b", "93.3%", "93.3%", "135 ms", "yes, 22.5 s"],
+           ["qwen2.5:7b", "100%", "100%", "158 ms", "no — times out"]],
+          widths=[4.4, 2.8, 2.8, 2.2, 4.0])
+
+    callout(doc, "The 3B only ties the rules on intent and is worse on tool selection; the 7B is "
+                 "genuinely 100% but cannot run alongside the try-on. Measured, not estimated.")
+
+    body(doc, "An unexpected finding: the prompt mattered more than model size. The first 3B "
+              "prompt scored 86.7%; adding Cantonese cues and the rule \"a budget alone is not a "
+              "price question\" took it to 93.3% with the same model.")
+
+    body(doc, "Fair warning: the rule router was developed against these same 15 questions, so its "
+              "93.3% is optimistic — the set is a dev set as much as a test set. The LLM saw none "
+              "of them. A larger held-out set is the next step, and tools/eval_router.py is what "
+              "would run it.")
 
     h2(doc, "10.3  The fallback contract: four failures, all back to rules")
 
@@ -642,10 +655,9 @@ python tools/eval_router.py                   # 15 questions, both routers""")
               "timeout, an HTTP 500), so the whole path and its degradation are testable with no "
               "GPU and no model.")
 
-    body(doc, "The honest status: this machine has no outbound network, so the model cannot be "
-              "installed and the real model-vs-rules comparison has not been run. The harness "
-              "exists, and it prints a warning when its numbers came from the mock so they "
-              "cannot be mistaken for model quality.")
+    body(doc, "Honest status: both models have now been measured (10.2b). What is still missing is "
+              "a held-out set — these 15 questions are the rule router's dev set too, so its 93.3% "
+              "is optimistic and the comparison is not yet fair.")
 
     doc.add_paragraph()
     p = doc.add_paragraph()
