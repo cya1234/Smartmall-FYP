@@ -46,8 +46,14 @@ check("has 30 forecast points", len(f.get("forecast", [])) == 30, len(f.get("for
 check("history series present", len(f.get("history", [])) >= 100, len(f.get("history", [])))
 check("advisory waits", f["advisory"]["action"] == "wait", f["advisory"]["headline_zh"])
 check("drop is material", f["advisory"]["expectedDropPct"] >= 4, f"{f['advisory']['expectedDropPct']}%")
-check("double-11 detected ahead", any(e["name"] == "double11" for e in f.get("events", [])),
-      ", ".join(f"{e['label']} ({e['daysAway']}d)" for e in f.get("events", [])))
+# Which sale comes next depends on today's date: on 2026-11-17 Double 11 has just
+# passed and Black Friday is the upcoming event. Assert the property, not a label,
+# or this test expires once a year.
+upcoming = [e for e in f.get("events", []) if e.get("daysAway", 99) >= 0]
+check("an upcoming sale is detected", bool(upcoming),
+      ", ".join(f"{e['label']} ({e['daysAway']}d)" for e in f.get("events", [])) or "none")
+check("upcoming sales are inside the horizon", all(e["daysAway"] <= 90 for e in upcoming),
+      f"furthest {max((e['daysAway'] for e in upcoming), default=0)}d")
 check("event price below current",
       all(e["predictedPrice"] < f["current"] for e in f.get("events", []) if e["dropPct"] > 0),
       f"current {f['current']}")

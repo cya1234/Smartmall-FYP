@@ -576,6 +576,77 @@ fix:    fixed two columns, with "or" as an absolutely centred badge""")
            ["Hardware", "Windows + RTX 4070", "same, but the code now supports Apple Silicon"]],
           widths=[4.0, 5.4, 7.2])
 
+    # -------------------------------------------------------- 10 llm router
+    h1(doc, "10  The LLM router: put the model where it does least harm")
+    body(doc, "The rule router misses phrasings it has never seen. The obvious fix is "
+              "\"add an LLM\" — but *where* you add it decides whether the system stays "
+              "trustworthy.")
+
+    h2(doc, "10.1  The model does one thing: classify intent")
+
+    code(doc, """question ──▶ LLM classifies intents ─┐
+                                            ├─▶ buildPlan() ──▶ tools ──▶ facts ──▶ composer
+            rules classify intents ─┘   (shared)                        (unchanged)""")
+
+    body(doc, "Both routers call the same buildPlan() and the same extractEntities(), so the "
+              "comparison measures the classifier rather than two independently written "
+              "planners. That is what makes the evaluation mean something.")
+
+    callout(doc, "The model never sees the catalogue, never produces a price, a size, a stock "
+                 "count or a tool argument, and never writes the answer. Money and size are "
+                 "read from the shopper's own words by extractEntities().")
+
+    h2(doc, "10.2  Why classification only")
+
+    body(doc, "Not fastidiousness — a hard constraint on both compute and trust. Measured on "
+              "this machine:")
+
+    table(doc, ["State", "VRAM used", "Headroom for an LLM"],
+          [["Desktop apps only", "2371 MiB", "—"],
+           ["CLIP + CatVTON loaded", "5672 MiB", "about 6.1 GB"],
+           ["During a try-on (peak)", "about 7800 MiB", "about 3.9 GB"]],
+          widths=[5.4, 4.0, 5.4])
+
+    table(doc, ["Model (4-bit)", "Real footprint", "Co-exists with CatVTON?"],
+          [["0.5B", "about 0.6 GB", "yes, easily"],
+           ["1.5B", "about 1.5 GB", "yes"],
+           ["3B", "about 2.8 GB", "yes, just"],
+           ["7B", "about 5.5 GB", "no — only on its own"]],
+          widths=[4.6, 4.0, 6.2])
+
+    body(doc, "Classification costs a few dozen output tokens, so 1.5B–3B is enough. Anything "
+              "that has to write the answer needs 7B, which does not fit in 3.9 GB — and would "
+              "destroy the structural no-hallucination guarantee.")
+
+    h2(doc, "10.3  The fallback contract: four failures, all back to rules")
+
+    table(doc, ["Failure", "Behaviour"],
+          [["No model / unreachable", "falls back to rules; the answer is identical"],
+           ["Timeout (2.5 s default)", "falls back to rules"],
+           ["Response is not JSON", "falls back to rules"],
+           ["Intent not in the allowlist", "that intent is dropped; if none survive, fall back"]],
+          widths=[6.0, 9.0])
+
+    body(doc, "Measured: with the LLM enabled but the endpoint missing, all 15 questions fell "
+              "back, intent and tool accuracy were identical to the rule router, and latency "
+              "rose by 0.5 ms. Turning the feature on costs nothing when no model exists.")
+
+    h2(doc, "10.4  Verifying it without a model")
+
+    code(doc, """python tools/mock_llm_server.py --port 11434   # scripted OpenAI-compatible server
+node tools/test_router_llm.mjs 11434          # 13 contract checks
+
+python tools/eval_router.py                   # 15 questions, both routers""")
+
+    body(doc, "The mock can play four failure modes (prose instead of JSON, unknown intents, a "
+              "timeout, an HTTP 500), so the whole path and its degradation are testable with no "
+              "GPU and no model.")
+
+    body(doc, "The honest status: this machine has no outbound network, so the model cannot be "
+              "installed and the real model-vs-rules comparison has not been run. The harness "
+              "exists, and it prints a warning when its numbers came from the mock so they "
+              "cannot be mistaken for model quality.")
+
     doc.add_paragraph()
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER

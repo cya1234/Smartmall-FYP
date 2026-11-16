@@ -31,6 +31,8 @@ import { draftListing, publishListing, getListings, buyListing, consignableItems
 import { createPoll, getPolls, getPoll, simulateVotes, castVote, GROUPS, socialImpact } from './lib/social.js';
 import { getMemoryContext, getInsights, getWardrobeCoverage } from './lib/memory.js';
 import { predictReturnRisk, predictCartRisk } from './lib/returnPredict.js';
+import { route as routeQuery } from './lib/agent/router.js';
+import { routeWithLLM, llmHealth } from './lib/agent/llmRouter.js';
 import { startSession, analyzePhoto, submitReturn, getReturns as getReturnForms, returnStats, RETURN_REASONS } from './lib/support.js';
 import {
   trackEvent, issueCoupon, applyCoupon, getCoupon, getSummary, getRecentEvents, getCoupons,
@@ -178,6 +180,35 @@ async function handleApi(req, res, pathname) {
     const body = JSON.parse((await readBody(req)) || '{}');
     if (!body.query || typeof body.query !== 'string') return sendJson(res, 400, { error: 'query required' });
     return sendJson(res, 200, await runAssistant(body.query, body.lang || 'zh'));
+  }
+
+  // GET /api/assistant/route?q=...&lang=..&router=rules|llm
+  // Planning only — no tools run. tools/eval_router.py scores both routers on the
+  // same questions without paying for the tool calls.
+  if (parts[1] === 'assistant' && parts[2] === 'route' && method === 'GET') {
+    const url = new URL(req.url, 'http://localhost');
+    const q = (url.searchParams.get('q') || '').trim();
+    if (!q) return sendJson(res, 400, { error: 'q required' });
+    const lang = url.searchParams.get('lang') === 'en' ? 'en' : 'zh';
+    const which = url.searchParams.get('router') || 'rules';
+    const t0 = Date.now();
+    const fromLLM = which === 'llm' ? await routeWithLLM(q, lang) : null;
+    const routed = fromLLM || routeQuery(q, lang);
+    return sendJson(res, 200, {
+      query: q,
+      lang,
+      requested: which,
+      source: routed.source || 'rules',
+      intents: routed.intents,
+      tools: routed.plan.map((s) => s.tool),
+      latencyMs: Date.now() - t0,
+      router: routed.router || null,
+    });
+  }
+
+  // GET /api/assistant/llm — is a local model configured and reachable?
+  if (parts[1] === 'assistant' && parts[2] === 'llm' && method === 'GET') {
+    return sendJson(res, 200, await llmHealth());
   }
 
   // POST /api/visual-search

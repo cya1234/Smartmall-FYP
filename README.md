@@ -337,6 +337,60 @@ The honest caveat: 15 hand-written questions is a smoke test, not a benchmark. T
 based, so an unfamiliar phrasing misses — the fix is an LLM router behind the same tool contract,
 which is why the tools and composer are kept separate from it.
 
+### The optional LLM router
+
+`lib/agent/llmRouter.js` puts a local model in front of the deterministic router. **It replaces one
+thing only: intent classification.** The model never sees the catalogue, never produces a price, a
+size, a stock count or a tool argument, and never writes the answer.
+
+```
+question ──▶ LLM classifies intents ─┐
+                                     ├─▶ buildPlan() ──▶ tools ──▶ facts ──▶ composer ──▶ answer
+            rules classify intents ──┘        (shared)                          (unchanged)
+```
+
+Both routers call the same `buildPlan()` and the same `extractEntities()`, so money and size stay
+deterministic and the comparison between them measures the classifier rather than two independently
+written planners. Off by default; when it is off, slow, unreachable, or returns anything invalid,
+the rule router answers exactly as before.
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `ASSISTANT_LLM` | unset (off) | set to `1` to enable |
+| `LLM_URL` | `http://127.0.0.1:11434/v1` | any OpenAI-compatible base (Ollama works) |
+| `LLM_MODEL` | `qwen2.5:3b-instruct` | |
+| `LLM_TIMEOUT_MS` | `2500` | exceed it and the rules take over |
+
+Why a small model is enough: classification is a few dozen output tokens, so 1.5B–3B fits beside
+CatVTON in the same 12 GB. Anything that has to *write* the answer would need 7B and would break the
+grounding guarantee.
+
+```bash
+# on a machine with internet
+ollama pull qwen2.5:3b-instruct
+
+# then, in the project
+ASSISTANT_LLM=1 LLM_MODEL=qwen2.5:3b-instruct node server.js
+
+# is it reachable?
+curl -s localhost:3000/api/assistant/llm
+
+# compare the two routers on the 15 labelled questions
+python tools/eval_router.py
+```
+
+**Measured so far:** with no model installed, every question falls back and the assistant's numbers
+are identical to the rule router's (15/15 fell back, +0.5 ms). With a real model the comparison has
+not been run yet — `tools/eval_router.py` exists for exactly that, and prints a warning when the
+results came from the mock rather than a real model.
+
+Tests that do not need a model (`tools/mock_llm_server.py` plays any failure mode):
+
+```bash
+python tools/mock_llm_server.py --port 11434 &     # or start it in another window
+node tools/test_router_llm.mjs 11434               # 13 checks, all passing
+```
+
 ## Swapping in real AI
 
 The proposal's key idea — *decoupling standard web operations from high-dimensional AI
