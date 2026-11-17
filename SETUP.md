@@ -167,9 +167,31 @@ Results land in `data/eval/`.
 ## Sharing the demo
 
 The AI services need a GPU, so the site cannot run on GitHub Pages or a free
-static host. Two workable options:
+static host. Three workable options:
 
-**A. Tunnel to your own machine** (recommended — the GPU models keep working):
+**A. Tailscale — reach this PC from anywhere, privately** (best if the PC can stay on):
+
+```powershell
+winget install tailscale.tailscale
+tailscale up            # sign in, then note the 100.x.y.z address
+```
+
+Install Tailscale on the Mac or phone too, and open `http://100.x.y.z:3000` from
+anywhere. The traffic is private to your tailnet — no public URL, no authentication
+to bolt on. The PC must stay awake; set it not to sleep.
+
+For a URL you can open from a device *without* Tailscale (a friend's phone, the
+campus PC), use **Tailscale Funnel** instead — it publishes one port to the public
+internet over HTTPS:
+
+```powershell
+tailscale funnel 3000
+# -> https://<machine>.<tailnet>.ts.net
+```
+
+Funnel is public: run `tailscale funnel off` when the demo ends.
+
+**B. Tunnel to your own machine** (no Tailscale account, public URL):
 
 ```powershell
 winget install Cloudflare.cloudflared
@@ -181,10 +203,41 @@ changes take effect on refresh. Caveats: your machine must stay awake, the free
 quick-tunnel URL changes on restart, and there is no authentication — do not
 publish the URL widely.
 
-**B. Deploy the web tier only.** Render/Railway can run `node server.js`, which
+**C. Deploy the web tier only.** Render/Railway can run `node server.js`, which
 gives you the storefront and the merchant dashboard but **not** try-on, visual
 search or forecasting, because none of them run without a GPU. That removes the
 three things worth demonstrating, so it is not recommended for a demo.
+
+### Moving the project to a Mac
+
+The repository is ~22 MB; the 6.7 GB of model weights are deliberately not in it and
+are re-downloaded on the new machine.
+
+```bash
+git clone https://github.com/cya1234/Smartmall-FYP.git SmartMall
+cd SmartMall
+bash setup-mac.sh      # venv, dependencies, models, and an MPS check
+bash start-all.sh
+```
+
+`setup-mac.sh` installs an unpinned `torch`/`torchvision` because the macOS arm64
+wheel is the one with MPS support — pinning the CUDA build used on Windows would fail
+on a Mac. `ai-service/device_util.py` then picks CUDA, MPS or CPU at runtime, so the
+same code runs on both machines.
+
+Expect the Mac to be slower at exactly one thing: try-on takes roughly 50–90 s per
+image on an M-series chip versus ~22 s on the RTX 4070. Everything else is fast.
+
+macOS needs two extras the Windows machine did not:
+
+```bash
+brew install python@3.11     # if python3 is missing or too old
+brew install cmdstan         # Prophet will not start without it
+```
+
+If `setup-mac.sh` reports `mps=False`, try-on still runs but on CPU (minutes per
+image); check that you are on an Apple Silicon build of Python (`python3 -c "import
+platform; print(platform.machine())"` should print `arm64`).
 
 ---
 
