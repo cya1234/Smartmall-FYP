@@ -12,34 +12,10 @@
   },
   "pairs": []
  },
- "onboardedAt": "2026-11-18T12:44:36.673Z",
+ "onboardedAt": "2026-11-18T12:47:39.271Z",
  "history": [
   {
-   "at": "2026-11-18T12:44:36.910Z",
-   "kind": "text",
-   "query": "滑雪",
-   "lang": "zh",
-   "results": 5,
-   "productId": null
-  },
-  {
-   "at": "2026-11-18T12:44:36.916Z",
-   "kind": "assistant",
-   "query": "我下個月要去海島婚禮，穿什麼好？",
-   "lang": "zh",
-   "results": 0,
-   "productId": null
-  },
-  {
-   "at": "2026-11-18T12:44:37.035Z",
-   "kind": "visual",
-   "query": "a blue ski jacket",
-   "lang": "zh",
-   "results": 12,
-   "productId": null
-  },
-  {
-   "at": "2026-11-18T12:44:38.093Z",
+   "at": "2026-11-18T12:47:40.281Z",
    "kind": "visual",
    "query": "a red dress",
    "lang": "zh",
@@ -47,7 +23,7 @@
    "productId": null
   },
   {
-   "at": "2026-11-18T12:44:38.103Z",
+   "at": "2026-11-18T12:47:40.311Z",
    "kind": "visual",
    "query": "white sneakers",
    "lang": "zh",
@@ -55,7 +31,7 @@
    "productId": null
   },
   {
-   "at": "2026-11-18T12:44:38.113Z",
+   "at": "2026-11-18T12:47:40.343Z",
    "kind": "visual",
    "query": "black sunglasses",
    "lang": "zh",
@@ -63,7 +39,7 @@
    "productId": null
   },
   {
-   "at": "2026-11-18T12:44:38.137Z",
+   "at": "2026-11-18T12:47:40.353Z",
    "kind": "visual",
    "query": "beige trousers",
    "lang": "zh",
@@ -71,7 +47,7 @@
    "productId": null
   },
   {
-   "at": "2026-11-18T12:44:38.191Z",
+   "at": "2026-11-18T12:47:40.382Z",
    "kind": "visual",
    "query": "(image)",
    "lang": "zh",
@@ -79,7 +55,7 @@
    "productId": null
   },
   {
-   "at": "2026-11-18T12:44:38.226Z",
+   "at": "2026-11-18T12:47:40.408Z",
    "kind": "visual",
    "query": "linen",
    "lang": "zh",
@@ -87,7 +63,7 @@
    "productId": null
   },
   {
-   "at": "2026-11-18T12:44:38.240Z",
+   "at": "2026-11-18T12:47:40.440Z",
    "kind": "visual",
    "query": "a blue ski jacket",
    "lang": "zh",
@@ -95,7 +71,7 @@
    "productId": null
   },
   {
-   "at": "2026-11-18T12:44:39.379Z",
+   "at": "2026-11-18T12:47:41.536Z",
    "kind": "assistant",
    "query": "海島婚禮穿什麼",
    "lang": "zh",
@@ -103,7 +79,7 @@
    "productId": null
   },
   {
-   "at": "2026-11-18T12:44:39.389Z",
+   "at": "2026-11-18T12:47:41.546Z",
    "kind": "visual",
    "query": "a red dress",
    "lang": "zh",

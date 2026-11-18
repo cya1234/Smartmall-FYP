@@ -1,9 +1,12 @@
 """Full-site regression check after the CLIP integration."""
 import json
+import os
+import re
 import sys
 import urllib.request
 
 BASE = "http://127.0.0.1:3000"
+ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 fails = []
 
 
@@ -99,6 +102,36 @@ check("add-to-cart carries the size", "addToCart(p.id, qty, chosenSize)" in prod
 cart_js = served("/js/cart.js")
 check("the cart stores a size per line", "size: size ||" in cart_js)
 check("the cart keeps size when qty changes", "size: c[id]?.size || null" in cart_js)
+
+print("\n== every ui helper a view calls is imported ==")
+# This is the bug the home page had: the banner called isZh() but home.js imported
+# only { productCard, esc, t }, so render threw a ReferenceError and the page stayed
+# blank while every other route worked. A missing import is invisible to node --check
+# and to any test that only exercises the API, so check it directly.
+UI_EXPORTS = [
+    "esc", "fmtPrice", "hexA", "toast", "pName", "pDesc", "mediaInner", "thumbHTML",
+    "productCard", "spinner", "emptyState", "itemTile", "agoLabel",
+    "t", "bi", "money", "currency", "isZh",
+]
+bad_imports = []
+for name in sorted(os.listdir(os.path.join(ROOT, "public", "js", "views"))):
+    if not name.endswith(".js"):
+        continue
+    src = served(f"/js/views/{name}")
+    m = re.search(r"import\s*\{([^}]*)\}\s*from\s*'\.\./ui\.js'", src)
+    imported = set()
+    if m:
+        imported = {x.strip().split(" as ")[0] for x in m.group(1).split(",") if x.strip()}
+    # A view may legitimately define its own helper with the same name (survey.js has
+    # a local money() formatter), so anything declared in the file is not a miss.
+    declared = set(re.findall(r"(?:const|let|var|function)\s+([A-Za-z_$][\w$]*)", src))
+    for sym in UI_EXPORTS:
+        # a bare call, not a member access and not a string
+        if (re.search(r"(?<![\w.])" + re.escape(sym) + r"\s*\(", src)
+                and sym not in imported and sym not in declared):
+            bad_imports.append(f"{name}:{sym}")
+check("no view calls an unimported ui helper", not bad_imports,
+      ", ".join(bad_imports[:6]) or f"{len(UI_EXPORTS)} helpers checked")
 
 print("\n== product photos ==")
 withimg = [p for p in products if p.get("image")]

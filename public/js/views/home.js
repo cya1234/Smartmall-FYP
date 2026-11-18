@@ -1,5 +1,5 @@
 // js/views/home.js
-import { productCard, esc, t } from '../ui.js';
+import { productCard, esc, t, isZh } from '../ui.js';
 
 const FEATURES = [
   { key: 'blindbox', route: 'blindbox', emoji: '🎁', accent: true },
