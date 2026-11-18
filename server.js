@@ -34,10 +34,14 @@ import { predictReturnRisk, predictCartRisk } from './lib/returnPredict.js';
 import { route as routeQuery } from './lib/agent/router.js';
 import { routeWithLLM, llmHealth, warmLLM } from './lib/agent/llmRouter.js';
 import {
-  recordSearch, getHistory, clearHistory, saveOnboarding, getOnboarding, hasOnboarded,
+  recordSearch, getHistory, clearHistory, saveOnboarding, getOnboarding, hasOnboarded, GUEST,
 } from './lib/userState.js';
 import { attention, resetCache as resetEngagementCache } from './lib/engagement.js';
 import { experimentSummary } from './lib/experiment.js';
+import {
+  register, login, logout, userForToken, sessionFromRequest,
+  cookieFor, clearCookie, userCount,
+} from './lib/auth.js';
 import { startSession, analyzePhoto, submitReturn, getReturns as getReturnForms, returnStats, RETURN_REASONS } from './lib/support.js';
 import {
   trackEvent, issueCoupon, applyCoupon, getCoupon, getSummary, getRecentEvents, getCoupons,
@@ -75,13 +79,22 @@ const MIME = {
   '.woff2': 'font/woff2',
 };
 
-function sendJson(res, status, payload) {
-  const body = JSON.stringify(payload);
-  res.writeHead(status, {
+/** Caller address, used only to rate-limit failed logins. */
+function clientIp(req) {
+  const fwd = req.headers['x-forwarded-for'];
+  if (typeof fwd === 'string' && fwd.length) return fwd.split(',')[0].trim();
+  return req.socket?.remoteAddress || 'unknown';
+}
+
+function sendJson(res, status, payload, extraHeaders = null) {  const body = JSON.stringify(payload);
+  const headers = {
     'Content-Type': 'application/json; charset=utf-8',
     'Content-Length': Buffer.byteLength(body),
     'Cache-Control': 'no-store',
-  });
+  };
+  // Set-Cookie only arrives through here, so it must not be lost on the auth routes.
+  if (extraHeaders) Object.assign(headers, extraHeaders);
+  res.writeHead(status, headers);
   res.end(body);
 }
 
@@ -134,6 +147,47 @@ async function handleApi(req, res, pathname) {
   // GET /api/health
   if (parts[1] === 'health') return sendJson(res, 200, { ok: true, service: 'SmartMall' });
 
+  // ---- Accounts -----------------------------------------------------------
+  // Browsing works logged out; an account only decides *whose* preferences and
+  // history are being recorded, so two people sharing a demo do not mix.
+  if (parts[1] === 'auth') {
+    const token = sessionFromRequest(req);
+    const me = userForToken(token);
+
+    if (parts[2] === 'me' && method === 'GET') {
+      return sendJson(res, 200, { user: me, accounts: userCount() });
+    }
+
+    if (parts[2] === 'register' && method === 'POST') {
+      const body = JSON.parse((await readBody(req)) || '{}');
+      const r = register(body);
+      if (!r.ok) return sendJson(res, 400, r);
+      const s = login({ email: body.email, password: body.password, ip: clientIp(req) });
+      if (!s.ok) return sendJson(res, 400, s);
+      return sendJson(res, 200, { ok: true, user: s.user }, { 'Set-Cookie': cookieFor(s.token) });
+    }
+
+    if (parts[2] === 'login' && method === 'POST') {
+      const body = JSON.parse((await readBody(req)) || '{}');
+      const r = login({ email: body.email, password: body.password, ip: clientIp(req) });
+      if (!r.ok) {
+        const status = r.error === 'too_many_attempts' ? 429 : 401;
+        return sendJson(res, status, r);
+      }
+      return sendJson(res, 200, { ok: true, user: r.user }, { 'Set-Cookie': cookieFor(r.token) });
+    }
+
+    if (parts[2] === 'logout' && method === 'POST') {
+      logout(token);
+      return sendJson(res, 200, { ok: true }, { 'Set-Cookie': clearCookie() });
+    }
+
+    return sendJson(res, 404, { error: 'unknown auth route' });
+  }
+
+  // Whose state this request touches.
+  const account = userForToken(sessionFromRequest(req))?.id || GUEST;
+
   // GET /api/products, /api/products/:id
   if (parts[1] === 'products') {
     if (parts[2]) {
@@ -150,7 +204,7 @@ async function handleApi(req, res, pathname) {
       );
       // Only real queries are recorded. The shop renders the whole catalogue on load,
       // and recording that would bury the searches under one entry per page view.
-      recordSearch({ kind: 'text', query: q, lang: 'zh', results: list.length });
+      recordSearch({ kind: 'text', query: q, lang: 'zh', results: list.length }, account);
     }
     return sendJson(res, 200, list);
   }
@@ -193,7 +247,7 @@ async function handleApi(req, res, pathname) {
       query: body.query,
       lang: body.lang || 'zh',
       results: (answer.alternatives || []).length,
-    });
+    }, account);
     return sendJson(res, 200, answer);
   }
 
@@ -243,7 +297,7 @@ async function handleApi(req, res, pathname) {
         query: body.query || '(image)',
         lang: body.lang || 'zh',
         results: (result.results || []).length,
-      });
+      }, account);
     }
     return sendJson(res, 200, result);
   }
@@ -251,13 +305,13 @@ async function handleApi(req, res, pathname) {
   // ---- Search history and onboarding ---------------------------------------
   if (parts[1] === 'history') {
     if (method === 'POST' && parts[2] === 'clear') {
-      return sendJson(res, 200, clearHistory());
+      return sendJson(res, 200, clearHistory(account));
     }
     const url = new URL(req.url, 'http://localhost');
     return sendJson(res, 200, getHistory({
       days: Number(url.searchParams.get('days')) || 30,
       limit: Number(url.searchParams.get('limit')) || 12,
-    }));
+    }, account));
   }
 
   // ---- The score A/B experiment -------------------------------------------
@@ -284,12 +338,12 @@ async function handleApi(req, res, pathname) {
   if (parts[1] === 'onboarding') {
     if (method === 'POST') {
       const body = JSON.parse((await readBody(req)) || '{}');
-      const answers = saveOnboarding(body);
+      const answers = saveOnboarding(body, account);
       trackEvent({ type: 'onboarding_completed', label: 'welcome', value: answers.categories.length,
         meta: { styles: answers.styles, pairs: answers.pairs.length } });
       return sendJson(res, 200, { ok: true, onboarding: answers });
     }
-    return sendJson(res, 200, { onboarded: hasOnboarded(), onboarding: getOnboarding() });
+    return sendJson(res, 200, { onboarded: hasOnboarded(account), onboarding: getOnboarding(account) });
   }
 
   // GET /api/visual-search/status — is the CLIP service up?

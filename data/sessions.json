@@ -1,0 +1,40 @@
+{
+ "sessions": {
+  "24d742f6506c163c41c5ae26ccd904084dc34eca3ca321a6444720868a700baf": {
+   "userId": "6194de62-c57a-40b3-9a5e-bb59b8ea6841",
+   "createdAt": "2026-11-18T13:09:59.223Z"
+  },
+  "f6dc1bf73e36577f2f6137ab10312f31a3b18a2d276780ecfeca06f72a785bce": {
+   "userId": "1d181533-c487-4aff-af08-3a11f73c2525",
+   "createdAt": "2026-11-18T13:10:30.169Z"
+  },
+  "91438e5128e61f27c8eb1a2e2267a15303e5a3b68db2a3186b90c74d7ab99dc4": {
+   "userId": "6e2e84a7-102b-4151-a235-defc644728d7",
+   "createdAt": "2026-11-18T13:10:34.986Z"
+  },
+  "12c144c5b11ae15d617b5aa9803a3690da1ae123f46b2cbc3bb028eaa1f2a5f6": {
+   "userId": "042e6d8a-7c53-4d90-962b-b67ebc2a5881",
+   "createdAt": "2026-11-18T13:11:02.000Z"
+  },
+  "3b9bdf8dc8b1565016babc8f09d39a84a2687180c50beb2881de00d33a50cea2": {
+   "userId": "d9ebdb38-cbc3-4c94-ba59-c69708bf7058",
+   "createdAt": "2026-11-18T13:11:06.212Z"
+  },
+  "852aacb23a594fbf2de4cfca67b8e893b64516ea8b01b75109485c32df693d92": {
+   "userId": "94cd4b94-6b48-4e5f-9714-37beb6b5931b",
+   "createdAt": "2026-11-18T13:11:15.498Z"
+  },
+  "cb76d8fdc37f2230e6ea3ebaed1d2e03e302a4c7daf96df4c2e3d593677e1c27": {
+   "userId": "044cd536-fcee-4364-bda1-581d798cfcae",
+   "createdAt": "2026-11-18T13:11:22.832Z"
+  },
+  "599d6a85dd97733416e81345e59c3c46dcf2723d5892d5908112e0a2b6e42db2": {
+   "userId": "a5c5f3ff-6de6-4409-92cb-4d7f8bf83a5e",
+   "createdAt": "2026-11-18T13:11:33.715Z"
+  },
+  "fdb230c2a472f2f2cd38bf5d325ce39d84644c9a482fce9ab9b30672fd36f6a4": {
+   "userId": "c14cb6ac-e4af-4101-8180-2f27f3a5b393",
+   "createdAt": "2026-11-18T13:11:37.943Z"
+  }
+ }
+}

@@ -21,6 +21,7 @@ import { render as stores } from './views/stores.js';
 import { render as closet } from './views/closet.js';
 import { render as survey } from './views/survey.js';
 import { render as welcome } from './views/welcome.js';
+import { render as login } from './views/login.js';
 import { render as aesthetic } from './views/aesthetic.js';
 import { render as cart } from './views/cart.js';
 import { initExitIntent } from './exitIntent.js';
@@ -39,6 +40,9 @@ const ctx = {
   navigate: (path) => { location.hash = path; },
   toast,
   lang: () => getLang(),
+  // Who is signed in, if anyone. Kept on the shared context so the header and any
+  // view can read it without another request.
+  user: null,
 };
 
 function parseRoute() {
@@ -94,6 +98,7 @@ async function render() {
     case 'closet': await closet(app, ctx); break;
     case 'survey': await survey(app, ctx); break;
     case 'welcome': await welcome(app, ctx); break;
+    case 'login': await login(app, ctx); break;
     case 'aesthetic': await aesthetic(app, ctx); break;
     case 'priceagent': priceagent(app, ctx); break;
     case 'resale': resale(app, ctx); break;
@@ -125,6 +130,21 @@ function wireHeaderSearch() {
   if (cam) cam.addEventListener('click', () => ctx.navigate('/visual'));
 }
 
+/** Who is signed in, and reflect it in the header. Never blocks the page. */
+async function loadAccount() {
+  try {
+    const r = await getJSON('/api/auth/me');
+    ctx.user = r.user || null;
+  } catch {
+    ctx.user = null;
+  }
+  const link = document.getElementById('account-link');
+  if (link && ctx.user) {
+    link.textContent = `👤 ${ctx.user.name.slice(0, 10)}`;
+    link.title = `${ctx.user.name} — ${ctx.user.email}`;
+  }
+}
+
 async function boot() {
   try {
     ctx.products = await getJSON('/api/products');
@@ -134,6 +154,7 @@ async function boot() {
   updateBadge();
   applyStaticI18n();
   wireHeaderSearch();
+  await loadAccount();
   render();
   window.addEventListener('hashchange', render);
 

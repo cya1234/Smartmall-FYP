@@ -585,6 +585,50 @@ support.
 To see it work, open `#/aesthetic`, upload a photo, press "browse using this score", and
 re-read `/api/experiment`.
 
+## Accounts (optional)
+
+Browsing works signed out. An account only decides **whose** preferences and history
+are recorded, so two people sharing a demo do not end up with one blended profile.
+
+```
+#/login   register or sign in        GET  /api/auth/me
+                                    POST /api/auth/register | /login | /logout
+```
+
+What makes it defensible rather than a toy, with no npm dependencies:
+
+| Concern | How |
+|---|---|
+| Password storage | `scrypt` with a per-user 16-byte salt, 64-byte key |
+| Comparison | `timingSafeEqual`, so a wrong password cannot be timed |
+| Session | 32 random bytes, stored server-side — a cookie cannot be forged |
+| Cookie | `HttpOnly` (script cannot read it), `SameSite=Lax` (no cross-site POST) |
+| Enumeration | same `invalid_credentials` for unknown address and wrong password |
+| Brute force | 5 failures per address, 50 per IP, per 5 minutes |
+
+`user-state.json` is partitioned by account (`guest` is a real bucket, so signed-out
+browsing still records history). The auth test asserts that a second account sees none
+of the first's onboarding answers or searches.
+
+**Deliberately not included:** email verification, password reset, OAuth, and the
+cookie's `Secure` flag — that last one because this demo runs over `http` on localhost
+and on a Tailscale address, so setting it would silently break the only deployments it
+has. Put TLS in front and add it.
+
+`python tools/test_auth_e2e.py` — 25 checks, including that the password never appears
+in `users.json`.
+
+## Collecting the experiment data
+
+`EXPERIMENT.md` is the operational guide: how many testers, how to avoid the five
+mistakes that invalidate the numbers, the sample-size table, a reporting template, and
+how to reset between rounds. Short version:
+
+- one browser per tester (the arm is sticky in `localStorage`)
+- ~15–25 people, target 30–50 views per arm
+- do not tell them which button to press
+- decide the sample size **before** looking at the result
+
 ## Swapping in real AI
 
 The proposal's key idea — *decoupling standard web operations from high-dimensional AI

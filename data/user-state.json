@@ -1,90 +1,409 @@
 {
- "onboarding": {
-  "categories": [],
-  "styles": [],
-  "colours": [],
-  "avoidColours": [],
-  "occasions": [],
-  "materials": [],
-  "budget": {
-   "min": null,
-   "max": null
+ "accounts": {
+  "guest": {
+   "onboarding": {
+    "categories": [],
+    "styles": [],
+    "colours": [],
+    "avoidColours": [],
+    "occasions": [],
+    "materials": [],
+    "budget": {
+     "min": null,
+     "max": null
+    },
+    "pairs": []
+   },
+   "onboardedAt": "2026-11-18T13:11:39.532Z",
+   "history": [
+    {
+     "at": "2026-11-18T13:11:40.525Z",
+     "kind": "visual",
+     "query": "a red dress",
+     "lang": "zh",
+     "results": 12,
+     "productId": null
+    },
+    {
+     "at": "2026-11-18T13:11:40.534Z",
+     "kind": "visual",
+     "query": "white sneakers",
+     "lang": "zh",
+     "results": 12,
+     "productId": null
+    },
+    {
+     "at": "2026-11-18T13:11:40.542Z",
+     "kind": "visual",
+     "query": "black sunglasses",
+     "lang": "zh",
+     "results": 12,
+     "productId": null
+    },
+    {
+     "at": "2026-11-18T13:11:40.551Z",
+     "kind": "visual",
+     "query": "beige trousers",
+     "lang": "zh",
+     "results": 12,
+     "productId": null
+    },
+    {
+     "at": "2026-11-18T13:11:40.570Z",
+     "kind": "visual",
+     "query": "(image)",
+     "lang": "zh",
+     "results": 12,
+     "productId": null
+    },
+    {
+     "at": "2026-11-18T13:11:40.596Z",
+     "kind": "visual",
+     "query": "linen",
+     "lang": "zh",
+     "results": 12,
+     "productId": null
+    },
+    {
+     "at": "2026-11-18T13:11:40.618Z",
+     "kind": "visual",
+     "query": "a blue ski jacket",
+     "lang": "zh",
+     "results": 12,
+     "productId": null
+    },
+    {
+     "at": "2026-11-18T13:11:41.550Z",
+     "kind": "assistant",
+     "query": "海島婚禮穿什麼",
+     "lang": "zh",
+     "results": 0,
+     "productId": null
+    },
+    {
+     "at": "2026-11-18T13:11:41.573Z",
+     "kind": "visual",
+     "query": "a red dress",
+     "lang": "zh",
+     "results": 12,
+     "productId": null
+    }
+   ]
   },
-  "pairs": []
- },
- "onboardedAt": "2026-11-18T13:02:20.704Z",
- "history": [
-  {
-   "at": "2026-11-18T13:02:21.642Z",
-   "kind": "visual",
-   "query": "a red dress",
-   "lang": "zh",
-   "results": 12,
-   "productId": null
+  "bd7cfeb8-67b0-4db5-9f82-32ae0c99293a": {
+   "onboarding": {
+    "categories": [
+     "Electronics"
+    ],
+    "styles": [
+     "Minimal"
+    ],
+    "colours": [],
+    "avoidColours": [],
+    "occasions": [],
+    "materials": [],
+    "budget": {
+     "min": null,
+     "max": null
+    },
+    "pairs": []
+   },
+   "onboardedAt": "2026-11-18T13:09:59.121Z",
+   "history": [
+    {
+     "at": "2026-11-18T13:09:59.146Z",
+     "kind": "assistant",
+     "query": "alice secret query",
+     "lang": "zh",
+     "results": 0,
+     "productId": null
+    }
+   ]
   },
-  {
-   "at": "2026-11-18T13:02:21.652Z",
-   "kind": "visual",
-   "query": "white sneakers",
-   "lang": "zh",
-   "results": 12,
-   "productId": null
+  "6194de62-c57a-40b3-9a5e-bb59b8ea6841": {
+   "onboarding": null,
+   "onboardedAt": null,
+   "history": []
   },
-  {
-   "at": "2026-11-18T13:02:21.661Z",
-   "kind": "visual",
-   "query": "black sunglasses",
-   "lang": "zh",
-   "results": 12,
-   "productId": null
+  "a85dfaa0-6063-49ee-82bd-1157fa51d470": {
+   "onboarding": {
+    "categories": [
+     "Electronics"
+    ],
+    "styles": [
+     "Minimal"
+    ],
+    "colours": [],
+    "avoidColours": [],
+    "occasions": [],
+    "materials": [],
+    "budget": {
+     "min": null,
+     "max": null
+    },
+    "pairs": []
+   },
+   "onboardedAt": "2026-11-18T13:10:30.077Z",
+   "history": [
+    {
+     "at": "2026-11-18T13:10:30.085Z",
+     "kind": "assistant",
+     "query": "alice secret query",
+     "lang": "zh",
+     "results": 0,
+     "productId": null
+    }
+   ]
   },
-  {
-   "at": "2026-11-18T13:02:21.671Z",
-   "kind": "visual",
-   "query": "beige trousers",
-   "lang": "zh",
-   "results": 12,
-   "productId": null
+  "1d181533-c487-4aff-af08-3a11f73c2525": {
+   "onboarding": null,
+   "onboardedAt": null,
+   "history": []
   },
-  {
-   "at": "2026-11-18T13:02:21.691Z",
-   "kind": "visual",
-   "query": "(image)",
-   "lang": "zh",
-   "results": 12,
-   "productId": null
+  "1e3d6548-04d7-49c7-9801-a8acd5d2a843": {
+   "onboarding": {
+    "categories": [
+     "Electronics"
+    ],
+    "styles": [
+     "Minimal"
+    ],
+    "colours": [],
+    "avoidColours": [],
+    "occasions": [],
+    "materials": [],
+    "budget": {
+     "min": null,
+     "max": null
+    },
+    "pairs": []
+   },
+   "onboardedAt": "2026-11-18T13:10:34.889Z",
+   "history": [
+    {
+     "at": "2026-11-18T13:10:34.912Z",
+     "kind": "assistant",
+     "query": "alice secret query",
+     "lang": "zh",
+     "results": 0,
+     "productId": null
+    }
+   ]
   },
-  {
-   "at": "2026-11-18T13:02:21.715Z",
-   "kind": "visual",
-   "query": "linen",
-   "lang": "zh",
-   "results": 12,
-   "productId": null
+  "6e2e84a7-102b-4151-a235-defc644728d7": {
+   "onboarding": null,
+   "onboardedAt": null,
+   "history": []
   },
-  {
-   "at": "2026-11-18T13:02:21.734Z",
-   "kind": "visual",
-   "query": "a blue ski jacket",
-   "lang": "zh",
-   "results": 12,
-   "productId": null
+  "0dbddeea-a483-4d06-9cf1-43c8c44a7793": {
+   "onboarding": {
+    "categories": [
+     "Electronics"
+    ],
+    "styles": [
+     "Minimal"
+    ],
+    "colours": [],
+    "avoidColours": [],
+    "occasions": [],
+    "materials": [],
+    "budget": {
+     "min": null,
+     "max": null
+    },
+    "pairs": []
+   },
+   "onboardedAt": "2026-11-18T13:11:01.911Z",
+   "history": [
+    {
+     "at": "2026-11-18T13:11:01.920Z",
+     "kind": "assistant",
+     "query": "alice secret query",
+     "lang": "zh",
+     "results": 0,
+     "productId": null
+    }
+   ]
   },
-  {
-   "at": "2026-11-18T13:02:22.746Z",
-   "kind": "assistant",
-   "query": "海島婚禮穿什麼",
-   "lang": "zh",
-   "results": 0,
-   "productId": null
+  "042e6d8a-7c53-4d90-962b-b67ebc2a5881": {
+   "onboarding": null,
+   "onboardedAt": null,
+   "history": []
   },
-  {
-   "at": "2026-11-18T13:02:22.755Z",
-   "kind": "visual",
-   "query": "a red dress",
-   "lang": "zh",
-   "results": 12,
-   "productId": null
+  "d2bb4a19-ef48-4d0c-8016-d61e4e33f176": {
+   "onboarding": {
+    "categories": [
+     "Electronics"
+    ],
+    "styles": [
+     "Minimal"
+    ],
+    "colours": [],
+    "avoidColours": [],
+    "occasions": [],
+    "materials": [],
+    "budget": {
+     "min": null,
+     "max": null
+    },
+    "pairs": []
+   },
+   "onboardedAt": "2026-11-18T13:11:06.101Z",
+   "history": [
+    {
+     "at": "2026-11-18T13:11:06.104Z",
+     "kind": "assistant",
+     "query": "alice secret query",
+     "lang": "zh",
+     "results": 0,
+     "productId": null
+    }
+   ]
+  },
+  "d9ebdb38-cbc3-4c94-ba59-c69708bf7058": {
+   "onboarding": null,
+   "onboardedAt": null,
+   "history": []
+  },
+  "1abb3702-08f6-409f-a22c-b7120b7a5bf3": {
+   "onboarding": {
+    "categories": [
+     "Electronics"
+    ],
+    "styles": [
+     "Minimal"
+    ],
+    "colours": [],
+    "avoidColours": [],
+    "occasions": [],
+    "materials": [],
+    "budget": {
+     "min": null,
+     "max": null
+    },
+    "pairs": []
+   },
+   "onboardedAt": "2026-11-18T13:11:15.393Z",
+   "history": [
+    {
+     "at": "2026-11-18T13:11:15.415Z",
+     "kind": "assistant",
+     "query": "alice secret query",
+     "lang": "zh",
+     "results": 0,
+     "productId": null
+    }
+   ]
+  },
+  "94cd4b94-6b48-4e5f-9714-37beb6b5931b": {
+   "onboarding": null,
+   "onboardedAt": null,
+   "history": []
+  },
+  "0370ea73-315f-4404-b6e3-0502ee7532cb": {
+   "onboarding": {
+    "categories": [
+     "Electronics"
+    ],
+    "styles": [
+     "Minimal"
+    ],
+    "colours": [],
+    "avoidColours": [],
+    "occasions": [],
+    "materials": [],
+    "budget": {
+     "min": null,
+     "max": null
+    },
+    "pairs": []
+   },
+   "onboardedAt": "2026-11-18T13:11:22.734Z",
+   "history": [
+    {
+     "at": "2026-11-18T13:11:22.755Z",
+     "kind": "assistant",
+     "query": "alice secret query",
+     "lang": "zh",
+     "results": 0,
+     "productId": null
+    }
+   ]
+  },
+  "044cd536-fcee-4364-bda1-581d798cfcae": {
+   "onboarding": null,
+   "onboardedAt": null,
+   "history": []
+  },
+  "0952786a-b45a-4e52-8127-49a46e2e8587": {
+   "onboarding": {
+    "categories": [
+     "Electronics"
+    ],
+    "styles": [
+     "Minimal"
+    ],
+    "colours": [],
+    "avoidColours": [],
+    "occasions": [],
+    "materials": [],
+    "budget": {
+     "min": null,
+     "max": null
+    },
+    "pairs": []
+   },
+   "onboardedAt": "2026-11-18T13:11:33.621Z",
+   "history": [
+    {
+     "at": "2026-11-18T13:11:33.624Z",
+     "kind": "assistant",
+     "query": "alice secret query",
+     "lang": "zh",
+     "results": 0,
+     "productId": null
+    }
+   ]
+  },
+  "a5c5f3ff-6de6-4409-92cb-4d7f8bf83a5e": {
+   "onboarding": null,
+   "onboardedAt": null,
+   "history": []
+  },
+  "7a5602b3-5eac-445c-8e1c-76429467b269": {
+   "onboarding": {
+    "categories": [
+     "Electronics"
+    ],
+    "styles": [
+     "Minimal"
+    ],
+    "colours": [],
+    "avoidColours": [],
+    "occasions": [],
+    "materials": [],
+    "budget": {
+     "min": null,
+     "max": null
+    },
+    "pairs": []
+   },
+   "onboardedAt": "2026-11-18T13:11:37.866Z",
+   "history": [
+    {
+     "at": "2026-11-18T13:11:37.869Z",
+     "kind": "assistant",
+     "query": "alice secret query",
+     "lang": "zh",
+     "results": 0,
+     "productId": null
+    }
+   ]
+  },
+  "c14cb6ac-e4af-4101-8180-2f27f3a5b393": {
+   "onboarding": null,
+   "onboardedAt": null,
+   "history": []
   }
- ]
+ }
 }
