@@ -872,3 +872,34 @@ input:focus, select:focus, textarea:focus {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ---- sample people on the try-on page ---- */
+.sample-people {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.sample-person {
+  width: 54px;
+  height: 72px;
+  padding: 0;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.sample-person:hover {
+  border-color: var(--brand);
+  transform: translateY(-2px);
+}
+.sample-person img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}

@@ -1,0 +1,62 @@
+[
+ {
+  "file": "person-01.jpg",
+  "zh": "範例人物 1",
+  "en": "Sample 1",
+  "source": "catvton-demo"
+ },
+ {
+  "file": "person-02.jpg",
+  "zh": "範例人物 2",
+  "en": "Sample 2",
+  "source": "catvton-demo"
+ },
+ {
+  "file": "person-03.jpg",
+  "zh": "範例人物 3",
+  "en": "Sample 3",
+  "source": "catvton-demo"
+ },
+ {
+  "file": "person-04.jpg",
+  "zh": "範例人物 4",
+  "en": "Sample 4",
+  "source": "catvton-demo"
+ },
+ {
+  "file": "person-05.jpg",
+  "zh": "模特兒 A",
+  "en": "Model A",
+  "source": "p001"
+ },
+ {
+  "file": "person-06.jpg",
+  "zh": "模特兒 B",
+  "en": "Model B",
+  "source": "p002"
+ },
+ {
+  "file": "person-07.jpg",
+  "zh": "模特兒 C",
+  "en": "Model C",
+  "source": "p003"
+ },
+ {
+  "file": "person-08.jpg",
+  "zh": "模特兒 D",
+  "en": "Model D",
+  "source": "p005"
+ },
+ {
+  "file": "person-09.jpg",
+  "zh": "模特兒 E",
+  "en": "Model E",
+  "source": "p006"
+ },
+ {
+  "file": "person-10.jpg",
+  "zh": "模特兒 F",
+  "en": "Model F",
+  "source": "p035"
+ }
+]

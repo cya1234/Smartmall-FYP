@@ -14,10 +14,10 @@
     },
     "pairs": []
    },
-   "onboardedAt": "2026-11-18T14:19:46.513Z",
+   "onboardedAt": "2026-11-18T14:35:22.881Z",
    "history": [
     {
-     "at": "2026-11-18T14:19:47.799Z",
+     "at": "2026-11-18T14:35:24.034Z",
      "kind": "assistant",
      "query": "海島婚禮穿什麼",
      "lang": "zh",
@@ -25,7 +25,7 @@
      "productId": null
     },
     {
-     "at": "2026-11-18T14:19:47.825Z",
+     "at": "2026-11-18T14:35:24.042Z",
      "kind": "visual",
      "query": "a red dress",
      "lang": "zh",
@@ -485,6 +485,76 @@
    ]
   },
   "5a088e39-101c-4c4b-b1f1-da697bc020d8": {
+   "onboarding": null,
+   "onboardedAt": null,
+   "history": []
+  },
+  "fb925b8d-62c2-4022-8609-a36b95630d7a": {
+   "onboarding": {
+    "categories": [
+     "Electronics"
+    ],
+    "styles": [
+     "Minimal"
+    ],
+    "colours": [],
+    "avoidColours": [],
+    "occasions": [],
+    "materials": [],
+    "budget": {
+     "min": null,
+     "max": null
+    },
+    "pairs": []
+   },
+   "onboardedAt": "2026-11-18T14:33:41.148Z",
+   "history": [
+    {
+     "at": "2026-11-18T14:33:41.151Z",
+     "kind": "assistant",
+     "query": "alice secret query",
+     "lang": "zh",
+     "results": 0,
+     "productId": null
+    }
+   ]
+  },
+  "56e7f1a7-98c7-4513-823f-d4b653c70881": {
+   "onboarding": null,
+   "onboardedAt": null,
+   "history": []
+  },
+  "49ef5f7f-30c2-4243-b1d5-e5da3848bcd9": {
+   "onboarding": {
+    "categories": [
+     "Electronics"
+    ],
+    "styles": [
+     "Minimal"
+    ],
+    "colours": [],
+    "avoidColours": [],
+    "occasions": [],
+    "materials": [],
+    "budget": {
+     "min": null,
+     "max": null
+    },
+    "pairs": []
+   },
+   "onboardedAt": "2026-11-18T14:35:22.191Z",
+   "history": [
+    {
+     "at": "2026-11-18T14:35:22.195Z",
+     "kind": "assistant",
+     "query": "alice secret query",
+     "lang": "zh",
+     "results": 0,
+     "productId": null
+    }
+   ]
+  },
+  "ac525063-d9be-4538-bb74-f43d2d55cf60": {
    "onboarding": null,
    "onboardedAt": null,
    "history": []

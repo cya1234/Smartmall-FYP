@@ -653,6 +653,56 @@ how to reset between rounds. Short version:
 - do not tell them which button to press
 - decide the sample size **before** looking at the result
 
+## Catalogue and sizing
+
+52 products across seven categories. **Electronics has 14 items** (audio, wearables,
+power and seven computer accessories: keyboard, mouse, hub, stand, webcam, SSD,
+monitor), up from 2 — a category with two products is not a category.
+
+The twelve new items are drawn, not photographed, and `imageCredit` says `(illustration)`
+rather than pretending otherwise. `python tools/add_tech_products.py` regenerates both
+the records and the images; it is idempotent.
+
+### Shoes are sized the Hong Kong way
+
+Hong Kong shops quote the **EU/Asian number** and measure the foot in cm
+([Charles & Keith HK](https://www.charleskeith.com/hk-en/CK1-60280245-1_CHALK_35.html)
+states "using Asian/European sizing"), so that is what the picker shows: **36–46**, with
+the foot length and the UK equivalent under the button.
+
+```
+36 37 38 39 40 41 42 43 44 45 46
+香港慣用歐碼（EU／亞洲碼），量腳長（cm）對照選碼。
+腳長約 25.9 cm · UK 7.5
+```
+
+The old ladder was `['EU 39', …, 'EU 45']` — seven sizes, a label that is not a size,
+and the number buried in a string. Profiles that stored `"EU 41"` are migrated on read.
+
+### Products without a size get no size picker
+
+`isSizeable()` decides from the category and subcategory, and the decision comes from
+the API (`sizeable`, `sizes`) rather than being hardcoded in the view — the view used to
+render `XS…XXL` for everything, including shoes.
+
+| Product | Has a size? |
+|---|---|
+| Apparel, winter | yes, XS–XXL |
+| Footwear | yes, HK/EU 36–46 |
+| Hat, beanie, gloves, socks | yes, S–XL |
+| **Electronics, computer accessories** | **no** |
+| Bags, watches, eyewear, scarves | no |
+| Home, beauty | no |
+
+A size selector on a pair of earbuds is a bug, not a feature, so the page shows
+「單一規格，不需選碼」 instead.
+
+### Try-on sample people
+
+`#/tryon` offers **ten sample people** — the four CatVTON demo photos plus six
+catalogue model shots — so the feature can be tried without photographing yourself.
+Built by `python tools/build_person_samples.py`, served from `/assets/persons/`.
+
 ## Swapping in real AI
 
 The proposal's key idea — *decoupling standard web operations from high-dimensional AI

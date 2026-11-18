@@ -1,4 +1,4 @@
-"""Full-site regression check after the CLIP integration."""
+﻿"""Full-site regression check after the CLIP integration."""
 import json
 import os
 import re
@@ -31,7 +31,7 @@ def check(name, cond, detail=""):
 print("== core ==")
 check("health", get("/api/health").get("ok") is True)
 products = get("/api/products")
-check("catalog", len(products) == 40, f"{len(products)} products")
+check("catalog", len(products) >= 40, f"{len(products)} products")
 check("zh search", len(get("/api/products?q=%E6%BB%91%E9%9B%AA")) > 0, "滑雪")
 
 print("\n== original AI modules still work ==")
@@ -132,6 +132,50 @@ for name in sorted(os.listdir(os.path.join(ROOT, "public", "js", "views"))):
             bad_imports.append(f"{name}:{sym}")
 check("no view calls an unimported ui helper", not bad_imports,
       ", ".join(bad_imports[:6]) or f"{len(UI_EXPORTS)} helpers checked")
+
+print("\n== sizing: the Hong Kong way, and not for things without sizes ==")
+# Shoe sizes here are the EU/Asian numbers Hong Kong shops quote, with the foot length
+# in cm, which is the measurement a shopper can actually check.
+shoe = get("/api/return-risk/p013?lang=zh")
+labels = [s["label"] for s in (shoe.get("sizes") or [])]
+check("shoe sizes are EU numbers, not 'EU 41' strings",
+      labels and all(l.isdigit() for l in labels), labels[:4])
+check("shoe range covers 36-46", labels[:1] == ["36"] and labels[-1:] == ["46"], f"{labels[:1]}..{labels[-1:]}")
+check("shoe sizes carry foot length in cm",
+      all(isinstance(s.get("cm"), (int, float)) for s in shoe["sizes"]), shoe["sizes"][:2])
+check("the shoe note mentions the Hong Kong convention",
+      "歐碼" in (shoe.get("sizeNote") or ""), shoe.get("sizeNote"))
+check("the usual shoe size survived the migration", shoe.get("usualSize") == "41", shoe.get("usualSize"))
+
+# A size selector on a pair of earbuds is a bug, not a feature.
+for pid in ("p029", "p046", "p052"):
+    r = get(f"/api/return-risk/{pid}?lang=zh")
+    check(f"{pid} has no size to choose", r.get("sizeable") is False and not r.get("sizes"),
+          f"sizeable={r.get('sizeable')} sizes={r.get('sizes')}")
+check("apparel still has letter sizes",
+      [s["label"] for s in get("/api/return-risk/p001?lang=zh")["sizes"]] ==
+      ["XS", "S", "M", "L", "XL", "XXL"])
+check("a hat gets a short ladder, not XS-XXL",
+      [s["label"] for s in get("/api/return-risk/p018?lang=zh")["sizes"]] ==
+      ["S", "M", "L", "XL"])
+
+print("\n== digital products ==")
+electronics = [p for p in products if p["category"] == "Electronics"]
+check("electronics is a real category now", len(electronics) >= 10, f"{len(electronics)} items")
+check("computer accessories exist",
+      len([p for p in electronics if p["subcategory"] == "Computer"]) >= 5,
+      len([p for p in electronics if p["subcategory"] == "Computer"]))
+check("each has its own image",
+      len({p["image"] for p in electronics}) == len(electronics))
+
+print("\n== try-on sample people ==")
+try:
+    samples = get("/assets/persons/persons.json")
+    check("sample people are listed", isinstance(samples, list) and len(samples) >= 8, f"{len(samples)} samples")
+    first = urllib.request.urlopen(BASE + "/assets/persons/" + samples[0]["file"], timeout=20)
+    check("the first sample loads", first.status == 200, samples[0]["file"])
+except Exception as exc:
+    check("sample people are listed", False, repr(exc))
 
 print("\n== product photos ==")
 withimg = [p for p in products if p.get("image")]

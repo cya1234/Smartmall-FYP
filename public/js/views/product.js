@@ -192,20 +192,28 @@ function renderRisk(host, r, reload, explicit = false) {
       <div class="divider"></div>
       <div class="row-between">
         <div>
-          <div class="muted small">${esc(t('rr.usual'))} · ${esc(runsLabel)}</div>
-          <div style="font-weight:800;font-size:1.05rem">${esc(r.usualSize)} → <span class="hl">${esc(r.recommendedSize)}</span></div>
+          ${r.sizeable === false
+            ? `<div class="muted small">${esc(t('rr.noSizeNeeded'))}</div>`
+            : `<div class="muted small">${esc(t('rr.usual'))} · ${esc(runsLabel)}</div>
+               <div style="font-weight:800;font-size:1.05rem">${esc(r.usualSize)} → <span class="hl">${esc(r.recommendedSize)}</span></div>`}
         </div>
         <span class="badge badge-good">${esc(t('rr.ifFollowed'))} ${r.riskIfFollowed}%</span>
       </div>
 
+      ${r.sizeable === false ? `
+      <div class="small" style="margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--surface-2)">
+        <strong>${esc(t('rr.oneSize'))}</strong>
+      </div>` : `
       <div class="size-pick">
-        ${['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((s) => `<button class="size-btn ${s === r.recommendedSize ? 'rec' : ''} ${s === picked ? 'active' : ''}" data-size="${s}">${s}${s === r.recommendedSize ? ' ✓' : ''}</button>`).join('')}
+        ${(r.sizes || []).map((s) => `<button class="size-btn ${s.label === r.recommendedSize ? 'rec' : ''} ${s.label === picked ? 'active' : ''}" data-size="${esc(s.label)}">${esc(s.label)}${s.label === r.recommendedSize ? ' ✓' : ''}</button>`).join('')}
       </div>
+      ${r.sizeNote ? `<div class="muted small" style="margin-top:8px">${esc(r.sizeNote)}</div>` : ''}
+      ${shoeDetail(r, picked)}
       <div class="small" style="margin-top:10px" data-chosen>
         ${picked
           ? `${esc(t('rr.youChose'))} <strong style="color:var(--brand)">${esc(picked)}</strong>`
           : `<span class="muted">${esc(t('rr.noChoice'))}</span>`}
-      </div>
+      </div>`}
 
       <p class="small" style="margin-top:14px;color:var(--ink-2);line-height:1.6">💡 ${esc(r.advice)}</p>
     </div>
@@ -213,6 +221,20 @@ function renderRisk(host, r, reload, explicit = false) {
 
   host.querySelectorAll('[data-size]').forEach((b) =>
     b.addEventListener('click', () => reload(b.dataset.size)));
+}
+
+/**
+ * The Hong Kong way to size shoes is the foot length in cm, so show it next to the
+ * number. Without this "41" is just a label nobody can check against their own foot.
+ */
+function shoeDetail(r, picked) {
+  // Show the conversion for whichever size is highlighted, so "41" means something
+  // before the shopper taps anything.
+  const size = picked || r.recommendedSize;
+  if (!size || r.sizeClass !== 'footwear') return '';
+  const s = (r.sizes || []).find((x) => x.label === size);
+  if (!s || s.cm == null) return '';
+  return `<div class="muted small" style="margin-top:4px">${esc(t('rr.shoeDetail'))} ${esc(String(s.cm))} cm · UK ${esc(s.uk)}</div>`;
 }
 
 function renderAdvisory(panel, f) {

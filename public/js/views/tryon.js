@@ -1,4 +1,4 @@
-// js/views/tryon.js — virtual try-on (simulated diffusion) + private friend voting.
+﻿// js/views/tryon.js — virtual try-on (simulated diffusion) + private friend voting.
 import { postJSON, getJSON } from '../api.js';
 import { toast, hexA, esc, pName, t, isZh, mediaInner } from '../ui.js';
 import { loadPhoto, savePhoto, toStorableDataUrl } from '../closetPhoto.js';
@@ -22,10 +22,12 @@ export function render(root, ctx) {
                  style="border-radius:inherit" />
             <div class="placeholder" id="stage-placeholder">
               <div style="font-size:3rem">🧍</div>
-              <p><strong>${esc(t('sp.upload'))}</strong></p>
+              <p><strong>${esc(t('tryon.uploadTitle'))}</strong></p>
               <p class="muted small">${esc(isZh() ? "建議：正面、腰部以上半身、光線均勻" : "Tip: front-facing, waist-up, even lighting" )}</p>
-              <button class="btn btn-ghost" id="upload-btn">📷 ${esc(t('sp.upload'))}</button>
+              <button class="btn btn-ghost" id="upload-btn">📷 ${esc(t('tryon.uploadTitle'))}</button>
               <input type="file" id="photo-input" accept="image/*" class="hidden" />
+              <p class="muted small" style="margin:14px 0 6px">${esc(t('tryon.orSample'))}</p>
+              <div class="sample-people" id="sample-people"></div>
             </div>
             <div class="placeholder hidden" id="stage-loading" style="position:absolute;inset:0;background:rgba(255,255,255,0.88);display:flex;flex-direction:column;align-items:center;justify-content:center">
               <span class="spinner dark" style="width:28px;height:28px"></span>
@@ -91,24 +93,56 @@ export function render(root, ctx) {
   function loadPhoto(file) {
     if (!file.type.startsWith('image/')) { toast(isZh() ? '請選擇圖片檔' : 'Please choose an image'); return; }
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        photo = img;
-        placeholder.classList.add('hidden');
-        // A new photo invalidates any previous CatVTON result.
-        resultImg.classList.add('hidden');
-        resultImg.removeAttribute('src');
-        canvas.classList.remove('hidden');
-        drawPreview();
-        // Remember the photo for the virtual closet, downscaled to fit storage.
-        try { savePhoto(toStorableDataUrl(img)); } catch { /* quota or private mode */ }
-        toast(isZh() ? '照片已載入，選擇服飾即可試穿' : 'Photo loaded — pick a garment');
-      };
-      img.src = e.target.result;
-    };
+    reader.onload = (e) => applyPhotoSrc(e.target.result);
     reader.readAsDataURL(file);
   }
+
+  /** Turn a loaded image source into the current photo, whichever way it arrived. */
+  function applyPhotoSrc(src) {
+    const img = new Image();
+    img.onload = () => {
+      photo = img;
+      placeholder.classList.add('hidden');
+      // A new photo invalidates any previous CatVTON result.
+      resultImg.classList.add('hidden');
+      resultImg.removeAttribute('src');
+      canvas.classList.remove('hidden');
+      drawPreview();
+      // Remember the photo for the virtual closet, downscaled to fit storage.
+      try { savePhoto(toStorableDataUrl(img)); } catch { /* quota or private mode */ }
+      toast(isZh() ? '照片已載入，選擇服飾即可試穿' : 'Photo loaded — pick a garment');
+    };
+    img.src = src;
+  }
+
+  // Sample people: a visitor can try the feature without photographing themselves,
+  // which matters at a demo table and for anyone unwilling to upload a selfie.
+  async function loadSamples() {
+    const host = root.querySelector('#sample-people');
+    if (!host) return;
+    try {
+      const list = await getJSON('/assets/persons/persons.json');
+      host.innerHTML = list.map((p) => `
+        <button class="sample-person" data-file="${esc(p.file)}" title="${esc(isZh() ? p.zh : p.en)}">
+          <img src="/assets/persons/${esc(p.file)}" alt="${esc(isZh() ? p.zh : p.en)}" loading="lazy" />
+        </button>`).join('');
+      host.querySelectorAll('[data-file]').forEach((b) => b.addEventListener('click', async () => {
+        const url = `/assets/persons/${b.dataset.file}`;
+        try {
+          const r = await fetch(url);
+          const blob = await r.blob();
+          const reader = new FileReader();
+          reader.onload = (e) => applyPhotoSrc(e.target.result);
+          reader.readAsDataURL(blob);
+        } catch {
+          toast(isZh() ? '載入範例失敗' : 'Could not load the sample');
+        }
+      }));
+    } catch {
+      host.innerHTML = '';
+    }
+  }
+  loadSamples();
 
   function drawPreview() {
     if (!photo || !garment) return;
