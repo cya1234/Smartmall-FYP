@@ -273,36 +273,44 @@ preview when the service is down or the product has no garment photo.
 | Model | `zhengchong/CatVTON-MaskFree`, `mix-48k-1024` | ICLR 2025, arXiv 2407.15886; 899 M params |
 | Pipeline | `CatVTONPix2PixPipeline` | from the official HF Space source, not the GitHub repo |
 | Base | `timbrooks/instruct-pix2pix` | **8-channel** UNet; the inpainting base is 9-channel and will not load |
-| Resolution | 768 × 1024, 12 steps, guidance 2.5 | configurable via `TRYON_*` env vars |
-| Sampler | DPM-Solver++ (Karras) | `TRYON_SCHEDULER=ddim` restores the original |
+| Resolution | 768 × 1024, 20 steps, guidance 2.5 | configurable via `TRYON_*` env vars |
+| Sampler | DDIM (the pipeline's own) | `TRYON_SCHEDULER=dpm` opts into DPM-Solver++ |
 | Licence | CC BY-NC-SA 4.0 | non-commercial — fine for an FYP, a blocker for a product |
 
-Measured on this machine (RTX 4070, 12 GB): model load 3.6 s, **12.8 s at 12 steps with
-DPM-Solver++**, **peak 3.57 GiB VRAM**. `tools/test_tryon_e2e.py` reproduces those
-numbers.
+Measured on this machine (RTX 4070, 12 GB): model load 3.0 s, **19.8 s at 20 steps**,
+**peak 3.57 GiB VRAM**. `tools/test_tryon_e2e.py` reproduces those numbers.
 
-### Why 12 steps rather than 30
+### The step count, and a correction
 
-Two changes, both measured here rather than assumed. Per-step cost is about 1.0 s on
-this card, plus roughly 4 s of fixed VAE encode/decode that no amount of step-trimming
-removes:
+An earlier revision of this file claimed that DPM-Solver++ at 12 steps matched DDIM at 20
+and cut the time by 61 %. That was wrong, and the way it was wrong is worth recording.
 
-| Steps | DDIM | DPM-Solver++ |
-|---|---|---|
-| 8 | 11.9 s | 11.2 s |
-| 12 | 13.6 s | 12.6 s |
-| 20 | 22.1 s | 21.0 s |
-| 30 | 32.5 s | — |
+CatVTON's pipeline holds its sampler at **`noise_scheduler`**, not the diffusers-standard
+`.scheduler`. The swap code read `.scheduler`, raised `AttributeError` inside a
+`try/except`, printed nothing alarming, and kept running DDIM — so every "DPM++"
+measurement was really DDIM. What the timings then showed, and still show:
 
-Swapping the sampler alone barely helps, because each step still costs the same. What
-helps is that **DPM-Solver++ at 12 steps reaches the quality DDIM needed 20 for** — so
-the win is 32.5 s → 12.8 s end to end (the site had been running DDIM at 30). Below
-about 8 steps the plaid patterns visibly soften.
+| Steps | DDIM | DPM-Solver++ | Per step |
+|---|---|---|---|
+| 12 | 12.9 s | 12.9 s | ~1.05 s |
+| 20 | 20.4 s | 20.2 s | ~1.02 s |
+| 30 | 29.7 s | — | ~0.99 s |
 
-**Fine-tuning would not have produced this.** Fine-tuning changes what the model draws,
-not how much work each step is. The only training-based speedup is step distillation
-(LCM / Turbo / DMD2), which is a research project in itself and risks quality. The
-free 60 % was sitting in the sampler and the step count.
+DPM-Solver++ costs the same per step here, so it buys no speed. The original gain came
+entirely from cutting 30 steps to 12 — and **12 steps is too few**: comparing the outputs
+on a real model photo, 12 leaves visible smearing where the original garment was, 20 is
+clean, and 30 is indistinguishable from 20.
+
+So the shipped default is **20 steps with DDIM**. That is still a third faster than the
+original 30, and it is the setting whose output was actually inspected.
+
+### What the remaining artefacts are
+
+Mask-free try-on synthesises the garment region from a reference photo; it cannot
+perfectly erase a very different original garment. On a busy original — a patterned
+dress, an unusual pose — a soft residue remains beside the new garment. The page says so
+above the result rather than presenting it as a finished photo. Feeding it a front-facing,
+plain-background, waist-up photo (or one of the sample people) gives the cleanest output.
 
 ### Why the mask-free variant
 

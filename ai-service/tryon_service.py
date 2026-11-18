@@ -47,7 +47,7 @@ ATTN_CKPT = os.environ.get("TRYON_ATTN", "zhengchong/CatVTON-MaskFree")
 ATTN_VERSION = os.environ.get("TRYON_ATTN_VERSION", "mix-48k-1024")
 WIDTH = int(os.environ.get("TRYON_WIDTH", 768))
 HEIGHT = int(os.environ.get("TRYON_HEIGHT", 1024))
-DEFAULT_STEPS = int(os.environ.get("TRYON_STEPS", 12))
+DEFAULT_STEPS = int(os.environ.get("TRYON_STEPS", 20))
 MAX_BODY = 16 * 1024 * 1024
 
 _state = {"ready": False, "error": None, "pipe": None, "torch": None}
@@ -76,26 +76,34 @@ def load():
     )
     _state.update(pipe=pipe, torch=torch, ready=True, device=device)
 
-    # Sampler swap, on by default.
+    # Sampler selection.
     #
-    # The pipeline ships with DDIM. DPM-Solver++ is a higher-order solver that reaches
-    # comparable quality in roughly half the steps, which is the cheapest speedup
-    # available without training anything (measured: DPM++ at 12 steps looks like DDIM
-    # at 20, and the site used to run DDIM at 30).
-    # TRYON_SCHEDULER=ddim restores the original.
-    choice = (os.environ.get("TRYON_SCHEDULER") or "dpm").strip().lower()
-    if choice in ("dpm", "dpm++", "dpm-solver", "dpmsolver"):
+    # CatVTON's pipeline stores its sampler as `noise_scheduler` (a DDIMScheduler built
+    # from the base checkpoint), NOT as the diffusers-standard `.scheduler`. An earlier
+    # version of this code read `.scheduler`, raised AttributeError, swallowed it, and
+    # silently kept DDIM while the log implied a swap.
+    #
+    # Now that the swap actually works, the measurement is unflattering: per-step cost is
+    # identical (about 1.05 s either way), so DPM-Solver++ buys no speed here. Quality at
+    # low step counts is also slightly worse, with more residual smearing where the
+    # original garment was. So DDIM stays the default and DPM++ is opt-in.
+    #   TRYON_SCHEDULER=dpm   -> DPM-Solver++ (Karras)
+    choice = (os.environ.get("TRYON_SCHEDULER") or "ddim").strip().lower()
+    sched = getattr(pipe, "noise_scheduler", None) or getattr(pipe, "scheduler", None)
+    if sched is None:
+        print("  scheduler: pipeline exposes no sampler; leaving it alone", flush=True)
+    elif choice in ("dpm", "dpm++", "dpm-solver", "dpmsolver"):
         try:
             from diffusers import DPMSolverMultistepScheduler
-            was = type(pipe.scheduler).__name__
-            pipe.scheduler = DPMSolverMultistepScheduler.from_config(
-                pipe.scheduler.config, algorithm_type="dpmsolver++", use_karras_sigmas=True,
+            was = type(sched).__name__
+            pipe.noise_scheduler = DPMSolverMultistepScheduler.from_config(
+                sched.config, algorithm_type="dpmsolver++", use_karras_sigmas=True,
             )
             print(f"  scheduler DPMSolver++ (karras), was {was}", flush=True)
         except Exception as exc:
-            print(f"  scheduler swap skipped: {exc}", flush=True)
+            print(f"  scheduler swap FAILED, staying on {type(sched).__name__}: {exc}", flush=True)
     else:
-        print(f"  scheduler {type(pipe.scheduler).__name__}", flush=True)
+        print(f"  scheduler {type(sched).__name__} (unchanged)", flush=True)
     vram = memory_gb(torch, device)
     print(f"  model    CatVTON MaskFree / {ATTN_VERSION}", flush=True)
     print(f"  device   {device} ({device_name(torch, device) or 'n/a'})", flush=True)

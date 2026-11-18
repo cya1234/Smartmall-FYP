@@ -363,7 +363,9 @@ async function handleApi(req, res, pathname) {
     const result = await runTryOn({
       productId: body.productId,
       photo: body.photo || null,
-      steps: Number(body.steps) || 30,
+      // Default lives in runTryOn; hardcoding a number here once meant a step-count
+      // change in lib/tryon.js had no effect on the served site.
+      steps: Number(body.steps) || undefined,
     });
     return sendJson(res, result.error ? 404 : 200, result);
   }

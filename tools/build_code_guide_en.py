@@ -724,19 +724,18 @@ if neutralShare < 0.12:   palette -= 12""")
               "and scores them under both rules.")
 
     # -------------------------------------------------------- 12 performance
-    h1(doc, "12  Performance: turning a 32.5 s try-on into 12.8 s")
-    body(doc, "The try-on started at 32.5 s per image. Nothing here was guessed: it was "
-              "measured first. This section records what the measurement showed, what "
-              "changed, and why fine-tuning the model was never going to be the answer.")
+    h1(doc, "12  Performance: the try-on is 20 steps, not 12, and why")
+    body(doc, "This section is a correction. An earlier revision claimed DPM-Solver++ at "
+              "12 steps matched DDIM at 20 and cut the time by 61 %. That was wrong, and "
+              "the shape of the mistake is more useful than the original claim.")
 
     h2(doc, "12.1  Measure where the time goes")
     body(doc, "Same person, same garment, only the step count changed:")
 
     table(doc, ["Steps", "DDIM (original)", "Per step"],
-          [["8", "11.9 s", "1.49 s"],
-           ["12", "13.6 s", "1.13 s"],
-           ["20", "22.1 s", "1.11 s"],
-           ["30", "32.5 s", "1.08 s"]],
+          [["12", "12.9 s", "1.05 s"],
+           ["20", "20.4 s", "1.02 s"],
+           ["30", "29.7 s", "0.99 s"]],
           widths=[3.0, 5.0, 4.0])
 
     callout(doc, "Cost = about 4 s of fixed VAE encode/decode + about 1 s per step. "
@@ -746,31 +745,37 @@ if neutralShare < 0.12:   palette -= 12""")
     body(doc, "The measurement also turned up that the site was running 30 steps, not the "
               "20 the docs claimed. The real starting point was 32.5 s.")
 
-    h2(doc, "12.2  Swapping the sampler alone does not help")
-    body(doc, "Replacing DDIM with DPM-Solver++, a higher-order solver:")
+    h2(doc, "12.2  A swallowed error: the sampler swap never happened")
+    body(doc, "The intent was to replace DDIM with DPM-Solver++ and keep the quality in "
+              "fewer steps. The code read pipe.scheduler and replaced it.")
+    body(doc, "CatVTON's pipeline stores its sampler at noise_scheduler, not at the "
+              "diffusers-standard .scheduler. The line raised AttributeError, the "
+              "try/except swallowed it, and the pipeline kept running DDIM.")
+    body(doc, "So every recorded DPM++ measurement was really DDIM. With the swap actually "
+              "working, the two are the same speed:")
 
-    table(doc, ["Steps", "DDIM", "DPM-Solver++", "Delta"],
-          [["8", "11.9 s", "11.2 s", "-6 %"],
-           ["12", "13.6 s", "12.6 s", "-7 %"],
-           ["20", "22.1 s", "21.0 s", "-5 %"]],
-          widths=[2.6, 3.4, 4.2, 3.0])
+    table(doc, ["Steps", "DDIM", "DPM-Solver++"],
+          [["12", "12.9 s", "12.9 s"],
+           ["20", "20.4 s", "20.2 s"]],
+          widths=[3.0, 4.4, 6.0])
 
-    body(doc, "Only 5 %, because a step costs the same either way. The value is not speed "
-              "per step but steps required: DPM-Solver++ reaches in 12 steps what DDIM "
-              "needed 20 for.")
+    callout(doc, "Cost per step is identical, so DPM-Solver++ buys no speed here. The "
+                 "original 60 % came entirely from cutting 30 steps to 12, nothing else.")
 
-    h2(doc, "12.3  Verified by looking, not by assuming")
-    body(doc, "Four outputs side by side, same person, same plaid shirt:")
+    h2(doc, "12.3  Checked by looking: 12 steps is not enough")
+    body(doc, "Compared on a real model photo rather than the clean demo portrait:")
 
     table(doc, ["Setting", "Time", "Quality"],
-          [["DDIM 20 steps", "22.1 s", "baseline"],
-           ["DDIM 12 steps", "13.6 s", "slightly soft"],
-           ["DPM++ 12 steps", "12.6 s", "close to DDIM 20"],
-           ["DPM++ 8 steps", "11.2 s", "plaid visibly blurred"]],
-          widths=[4.4, 3.4, 5.4])
+          [["DDIM 12 steps", "12.9 s", "clear residue where the old garment was"],
+           ["DDIM 20 steps", "20.4 s", "clean"],
+           ["DDIM 30 steps", "29.7 s", "no visible gain over 20"]],
+          widths=[4.4, 3.4, 6.4])
 
-    body(doc, "Hence 12. At 8 the plaid is visibly mushy; at 20 the extra time buys a "
-              "difference that is not visible.")
+    body(doc, "The shipped default is therefore 20 steps with DDIM: a third faster than "
+              "the original 30, and the setting whose output was actually inspected.")
+    body(doc, "Why the mistake survived so long: it was tested on the vendor's demo "
+              "portrait, which is clean, front-facing and standard. That input looks fine "
+              "even at 8 steps. Real shoppers upload their own photos.")
 
     h2(doc, "12.4  Why fine-tuning is not the answer")
     body(doc, "Expecting fine-tuning to make inference faster is a common mistake. "
@@ -781,10 +786,10 @@ if neutralShare < 0.12:   palette -= 12""")
                 "a research project on its own, and it costs quality")
     bullet(doc, "sampler + fewer steps: free, and already worth 60 %")
 
-    callout(doc, "The free 60 % was sitting in the sampler and the step count. Measure "
-                 "before spending time on training.")
+    callout(doc, "The lesson is not 'do not optimise'. It is 'do not validate on an input "
+                 "that is too easy'.")
 
-    h2(doc, "12.5  What else could work, and why stop here")
+    h2(doc, "12.5  What else could work")
 
     table(doc, ["Method", "Expected", "Effort", "Risk"],
           [["fp8 quantisation", "another ~25 %", "medium", "4070 is Ada, fp8 is supported"],
@@ -793,16 +798,17 @@ if neutralShare < 0.12:   palette -= 12""")
            ["step distillation", "4-8 steps", "high", "training, quality loss"]],
           widths=[4.4, 3.0, 2.0, 5.0])
 
-    body(doc, "12.8 s is comfortably fast for a demo. The remaining gains are small, and "
-              "the time is better spent collecting the A/B data.")
+    body(doc, "20 s is acceptable for a demo. Going lower costs quality, and the time is "
+              "better spent collecting the A/B data.")
 
     h2(doc, "12.6  Keeping it from regressing")
     body(doc, "Two assertions guard the fast path:")
 
-    bullet(doc, "the response must report steps = 12, so putting the 30-step path back fails")
-    bullet(doc, "the run must finish within 20 s")
+    bullet(doc, "the response must report steps = 20, so any change to the step count fails")
+    bullet(doc, "the run must finish within 30 s")
 
-    body(doc, "TRYON_SCHEDULER=ddim restores the original sampler if it is ever needed.")
+    body(doc, "DDIM is the default; TRYON_SCHEDULER=dpm opts into DPM-Solver++ for anyone "
+              "who wants to re-measure it.")
 
     doc.add_paragraph()
     p = doc.add_paragraph()

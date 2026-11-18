@@ -62,15 +62,16 @@ elif not online:
     print("  SKIP  service offline")
 else:
     photo = "data:image/jpeg;base64," + base64.b64encode(open(SAMPLE_PERSON, "rb").read()).decode()
-    # 12 steps with DPM-Solver++ is the shipped default: measured to look like the old
-    # DDIM 20 and about half the wall time. This assertion is here so a future change
-    # cannot quietly put the 30-step path back.
-    code, r = call("/api/tryon", {"productId": "p004", "photo": photo, "steps": 12})
+    # 20 steps with the DDIM sampler the pipeline ships. Measured: 12 steps leaves
+    # visible smearing where the original garment was, 20 is clean, 30 buys nothing.
+    # These assertions exist so neither a step-count nor a sampler change can slip in
+    # without someone re-checking the output image.
+    code, r = call("/api/tryon", {"productId": "p004", "photo": photo, "steps": 20})
     check("returns 200", code == 200, f"HTTP {code}")
     check("status synthesized", r.get("status") == "synthesized", r.get("status"))
     check("engine catvton", r.get("engine") == "catvton", r.get("engine"))
-    check("uses the fast step count", r.get("steps") == 12, f"steps={r.get('steps')}")
-    check("finishes inside 20 s", (r.get("tookMs") or 1e9) < 20000, f"{r.get('tookMs')} ms")
+    check("uses the verified step count", r.get("steps") == 20, f"steps={r.get('steps')}")
+    check("finishes inside 30 s", (r.get("tookMs") or 1e9) < 30000, f"{r.get('tookMs')} ms")
     img = r.get("image", "")
     check("image is a png data url", img.startswith("data:image/png;base64,"), img[:30])
     raw = base64.b64decode(img.split(",", 1)[1]) if img.startswith("data:") else b""

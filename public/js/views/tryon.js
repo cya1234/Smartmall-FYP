@@ -1,4 +1,4 @@
-﻿// js/views/tryon.js — virtual try-on (simulated diffusion) + private friend voting.
+// js/views/tryon.js — virtual try-on (simulated diffusion) + private friend voting.
 import { postJSON, getJSON } from '../api.js';
 import { toast, hexA, esc, pName, t, isZh, mediaInner } from '../ui.js';
 import { loadPhoto, savePhoto, toStorableDataUrl } from '../closetPhoto.js';
@@ -35,6 +35,7 @@ export function render(root, ctx) {
             </div>
           </div>
           <div class="muted small" id="tryon-note" style="margin-top:10px"></div>
+          <p class="muted small" style="margin:6px 0 0;font-size:0.75rem">ℹ️ ${esc(t('tryon.caveat'))}</p>
 
           <div class="card" style="margin-top:16px">
             <h3 style="margin-top:0">${esc(t('sv.title'))}</h3>
@@ -196,7 +197,7 @@ export function render(root, ctx) {
         }
       }, 1000);
 
-      const res = await postJSON('/api/tryon', { productId: garment.id, photo: photoData, steps: 12 });
+      const res = await postJSON('/api/tryon', { productId: garment.id, photo: photoData, steps: 20 });
       clearInterval(tick);
 
       if (res.engine === 'catvton' && res.image) {

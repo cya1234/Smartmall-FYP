@@ -14,10 +14,10 @@
     },
     "pairs": []
    },
-   "onboardedAt": "2026-11-18T14:35:22.881Z",
+   "onboardedAt": "2026-11-18T14:53:52.224Z",
    "history": [
     {
-     "at": "2026-11-18T14:35:24.034Z",
+     "at": "2026-11-18T14:53:53.423Z",
      "kind": "assistant",
      "query": "海島婚禮穿什麼",
      "lang": "zh",
@@ -25,7 +25,7 @@
      "productId": null
     },
     {
-     "at": "2026-11-18T14:35:24.042Z",
+     "at": "2026-11-18T14:53:53.434Z",
      "kind": "visual",
      "query": "a red dress",
      "lang": "zh",
@@ -555,6 +555,41 @@
    ]
   },
   "ac525063-d9be-4538-bb74-f43d2d55cf60": {
+   "onboarding": null,
+   "onboardedAt": null,
+   "history": []
+  },
+  "1e07b2de-3114-49e0-a087-2fa59b2f80c3": {
+   "onboarding": {
+    "categories": [
+     "Electronics"
+    ],
+    "styles": [
+     "Minimal"
+    ],
+    "colours": [],
+    "avoidColours": [],
+    "occasions": [],
+    "materials": [],
+    "budget": {
+     "min": null,
+     "max": null
+    },
+    "pairs": []
+   },
+   "onboardedAt": "2026-11-18T14:53:51.514Z",
+   "history": [
+    {
+     "at": "2026-11-18T14:53:51.517Z",
+     "kind": "assistant",
+     "query": "alice secret query",
+     "lang": "zh",
+     "results": 0,
+     "productId": null
+    }
+   ]
+  },
+  "005e1c96-db7a-4178-82f6-852cd0a71f8c": {
    "onboarding": null,
    "onboardedAt": null,
    "history": []
