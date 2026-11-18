@@ -5,6 +5,8 @@
 // rather than being told "8/10, trust me".
 import { getJSON, postJSON } from '../api.js';
 import { esc, t, isZh, toast, mediaInner } from '../ui.js';
+import { arm } from '../experiment.js';
+import { track } from '../exitIntent.js';
 
 const RING_R = 52;
 const RING_C = 2 * Math.PI * RING_R;
@@ -38,6 +40,10 @@ function bar(label, value) {
 
 export async function render(root, ctx) {
   const state = { phase: 'idle', result: null, preview: null, error: null };
+  // Which version of the score this visitor sees. Sticky per browser; see
+  // js/experiment.js for why it is not randomised on the server.
+  const armNow = arm();
+  let trackedFor = null;
 
   function paint() {
     if (state.phase === 'loading') {
@@ -85,12 +91,25 @@ export async function render(root, ctx) {
       ${r ? `
         <div class="card" style="margin-top:16px">
           <div style="display:flex;gap:22px;flex-wrap:wrap;align-items:center">
-            <div style="flex:0 0 auto">${ring(r.score, r.verdictLabel)}</div>
-            <div style="flex:1;min-width:230px">
-              ${bar(t('aes.style'), r.subscores.style)}
-              ${bar(t('aes.coverage'), r.subscores.coverage)}
-              ${bar(t('aes.palette'), r.subscores.palette)}
-            </div>
+            ${armNow === 'public' ? `
+              <div style="flex:0 0 auto">${ring(r.publicScore ?? r.score, isZh() ? '大衆審美' : 'general taste')}</div>
+              <div style="flex:1;min-width:230px">
+                ${bar(t('aes.style'), (r.publicSubscores || r.subscores).style)}
+                ${bar(t('aes.coverage'), r.subscores.coverage)}
+                ${bar(t('aes.palette'), r.subscores.palette)}
+              </div>
+            ` : `
+              <div style="flex:0 0 auto">${ring(r.score, r.verdictLabel)}</div>
+              <div style="flex:1;min-width:230px">
+                ${bar(t('aes.style'), r.subscores.style)}
+                ${bar(t('aes.coverage'), r.subscores.coverage)}
+                ${bar(t('aes.palette'), r.subscores.palette)}
+                ${armNow === 'both' ? `<p class="muted small" style="margin:10px 0 0">
+                  ${esc(isZh() ? '大衆審美（不看你衣櫃）：' : 'General taste (ignores your wardrobe):')}
+                  <strong>${esc(String(r.publicScore ?? '—'))}</strong>/100
+                </p>` : ''}
+              </div>
+            `}
           </div>
 
           <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line)">
@@ -118,11 +137,26 @@ export async function render(root, ctx) {
               </div>
             </div>` : ''}
 
+          <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-primary" id="aes-shop">
+              ${esc(isZh() ? '去逛逛，按這個分數挑' : 'Browse, using this score')}
+            </button>
+          </div>
+
           <p class="muted small" style="margin:16px 0 0;font-size:0.75rem">
             ${esc(t('aes.caveat'))} · ${esc(r.judge)} · ${r.tookMs}ms
           </p>
         </div>` : ''}
     </section>`;
+
+    const shopBtn = root.querySelector('#aes-shop');
+    if (shopBtn) {
+      shopBtn.addEventListener('click', () => {
+        // This is the experiment's dependent variable: a click after seeing a score.
+        try { track('aes_action', armNow, armNow === 'public' ? r.publicScore : r.score); } catch { /* best-effort */ }
+        ctx.navigate('/shop');
+      });
+    }
 
     const file = root.querySelector('#aes-file');
     const pick = root.querySelector('#aes-pick');
@@ -150,6 +184,13 @@ export async function render(root, ctx) {
         if (!r || r.online === false) throw new Error(r?.reason || 'offline');
         state.result = r;
         state.phase = 'idle';
+        // One view event per score, so views are comparable across arms.
+        if (trackedFor !== state.preview) {
+          trackedFor = state.preview;
+          try {
+            track('aes_view', armNow, armNow === 'public' ? r.publicScore : r.score);
+          } catch { /* analytics is best-effort */ }
+        }
       } catch (err) {
         state.phase = 'error';
         state.error = String(err.message || err);

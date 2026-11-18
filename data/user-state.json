@@ -12,6 +12,79 @@
   },
   "pairs": []
  },
- "onboardedAt": "2026-11-18T12:57:20.148Z",
- "history": []
+ "onboardedAt": "2026-11-18T13:02:20.704Z",
+ "history": [
+  {
+   "at": "2026-11-18T13:02:21.642Z",
+   "kind": "visual",
+   "query": "a red dress",
+   "lang": "zh",
+   "results": 12,
+   "productId": null
+  },
+  {
+   "at": "2026-11-18T13:02:21.652Z",
+   "kind": "visual",
+   "query": "white sneakers",
+   "lang": "zh",
+   "results": 12,
+   "productId": null
+  },
+  {
+   "at": "2026-11-18T13:02:21.661Z",
+   "kind": "visual",
+   "query": "black sunglasses",
+   "lang": "zh",
+   "results": 12,
+   "productId": null
+  },
+  {
+   "at": "2026-11-18T13:02:21.671Z",
+   "kind": "visual",
+   "query": "beige trousers",
+   "lang": "zh",
+   "results": 12,
+   "productId": null
+  },
+  {
+   "at": "2026-11-18T13:02:21.691Z",
+   "kind": "visual",
+   "query": "(image)",
+   "lang": "zh",
+   "results": 12,
+   "productId": null
+  },
+  {
+   "at": "2026-11-18T13:02:21.715Z",
+   "kind": "visual",
+   "query": "linen",
+   "lang": "zh",
+   "results": 12,
+   "productId": null
+  },
+  {
+   "at": "2026-11-18T13:02:21.734Z",
+   "kind": "visual",
+   "query": "a blue ski jacket",
+   "lang": "zh",
+   "results": 12,
+   "productId": null
+  },
+  {
+   "at": "2026-11-18T13:02:22.746Z",
+   "kind": "assistant",
+   "query": "海島婚禮穿什麼",
+   "lang": "zh",
+   "results": 0,
+   "productId": null
+  },
+  {
+   "at": "2026-11-18T13:02:22.755Z",
+   "kind": "visual",
+   "query": "a red dress",
+   "lang": "zh",
+   "results": 12,
+   "productId": null
+  }
+ ]
 }

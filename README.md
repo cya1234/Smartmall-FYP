@@ -542,6 +542,49 @@ Three nudges now multiply the search score, and each is separately attributable:
 "👀 你最近常看 Apparel · 44" with a note that those categories get a small nudge. That
 matters: a personalisation the shopper cannot see is indistinguishable from a bug.
 
+### The A/B experiment: does a personalised score convert better?
+
+The professor's question was whether the score *changes behaviour*, not whether it is
+accurate. That needs two numbers and a way to compare them, so the aesthetic endpoint
+returns both:
+
+| Number | Measured against | Weighted from |
+|---|---|---|
+| `score` | the shopper's **own wardrobe** | style 0.65 / coverage 0.25 / palette 0.10 |
+| `publicScore` | a **generic taste anchor** ("a stylish outfit", averaged over three prompts) | same weights, generic style term |
+
+Each browser is assigned one arm, sticky, equal thirds (`js/experiment.js`):
+
+- **personal** — sees the wardrobe-relative score (the current behaviour)
+- **public** — sees the general-taste score, labelled 大衆審美
+- **both** — sees the personal number large and the public one beneath it
+
+The dependent variable is **click-through after seeing a score**, from a "browse using
+this score" button. That is a proxy and it is labelled one: a demo cannot collect real
+orders, but a view followed by a click is measurable per visitor and reaches a usable
+sample far faster than checkout ever would.
+
+```bash
+curl -s localhost:3000/api/experiment
+python tools/test_experiment_e2e.py     # 18 checks
+```
+
+Sample currently: **0 views per arm**, so the summary says so rather than printing a
+percentage:
+
+```
+personal: {"views": 0, "actions": 0, "ctr": null}
+note: "Under 30 views per arm — the comparison is not yet meaningful."
+```
+
+That refusal is deliberate. `conclusive` only becomes true at 30 views per arm, and even
+then the note says the metric is a proxy rather than revenue. A percentage over four
+visitors is worse than no percentage, because it invites a conclusion the data cannot
+support.
+
+To see it work, open `#/aesthetic`, upload a photo, press "browse using this score", and
+re-read `/api/experiment`.
+
 ## Swapping in real AI
 
 The proposal's key idea — *decoupling standard web operations from high-dimensional AI

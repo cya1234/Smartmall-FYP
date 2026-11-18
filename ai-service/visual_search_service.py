@@ -321,6 +321,16 @@ CATEGORY_THRESHOLD = 0.03   # SigLIP 768-d image/text cosines live around -0.02.
 # staple scores in the high 80s rather than pinning at 100.
 STYLE_LO, STYLE_HI = 0.40, 0.85
 
+# Generic "does this look good" anchor for the A/B comparison. Calibrated below on
+# real product photos once the endpoints were running; the band is the image-to-text
+# range this model actually produces, not a guess.
+GENERIC_TASTE_PROMPTS = [
+    "a stylish outfit",
+    "a well put together look",
+    "fashionable clothing",
+]
+GENERIC_LO, GENERIC_HI = 0.00, 0.06
+
 
 def _category_hits(vec):
     """Which garment categories this photo looks like, via text anchors."""
@@ -469,6 +479,22 @@ def aesthetic(b64, wardrobe_ids=None):
     else:
         sim, style, per_item = None, 0.0, []
 
+    # ---- a "general taste" anchor, for the A/B comparison ----------------
+    # Deliberately NOT personal: the average of a few generic taste prompts, so the
+    # score answers "does this look stylish on its own terms" rather than "does this
+    # look like you". The experiment is exactly personal vs general, so both numbers
+    # have to exist.
+    generic_sim = None
+    generic = 0.0
+    try:
+        anchors = [encode_text(t) for t in GENERIC_TASTE_PROMPTS]
+        anchor = np.mean(anchors, axis=0)
+        anchor = anchor / (np.linalg.norm(anchor) or 1.0)
+        generic_sim = float(np.dot(vec, anchor))
+        generic = max(0.0, min(100.0, (generic_sim - GENERIC_LO) / (GENERIC_HI - GENERIC_LO) * 100.0))
+    except Exception:
+        pass
+
     # ---- composition: what counts as complete *for this shopper* ---------
     # The three-slot rule (top + bottom + shoes) is a Western default. Learn which
     # slots this shopper actually wears from their own wardrobe instead: someone who
@@ -517,6 +543,10 @@ def aesthetic(b64, wardrobe_ids=None):
     # value judgement no matter how it is worded. Keeping it at 10 % limits how much
     # a maximalist palette can cost, without removing the signal entirely.
     overall = round(0.65 * style + 0.25 * coverage + 0.10 * palette)
+    # Same composition weights, but the style term comes from the generic anchor
+    # instead of the shopper's wardrobe. This is the number the "public taste" arm of
+    # the A/B test shows.
+    public_score = round(0.65 * generic + 0.25 * coverage + 0.10 * palette)
 
     if overall >= 78:
         verdict = "excellent"
@@ -530,6 +560,12 @@ def aesthetic(b64, wardrobe_ids=None):
     return {
         "score": overall,
         "verdict": verdict,
+        "publicScore": public_score,
+        "publicSubscores": {
+            "style": round(generic),
+            "coverage": round(coverage),
+            "palette": round(palette),
+        },
         "subscores": {
             "style": round(style),
             "coverage": round(coverage),
@@ -537,6 +573,7 @@ def aesthetic(b64, wardrobe_ids=None):
         },
         "detail": {
             "styleSimilarity": None if sim is None else round(sim, 4),
+            "genericSimilarity": None if generic_sim is None else round(generic_sim, 4),
             "wardrobeUsed": len(cents),
             "closestOwned": [{"id": pid, "similarity": round(s, 4)} for s, pid in per_item],
             "categories": hits,

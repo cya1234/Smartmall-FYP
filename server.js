@@ -37,6 +37,7 @@ import {
   recordSearch, getHistory, clearHistory, saveOnboarding, getOnboarding, hasOnboarded,
 } from './lib/userState.js';
 import { attention, resetCache as resetEngagementCache } from './lib/engagement.js';
+import { experimentSummary } from './lib/experiment.js';
 import { startSession, analyzePhoto, submitReturn, getReturns as getReturnForms, returnStats, RETURN_REASONS } from './lib/support.js';
 import {
   trackEvent, issueCoupon, applyCoupon, getCoupon, getSummary, getRecentEvents, getCoupons,
@@ -256,6 +257,14 @@ async function handleApi(req, res, pathname) {
     return sendJson(res, 200, getHistory({
       days: Number(url.searchParams.get('days')) || 30,
       limit: Number(url.searchParams.get('limit')) || 12,
+    }));
+  }
+
+  // ---- The score A/B experiment -------------------------------------------
+  if (parts[1] === 'experiment') {
+    const url = new URL(req.url, 'http://localhost');
+    return sendJson(res, 200, experimentSummary({
+      days: Number(url.searchParams.get('days')) || 30,
     }));
   }
 
