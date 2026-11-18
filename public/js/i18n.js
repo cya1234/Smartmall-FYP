@@ -94,8 +94,8 @@ const DICT = {
     'aes.r.style.low': '與你衣櫃裡的衣服差異較大',
     'aes.r.coverage.full': '看起來是完整的搭配',
     'aes.r.coverage.partial': '偵測不到完整的上衣／下身／鞋子',
-    'aes.r.palette.good': '配色集中、層次清楚',
-    'aes.r.palette.busy': '顏色偏多或偏雜',
+    'aes.r.palette.good': '顏色屬於同一色系，整體協調',
+    'aes.r.palette.scattered': '顏色之間找不到共同的色系',
 
     // Common
     'common.loading': '載入中…',
@@ -481,8 +481,8 @@ const DICT = {
     'aes.r.style.low': 'Quite different from what is in your wardrobe',
     'aes.r.coverage.full': 'Reads as a complete outfit',
     'aes.r.coverage.partial': 'Could not find top / bottom / shoes together',
-    'aes.r.palette.good': 'Tight palette, clear layers',
-    'aes.r.palette.busy': 'Too many competing colours',
+    'aes.r.palette.good': 'The pieces share a colour family',
+    'aes.r.palette.scattered': 'No shared colour family between the pieces',
 
     'common.loading': 'Loading…',
     'common.addToCart': 'Add to cart',

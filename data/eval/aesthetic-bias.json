@@ -1,0 +1,57 @@
+{
+  "generatedAt": "2026-11-18T12:34:07Z",
+  "rows": [
+    {
+      "style": "minimal (neutrals)",
+      "hues": 0,
+      "neutral": 0.929,
+      "scheme": "neutral",
+      "old": 97.3,
+      "new": 100.0
+    },
+    {
+      "style": "streetwear (dark + 1 accent)",
+      "hues": 1,
+      "neutral": 0.853,
+      "scheme": "monochrome",
+      "old": 100.0,
+      "new": 100.0
+    },
+    {
+      "style": "heavy metal (black + dark red)",
+      "hues": 2,
+      "neutral": 0.786,
+      "scheme": "two-tone",
+      "old": 100.0,
+      "new": 95.0
+    },
+    {
+      "style": "maximalist, coherent (neon family)",
+      "hues": 2,
+      "neutral": 0.527,
+      "scheme": "two-tone",
+      "old": 100.0,
+      "new": 95.0
+    },
+    {
+      "style": "maximalist, scattered (random hues)",
+      "hues": 3,
+      "neutral": 0.533,
+      "scheme": "scattered",
+      "old": 100.0,
+      "new": 20.0
+    },
+    {
+      "style": "formal (navy + grey + white)",
+      "hues": 1,
+      "neutral": 0.666,
+      "scheme": "monochrome",
+      "old": 100.0,
+      "new": 100.0
+    }
+  ],
+  "spread": {
+    "old": 2.7,
+    "new": 80.0
+  }
+}

@@ -76,6 +76,19 @@ expected = round(w.get("style", 0) * subs.get("style", 0)
 check("overall equals the weighted sum", abs(expected - score) <= 1,
       f"recomputed {expected} vs reported {score}")
 check("weights sum to 1.0", abs(sum(w.values()) - 1.0) < 0.01, w)
+# Pins the fairness decision: palette is the only component carrying a built-in
+# aesthetic prior, so it is deliberately the smallest weight.
+check("palette carries the smallest weight", w.get("palette", 1) <= 0.10 and w.get("style", 0) >= 0.60, w)
+
+print("\n== fairness: the palette judges structure, not restraint ==")
+detail = r.get("detail") or {}
+pal = detail.get("palette") or {}
+check("palette reports a scheme", pal.get("scheme") in
+      ("neutral", "monochrome", "two-tone", "complementary", "analogous", "analogous-wide", "scattered"),
+      pal.get("scheme"))
+check("palette exposes hue centres", isinstance(pal.get("hueCentres"), list), pal.get("hueCentres"))
+check("coverage is derived from the wardrobe", isinstance(detail.get("requiredCategories"), list) and
+      len(detail.get("requiredCategories")) > 0, detail.get("requiredCategories"))
 check("verdict label localised", r.get("verdictLabel") in ("很襯你", "不錯", "尚可", "可以再調整"),
       r.get("verdictLabel"))
 check("judge is named", bool(r.get("judge")), r.get("judge"))

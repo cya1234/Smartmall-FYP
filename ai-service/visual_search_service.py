@@ -337,7 +337,7 @@ def _category_hits(vec):
 
 
 def _palette(b64):
-    """Dominant-hue count and neutral share from the photo itself."""
+    """Dominant colours, their hue centres, and the neutral share."""
     import colorsys
     from PIL import Image
     raw = base64.b64decode(b64.split(",")[-1])
@@ -354,7 +354,12 @@ def _palette(b64):
         if share < 0.05:
             continue
         h, s, v = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
-        if s < 0.18 or v < 0.12 or v > 0.95:
+        # Neutral = low saturation or near-black. The old test also treated V > 0.95
+        # as neutral, which swallowed every fully bright colour: a neon pink has
+        # max(r,g,b) = 255, so V = 1.0, so it was counted as "neutral" and its hue
+        # never reached the palette at all. White has low saturation, so S alone is
+        # enough to catch it.
+        if s < 0.18 or v < 0.12:
             neutral += share
         else:
             hues.append(h * 360)
@@ -367,7 +372,65 @@ def _palette(b64):
             clusters.append([h])
     if len(clusters) > 1 and (360 - clusters[-1][-1] + clusters[0][0]) <= 30:
         clusters = clusters[:-1] + [clusters[0] + clusters[-1]]
-    return {"distinctHues": len(clusters), "neutralShare": round(neutral, 3), "colours": top[:5]}
+
+    # Circular mean, not arithmetic: hues straddling red average out to the wrong
+    # side of the wheel. 330 and 0 average to 165 arithmetically (the opposite hue)
+    # and to 345 circularly, which is the whole difference between "a neon family"
+    # and "scattered".
+    import math
+    centres = []
+    for c in clusters:
+        sv = sum(math.sin(math.radians(h)) for h in c)
+        cv = sum(math.cos(math.radians(h)) for h in c)
+        centres.append(round(math.degrees(math.atan2(sv, cv)) % 360, 1))
+    return {
+        "distinctHues": len(clusters),
+        "hueCentres": centres,
+        "neutralShare": round(neutral, 3),
+        "colours": top[:5],
+    }
+
+
+def _palette_coherence(pal):
+    """Does the palette read as a deliberate scheme, whatever the taste?
+
+    The old rule was `more than 3 hues -> penalty, under 12 % neutral -> penalty`.
+    That is not a measure of quality, it is a measure of minimalism: it marks down
+    maximalist styles (shamazhite, heavy metal, harajuku) by construction, which is a
+    bias, not an aesthetic judgement. This version scores STRUCTURE instead:
+
+        all hues inside a 90 degree arc   -> analogous, coherent
+        two clusters about opposite       -> complementary, coherent
+        many hues with no structure       -> scattered, penalised
+
+    A neon outfit built on one colour family now scores the same as a beige one; a
+    genuinely random mix of six unrelated hues still scores low, for everyone.
+    """
+    centres = sorted(pal.get("hueCentres") or [])
+    n = len(centres)
+    if n == 0:
+        return 100.0, "neutral"
+    if n == 1:
+        return 100.0, "monochrome"
+    if n == 2:
+        # Two colours is never chaos: black + red (heavy metal) and navy + grey are
+        # both deliberate. Penalising a two-tone look would be exactly the bias this
+        # change exists to remove.
+        gaps2 = [centres[1] - centres[0], 360 - centres[1] + centres[0]]
+        arc2 = 360 - max(gaps2)
+        return 95.0, ("complementary" if 150 <= arc2 <= 210 else "two-tone")
+
+    gaps = [centres[i + 1] - centres[i] for i in range(n - 1)]
+    gaps.append(360 - centres[-1] + centres[0])
+    arc = 360 - max(gaps)                      # narrowest arc holding every hue
+
+    if arc <= 60:
+        return 100.0, "analogous"
+    if arc <= 90:
+        return 94.0, "analogous-wide"
+    # Three or more clusters spread wide: no discernible scheme.
+    penalty = (arc - 90) * 0.55 + (n - 2) * 6
+    return max(20.0, 92.0 - penalty), "scattered"
 
 
 def aesthetic(b64, wardrobe_ids=None):
@@ -406,25 +469,54 @@ def aesthetic(b64, wardrobe_ids=None):
     else:
         sim, style, per_item = None, 0.0, []
 
-    # ---- composition: does it look like a complete outfit ----------------
+    # ---- composition: what counts as complete *for this shopper* ---------
+    # The three-slot rule (top + bottom + shoes) is a Western default. Learn which
+    # slots this shopper actually wears from their own wardrobe instead: someone who
+    # never buys shoes should not be marked down for wearing none. A dress satisfies
+    # both top and bottom, because requiring a separate top would penalise one-piece
+    # garments. Outerwear is never required — a summer outfit has none.
     hits, anchor_scores = _category_hits(vec)
-    required = [c for c in ("top", "bottom", "shoes") if c in hits]
-    coverage = len(required) / 3 * 100
+    SUBCAT_GROUP = {
+        "top": {"shirt", "t-shirt", "sweater", "blouse", "knit", "hoodie", "dress"},
+        "bottom": {"trousers", "jeans", "skirt", "shorts"},
+        "shoes": {"shoes", "sneakers", "boots", "loafers", "sandals", "slippers"},
+        "outerwear": {"jacket", "coat", "blazer", "puffer", "fleece"},
+        "dress": {"dress"},
+    }
+    owned_groups = set()
+    for pid in wardrobe_ids:
+        r = row_of.get(pid)
+        if r is None:
+            continue
+        sub = str(entries[r].get("subcategory") or "").lower()
+        for group, words in SUBCAT_GROUP.items():
+            if any(w in sub for w in words):
+                owned_groups.add(group)
+                break
+
+    required = [g for g in ("top", "bottom", "shoes") if g in owned_groups]
+    if not required:
+        required = ["top", "bottom", "shoes"]      # no usable wardrobe history
+    # A dress covers a full look on its own.
+    has_dress = "dress" in hits
+    satisfied = sum(
+        1 for g in required
+        if g in hits or (has_dress and g in ("top", "bottom"))
+    )
+    coverage = satisfied / len(required) * 100
     if "outerwear" in hits:
         coverage = min(100.0, coverage + 10)
 
-    # ---- palette: hue spread and neutral balance ------------------------
+    # ---- palette: structure, not restraint ------------------------------
     pal = _palette(b64)
-    palette = 100.0
-    if pal["distinctHues"] > 3:
-        palette -= (pal["distinctHues"] - 3) * 16
-    if pal["neutralShare"] < 0.12:
-        palette -= 12
-    if pal["neutralShare"] > 0.95:
-        palette -= 8
-    palette = max(0.0, min(100.0, palette))
+    palette, scheme = _palette_coherence(pal)
 
-    overall = round(0.55 * style + 0.25 * coverage + 0.20 * palette)
+    # Palette carries the least weight of the three on purpose: style match is
+    # measured against the shopper's own wardrobe (so it is personal), coverage is
+    # their own definition of a complete look, but "do these colours work" retains a
+    # value judgement no matter how it is worded. Keeping it at 10 % limits how much
+    # a maximalist palette can cost, without removing the signal entirely.
+    overall = round(0.65 * style + 0.25 * coverage + 0.10 * palette)
 
     if overall >= 78:
         verdict = "excellent"
@@ -448,11 +540,13 @@ def aesthetic(b64, wardrobe_ids=None):
             "wardrobeUsed": len(cents),
             "closestOwned": [{"id": pid, "similarity": round(s, 4)} for s, pid in per_item],
             "categories": hits,
+            "requiredCategories": required,
+            "wardrobeGroups": sorted(owned_groups),
             "anchors": anchor_scores,
-            "palette": pal,
+            "palette": {**pal, "scheme": scheme},
             "imageSize": list(size),
         },
-        "weights": {"style": 0.55, "coverage": 0.25, "palette": 0.20},
+        "weights": {"style": 0.65, "coverage": 0.25, "palette": 0.10},
         "judge": "deterministic-clip",
     }
 

@@ -410,6 +410,69 @@ python tools/mock_llm_server.py --port 11434 &
 node tools/test_router_llm.mjs 11434               # 13 checks
 ```
 
+## The outfit score, and whether it is biased
+
+`#/aesthetic` scores a photo of today's outfit out of 100 in three parts:
+
+| Part | Weight | Measured against |
+|---|---|---|
+| Style match | 0.65 | the centroid of the shopper's **own wardrobe** |
+| Completeness | 0.25 | the slots that shopper actually wears (learned from their wardrobe) |
+| Colour harmony | 0.10 | whether the hues form a scheme |
+
+**The honest answer to "does this mark down alternative styles?" is: it did.** The
+original colour rule was
+
+```python
+if distinctHues > 3:      score -= (n - 3) * 16
+if neutralShare < 0.12:   score -= 12
+```
+
+which is not a measure of quality, it is a measure of minimalism. Heavy metal,
+shamazhite and harajuku looks lose points by construction.
+
+Measuring it (`python tools/eval_aesthetic_bias.py`) turned up two further bugs that
+made it worse:
+
+- **`V > 0.95` was treated as neutral**, so every fully bright colour was discarded
+  before its hue was ever counted. A neon pink has `max(r,g,b) = 255`, therefore
+  `V = 1.0`, therefore it vanished. Black-and-red scored fine; a neon family did not.
+- **Hue cluster centres were averaged arithmetically**, so a cluster straddling red
+  (330° and 0°) averaged to 165° — the opposite hue. One outfit read as "scattered"
+  for a rounding reason.
+
+Both are fixed, and the rule now judges **structure rather than restraint**:
+
+| Style (same garments, colour only differs) | Hues | Scheme | Old score | New score |
+|---|---|---|---|---|
+| minimal, neutrals | 0 | neutral | 97.3 | 100 |
+| streetwear, dark + 1 accent | 1 | monochrome | 100 | 100 |
+| heavy metal, black + dark red | 2 | two-tone | 100 | **95** |
+| maximalist, **coherent** neon family | 2 | two-tone | 100 | **95** |
+| maximalist, **scattered** random hues | 3 | scattered | 100 | **20** |
+| formal, navy + grey + white | 1 | monochrome | 100 | 100 |
+
+Two things to read out of that table, and the second one matters more:
+
+1. Every deliberate style now lands at 95–100; only a palette with no scheme is
+   marked down. A neon outfit built on one colour family scores the same as a beige
+   one.
+2. **The old rule was not biased so much as blind.** It kept every style within 2.7
+   points of every other — its hue threshold simply never fired, because quantising
+   an outfit to 8 colours rarely leaves more than three. The bias was real in the
+   code and almost absent in the effect, which is its own kind of defect: a signal
+   that costs 20 % of the score and distinguishes nothing.
+
+What remains is stated rather than hidden: preferring a coherent palette over a
+chaotic one is still a value judgement, so its weight was cut from 20 % to 10 % and
+the style term raised to 65 %. If you disagree with the judgement, `the weight is
+one number in `ai-service/visual_search_service.py``.
+
+Completeness changed too: it used to require top + bottom + shoes unconditionally.
+It now reads which categories the shopper actually buys and requires only those, and
+a dress satisfies both top and bottom — otherwise a one-piece garment would be marked
+down for not being a separate top and bottom.
+
 ## Swapping in real AI
 
 The proposal's key idea — *decoupling standard web operations from high-dimensional AI
