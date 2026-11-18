@@ -473,6 +473,43 @@ It now reads which categories the shopper actually buys and requires only those,
 a dress satisfies both top and bottom — otherwise a one-piece garment would be marked
 down for not being a separate top and bottom.
 
+## Cold start: the welcome survey and real search history
+
+Nothing can be personalised before the first click, so `#/welcome` asks ten questions
+once — categories, styles, budget, occasions, colours to avoid, three pairwise picks
+and materials. It is **offered** on the home page, never forced: a shopper can browse
+first and answer later, and the banner disappears once it is done.
+
+The answers go to `data/user-state.json`, not `data/profile.json`. That distinction
+matters: `store.js` mutates the profile in memory but never writes it, so anything that
+must survive a restart lives in `user-state.json` instead.
+
+The survey is not just stored — it reorders results. `search_products` multiplies its
+score by `1 + 0.25 × affinity`, computed from the chosen categories, styles and colours
+(minus anything in "avoid"). Measured on the probe query `black`:
+
+```
+no preference      -> p034  p009  p029
+Electronics        -> p029  p034  p009     (the earbuds move to first)
+Apparel            -> p009  p034  p029
+```
+
+Searches are recorded from all three entry points — the catalogue (`/api/products?q=`),
+the assistant, and visual search — into one list, so "what people look for" is a single
+answer rather than three. An image-only search is recorded as `(image)` rather than
+inventing a text query. The 我的 page shows the recent queries and the ones that keep
+coming back, and each is clickable.
+
+```bash
+curl -s localhost:3000/api/history          # recent + top terms + counts by kind
+curl -s localhost:3000/api/onboarding       # what the shopper chose
+python tools/test_userstate_e2e.py          # 24 checks
+```
+
+The endpoint sanitises what it accepts — lists truncated, non-strings dropped, budget
+clamped, incomplete pairs discarded — so a malformed request cannot write arbitrary
+structure into the state file. The test asserts all four.
+
 ## Swapping in real AI
 
 The proposal's key idea — *decoupling standard web operations from high-dimensional AI
