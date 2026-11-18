@@ -273,12 +273,36 @@ preview when the service is down or the product has no garment photo.
 | Model | `zhengchong/CatVTON-MaskFree`, `mix-48k-1024` | ICLR 2025, arXiv 2407.15886; 899 M params |
 | Pipeline | `CatVTONPix2PixPipeline` | from the official HF Space source, not the GitHub repo |
 | Base | `timbrooks/instruct-pix2pix` | **8-channel** UNet; the inpainting base is 9-channel and will not load |
-| Resolution | 768 × 1024, 30 steps, guidance 2.5 | configurable via `TRYON_*` env vars |
+| Resolution | 768 × 1024, 12 steps, guidance 2.5 | configurable via `TRYON_*` env vars |
+| Sampler | DPM-Solver++ (Karras) | `TRYON_SCHEDULER=ddim` restores the original |
 | Licence | CC BY-NC-SA 4.0 | non-commercial — fine for an FYP, a blocker for a product |
 
-Measured on this machine (RTX 4070, 12 GB): model load 3.6 s, **21 s at 20 steps / 31 s at 30 steps**,
-**peak 3.57 GiB VRAM**. `tools/test_catvton_p2p.py` and `tools/test_tryon_e2e.py` reproduce those
+Measured on this machine (RTX 4070, 12 GB): model load 3.6 s, **12.8 s at 12 steps with
+DPM-Solver++**, **peak 3.57 GiB VRAM**. `tools/test_tryon_e2e.py` reproduces those
 numbers.
+
+### Why 12 steps rather than 30
+
+Two changes, both measured here rather than assumed. Per-step cost is about 1.0 s on
+this card, plus roughly 4 s of fixed VAE encode/decode that no amount of step-trimming
+removes:
+
+| Steps | DDIM | DPM-Solver++ |
+|---|---|---|
+| 8 | 11.9 s | 11.2 s |
+| 12 | 13.6 s | 12.6 s |
+| 20 | 22.1 s | 21.0 s |
+| 30 | 32.5 s | — |
+
+Swapping the sampler alone barely helps, because each step still costs the same. What
+helps is that **DPM-Solver++ at 12 steps reaches the quality DDIM needed 20 for** — so
+the win is 32.5 s → 12.8 s end to end (the site had been running DDIM at 30). Below
+about 8 steps the plaid patterns visibly soften.
+
+**Fine-tuning would not have produced this.** Fine-tuning changes what the model draws,
+not how much work each step is. The only training-based speedup is step distillation
+(LCM / Turbo / DMD2), which is a research project in itself and risks quality. The
+free 60 % was sitting in the sampler and the step count.
 
 ### Why the mask-free variant
 

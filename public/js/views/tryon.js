@@ -162,7 +162,7 @@ export function render(root, ctx) {
         }
       }, 1000);
 
-      const res = await postJSON('/api/tryon', { productId: garment.id, photo: photoData, steps: 30 });
+      const res = await postJSON('/api/tryon', { productId: garment.id, photo: photoData, steps: 12 });
       clearInterval(tick);
 
       if (res.engine === 'catvton' && res.image) {

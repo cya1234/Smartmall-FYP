@@ -94,8 +94,18 @@ check("ctr is a percentage", p["ctr"] is None or 0 <= p["ctr"] <= 100, p["ctr"])
 check("mean score is reported", p["meanScore"] is None or isinstance(p["meanScore"], int), p["meanScore"])
 
 print("\n== it refuses to overclaim ==")
-check("conclusive is false on a small sample", after["conclusive"] is False, after["conclusive"])
-check("the note says so", "not yet meaningful" in (after.get("note") or ""), after.get("note"))
+# Do not assert "conclusive is false": after enough test runs the sample really does
+# pass 30 and the flag correctly flips. Assert the rule instead, so the check holds
+# whether the experiment is empty or saturated.
+enough = arms["personal"]["views"] >= 30 and arms["public"]["views"] >= 30
+check("conclusive matches the 30-per-arm rule", after["conclusive"] == enough,
+      f"personal={arms['personal']['views']} public={arms['public']['views']} -> {after['conclusive']}")
+note = after.get("note") or ""
+check("the note always says the metric is a proxy", "proxy metric" in note, note)
+if enough:
+    check("a full sample is still labelled a proxy", "revenue" in note, note)
+else:
+    check("a small sample is called not meaningful", "not yet meaningful" in note, note)
 check("a lift is either null or a number",
       after["liftPersonalVsPublic"] is None or isinstance(after["liftPersonalVsPublic"], (int, float)),
       after["liftPersonalVsPublic"])

@@ -47,7 +47,7 @@ ATTN_CKPT = os.environ.get("TRYON_ATTN", "zhengchong/CatVTON-MaskFree")
 ATTN_VERSION = os.environ.get("TRYON_ATTN_VERSION", "mix-48k-1024")
 WIDTH = int(os.environ.get("TRYON_WIDTH", 768))
 HEIGHT = int(os.environ.get("TRYON_HEIGHT", 1024))
-DEFAULT_STEPS = int(os.environ.get("TRYON_STEPS", 30))
+DEFAULT_STEPS = int(os.environ.get("TRYON_STEPS", 12))
 MAX_BODY = 16 * 1024 * 1024
 
 _state = {"ready": False, "error": None, "pipe": None, "torch": None}
@@ -75,6 +75,27 @@ def load():
         use_tf32=(device == "cuda"),
     )
     _state.update(pipe=pipe, torch=torch, ready=True, device=device)
+
+    # Sampler swap, on by default.
+    #
+    # The pipeline ships with DDIM. DPM-Solver++ is a higher-order solver that reaches
+    # comparable quality in roughly half the steps, which is the cheapest speedup
+    # available without training anything (measured: DPM++ at 12 steps looks like DDIM
+    # at 20, and the site used to run DDIM at 30).
+    # TRYON_SCHEDULER=ddim restores the original.
+    choice = (os.environ.get("TRYON_SCHEDULER") or "dpm").strip().lower()
+    if choice in ("dpm", "dpm++", "dpm-solver", "dpmsolver"):
+        try:
+            from diffusers import DPMSolverMultistepScheduler
+            was = type(pipe.scheduler).__name__
+            pipe.scheduler = DPMSolverMultistepScheduler.from_config(
+                pipe.scheduler.config, algorithm_type="dpmsolver++", use_karras_sigmas=True,
+            )
+            print(f"  scheduler DPMSolver++ (karras), was {was}", flush=True)
+        except Exception as exc:
+            print(f"  scheduler swap skipped: {exc}", flush=True)
+    else:
+        print(f"  scheduler {type(pipe.scheduler).__name__}", flush=True)
     vram = memory_gb(torch, device)
     print(f"  model    CatVTON MaskFree / {ATTN_VERSION}", flush=True)
     print(f"  device   {device} ({device_name(torch, device) or 'n/a'})", flush=True)
