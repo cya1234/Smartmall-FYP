@@ -20,6 +20,7 @@ import { render as dashboard } from './views/dashboard.js';
 import { render as stores } from './views/stores.js';
 import { render as closet } from './views/closet.js';
 import { render as survey } from './views/survey.js';
+import { render as welcome } from './views/welcome.js';
 import { render as aesthetic } from './views/aesthetic.js';
 import { render as cart } from './views/cart.js';
 import { initExitIntent } from './exitIntent.js';
@@ -92,6 +93,7 @@ async function render() {
     case 'tryon': tryon(app, ctx); break;
     case 'closet': await closet(app, ctx); break;
     case 'survey': await survey(app, ctx); break;
+    case 'welcome': await welcome(app, ctx); break;
     case 'aesthetic': await aesthetic(app, ctx); break;
     case 'priceagent': priceagent(app, ctx); break;
     case 'resale': resale(app, ctx); break;

@@ -33,6 +33,9 @@ import { getMemoryContext, getInsights, getWardrobeCoverage } from './lib/memory
 import { predictReturnRisk, predictCartRisk } from './lib/returnPredict.js';
 import { route as routeQuery } from './lib/agent/router.js';
 import { routeWithLLM, llmHealth, warmLLM } from './lib/agent/llmRouter.js';
+import {
+  recordSearch, getHistory, clearHistory, saveOnboarding, getOnboarding, hasOnboarded,
+} from './lib/userState.js';
 import { startSession, analyzePhoto, submitReturn, getReturns as getReturnForms, returnStats, RETURN_REASONS } from './lib/support.js';
 import {
   trackEvent, issueCoupon, applyCoupon, getCoupon, getSummary, getRecentEvents, getCoupons,
@@ -143,6 +146,9 @@ async function handleApi(req, res, pathname) {
           .toLowerCase()
           .includes(q),
       );
+      // Only real queries are recorded. The shop renders the whole catalogue on load,
+      // and recording that would bury the searches under one entry per page view.
+      recordSearch({ kind: 'text', query: q, lang: 'zh', results: list.length });
     }
     return sendJson(res, 200, list);
   }
@@ -179,7 +185,14 @@ async function handleApi(req, res, pathname) {
   if (parts[1] === 'assistant' && method === 'POST') {
     const body = JSON.parse((await readBody(req)) || '{}');
     if (!body.query || typeof body.query !== 'string') return sendJson(res, 400, { error: 'query required' });
-    return sendJson(res, 200, await runAssistant(body.query, body.lang || 'zh'));
+    const answer = await runAssistant(body.query, body.lang || 'zh');
+    recordSearch({
+      kind: 'assistant',
+      query: body.query,
+      lang: body.lang || 'zh',
+      results: (answer.alternatives || []).length,
+    });
+    return sendJson(res, 200, answer);
   }
 
   // GET /api/assistant/route?q=...&lang=..&router=rules|llm
@@ -220,7 +233,40 @@ async function handleApi(req, res, pathname) {
       image: body.image || null,
       limit: body.limit ? Number(body.limit) : 12,
     });
+    // An image-only search still counts as a search, recorded as "(image)" so the
+    // history shows that the shopper looked without inventing a text query.
+    if (body.query || body.image) {
+      recordSearch({
+        kind: 'visual',
+        query: body.query || '(image)',
+        lang: body.lang || 'zh',
+        results: (result.results || []).length,
+      });
+    }
     return sendJson(res, 200, result);
+  }
+
+  // ---- Search history and onboarding ---------------------------------------
+  if (parts[1] === 'history') {
+    if (method === 'POST' && parts[2] === 'clear') {
+      return sendJson(res, 200, clearHistory());
+    }
+    const url = new URL(req.url, 'http://localhost');
+    return sendJson(res, 200, getHistory({
+      days: Number(url.searchParams.get('days')) || 30,
+      limit: Number(url.searchParams.get('limit')) || 12,
+    }));
+  }
+
+  if (parts[1] === 'onboarding') {
+    if (method === 'POST') {
+      const body = JSON.parse((await readBody(req)) || '{}');
+      const answers = saveOnboarding(body);
+      trackEvent({ type: 'onboarding_completed', label: 'welcome', value: answers.categories.length,
+        meta: { styles: answers.styles, pairs: answers.pairs.length } });
+      return sendJson(res, 200, { ok: true, onboarding: answers });
+    }
+    return sendJson(res, 200, { onboarded: hasOnboarded(), onboarding: getOnboarding() });
   }
 
   // GET /api/visual-search/status — is the CLIP service up?

@@ -15,12 +15,29 @@ const FEATURES = [
 ];
 
 export function render(root, ctx) {
+  // The welcome survey is offered, never forced: a shopper can browse first and
+  // answer later, and the banner simply stops appearing once it has been filled in.
+  let onboarded = true;
+  try { onboarded = localStorage.getItem('smartmall-onboarded') === '1'; } catch { onboarded = true; }
+
   const featured = [...ctx.products]
     .sort((a, b) => b.rating * Math.log(b.reviews + 1) - a.rating * Math.log(a.reviews + 1))
     .slice(0, 8);
   const categories = [...new Set(ctx.products.map((p) => p.category))];
 
   root.innerHTML = `
+    ${onboarded ? '' : `
+    <section class="container" style="padding-bottom:0">
+      <div class="card" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;border-color:var(--brand)">
+        <div style="flex:1;min-width:220px">
+          <strong>${esc(isZh() ? '👋 第一次來？' : '👋 First time here?')}</strong>
+          <p class="muted small" style="margin:4px 0 0">${esc(isZh()
+            ? '回答 10 條問題，推薦會立刻按你的口味排序。'
+            : 'Ten questions and the recommendations reorder around your taste.')}</p>
+        </div>
+        <button class="btn btn-primary" data-go="welcome">${esc(isZh() ? '開始（2 分鐘）' : 'Start (2 min)')}</button>
+      </div>
+    </section>`}
     <section class="hero">
       <div class="hero-inner">
         <div>

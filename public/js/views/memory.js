@@ -30,10 +30,36 @@ export async function render(root, ctx) {
   const b = u.body;
   const coverage = new Set(p.coverage || []);
 
+  // Real searches, recorded server-side. Missing is fine: an empty history just
+  // means the card renders its empty state.
+  let hist = null;
+  try { hist = await getJSON('/api/history?limit=10'); } catch { hist = null; }
+  const recent = (hist?.recentQueries || []).filter((h) => h.query && h.query !== '(image)');
+  const topTerms = (hist?.top || []).filter((h) => h.count > 1);
+
   root.innerHTML = `
     <section class="container">
       <h1 class="section-title">${esc(t('mem.title'))}</h1>
       <p class="section-sub">${esc(t('mem.sub'))}</p>
+
+      <div class="card">
+        <div class="row-between" style="margin-bottom:10px">
+          <h3 style="margin:0">${esc(isZh() ? '🔎 搜尋紀錄' : '🔎 Search history')}</h3>
+          <span class="muted small">${esc(isZh()
+            ? `最近 ${hist?.days || 30} 天 · ${hist?.total || 0} 次`
+            : `last ${hist?.days || 30} days · ${hist?.total || 0} searches`)}</span>
+        </div>
+        ${recent.length ? `
+          <div class="chips">
+            ${recent.map((h) => `<button class="chip" data-q="${esc(h.query)}">${esc(h.query)}</button>`).join('')}
+          </div>` : `<p class="muted small" style="margin:0">${esc(isZh()
+            ? '還沒有搜尋紀錄 —— 去逛逛，這裡會自動記錄。'
+            : 'No searches yet — browse around and they will show up here.')}</p>`}
+        ${topTerms.length ? `
+          <p class="muted small" style="margin:12px 0 0">${esc(isZh() ? '你最常找：' : 'You keep looking for: ')}
+            ${topTerms.slice(0, 5).map((h) => `${esc(h.query)} ×${h.count}`).join(' · ')}
+          </p>` : ''}
+      </div>
 
       <div class="mem-layout">
         <div>
@@ -139,6 +165,12 @@ export async function render(root, ctx) {
 
   root.querySelectorAll('[data-id]').forEach((el) =>
     el.addEventListener('click', () => ctx.navigate(`/product/${el.dataset.id}`)));
+  root.querySelectorAll('[data-q]').forEach((el) =>
+    el.addEventListener('click', () => {
+      ctx.state.shopQuery = el.dataset.q;
+      ctx.state.shopCategory = '';
+      ctx.navigate('/shop');
+    }));
 }
 
 function measure(k, v) {
