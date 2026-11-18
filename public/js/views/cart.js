@@ -1,5 +1,5 @@
 // js/views/cart.js — shopping cart view (return-risk prediction + exit-intent coupon).
-import { getCart, setQty, removeFromCart, clearCart, cartLines, updateBadge } from '../cart.js';
+import { getCart, cartQty, setQty, removeFromCart, clearCart, cartLines, updateBadge } from '../cart.js';
 import { fmtPrice, emptyState, toast, pName, esc, t, isZh, mediaInner } from '../ui.js';
 import { postJSON } from '../api.js';
 import { getClaimedCoupon, track } from '../exitIntent.js';
@@ -63,7 +63,7 @@ export async function render(root, ctx) {
             <div class="cart-thumb">${mediaInner(l.product, '2.2rem')}</div>
             <div class="cart-info">
               <div class="nm">${esc(pName(l.product))}</div>
-              <div class="pr">${fmtPrice(l.product.price)} × ${l.qty}</div>
+              <div class="pr">${fmtPrice(l.product.price)} × ${l.qty}${l.size ? ` · ${esc(t('pp.size'))} ${esc(l.size)}` : ''}</div>
             </div>
             <div class="qty">
               <button data-dec="${l.id}">−</button><span>${l.qty}</span><button data-inc="${l.id}">+</button>
@@ -147,8 +147,8 @@ export async function render(root, ctx) {
     riskHost.innerHTML = `<div class="muted small">${esc(t('common.retry'))}</div>`;
   }
 
-  root.querySelectorAll('[data-inc]').forEach((b) => b.addEventListener('click', () => { setQty(b.dataset.inc, (getCart()[b.dataset.inc] || 0) + 1); render(root, ctx); }));
-  root.querySelectorAll('[data-dec]').forEach((b) => b.addEventListener('click', () => { setQty(b.dataset.dec, (getCart()[b.dataset.dec] || 1) - 1); render(root, ctx); }));
+  root.querySelectorAll('[data-inc]').forEach((b) => b.addEventListener('click', () => { setQty(b.dataset.inc, cartQty(b.dataset.inc) + 1); render(root, ctx); }));
+  root.querySelectorAll('[data-dec]').forEach((b) => b.addEventListener('click', () => { setQty(b.dataset.dec, Math.max(1, cartQty(b.dataset.dec)) - 1); render(root, ctx); }));
   root.querySelectorAll('[data-rm]').forEach((b) => b.addEventListener('click', () => { removeFromCart(b.dataset.rm); render(root, ctx); }));
   root.querySelector('#clear').addEventListener('click', () => { clearCart(); render(root, ctx); });
   root.querySelector('#checkout').addEventListener('click', async () => {

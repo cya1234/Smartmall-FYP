@@ -558,6 +558,12 @@ img { max-width: 100%; }
 .size-pick { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 8px; }
 .size-btn { border: 1px solid var(--line); background: var(--surface); border-radius: 9px; padding: 7px 13px; font-weight: 700; font-size: 0.84rem; }
 .size-btn.rec { border-color: var(--good); background: #14301F; color: var(--good); }
+/* The size the shopper actually picked. Must come after .rec: when the two coincide
+   the choice is what they need to see, and the tick in the label still marks it as
+   the recommendation. Without this rule the selected size had no styling at all,
+   which is why the page appeared to show only the recommended one. */
+.size-btn.active { border-color: var(--brand); background: var(--brand); color: #fff; box-shadow: 0 0 0 2px rgba(139, 123, 255, 0.25); }
+.size-btn.active.rec { border-color: var(--brand); background: var(--brand); color: #fff; }
 .risk-factor { display: flex; justify-content: space-between; font-size: 0.84rem; padding: 7px 0; border-bottom: 1px dashed var(--line); }
 .risk-factor:last-child { border-bottom: 0; }
 

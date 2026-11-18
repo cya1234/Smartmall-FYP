@@ -80,6 +80,26 @@ else:
           f"engine={vs.get('engine')}, {len(vs['results'])} results")
     print("       (start ai-service/visual_search_service.py to test real CLIP retrieval)")
 
+print("\n== the chosen size is visible and reaches the cart ==")
+# This is the bug the site had: product.js marked the picked size with an `active`
+# class that no CSS rule defined, so the page showed only the recommended size (which
+# has a green rule and a tick). A source-level check is what catches that class of
+# mistake; a screenshot caught it first, but this makes it stay fixed.
+def served(path):
+    return urllib.request.urlopen(BASE + path, timeout=20).read().decode("utf-8", "ignore")
+
+css = served("/css/styles.css")
+check("selected size has a style rule", ".size-btn.active" in css,
+      "missing .size-btn.active")
+
+prod = served("/js/views/product.js")
+check("chosen size is shown as text", "rr.youChose" in prod)
+check("add-to-cart carries the size", "addToCart(p.id, qty, chosenSize)" in prod)
+
+cart_js = served("/js/cart.js")
+check("the cart stores a size per line", "size: size ||" in cart_js)
+check("the cart keeps size when qty changes", "size: c[id]?.size || null" in cart_js)
+
 print("\n== product photos ==")
 withimg = [p for p in products if p.get("image")]
 raw = urllib.request.urlopen(BASE + withimg[0]["image"], timeout=20).read()

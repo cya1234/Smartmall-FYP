@@ -5,6 +5,11 @@ import { addToCart } from '../cart.js';
 import { track } from '../exitIntent.js';
 import { renderPriceChart } from '../chart.js';
 
+// The size the shopper picked, remembered per product so it survives leaving the
+// page and coming back. Previously the choice only re-ran the risk prediction and
+// was then discarded — the cart had nowhere to put it.
+const sizeChoice = new Map();
+
 export async function render(root, ctx, id) {
   const p = ctx.products.find((x) => x.id === id);
   if (!p) {
@@ -72,11 +77,13 @@ export async function render(root, ctx, id) {
   `;
 
   let qty = 1;
+  // Declared up here because the add-to-cart handler below closes over it.
+  let chosenSize = sizeChoice.get(p.id) || null;
   const qtyVal = root.querySelector('#qty-val');
   root.querySelector('[data-back]').addEventListener('click', () => history.back());
   root.querySelector('[data-add]').addEventListener('click', () => {
-    addToCart(p.id, qty);
-    toast(`${pName(p)} → ${t('nav.cart')}`);
+    addToCart(p.id, qty, chosenSize);
+    toast(`${pName(p)}${chosenSize ? ` · ${chosenSize}` : ''} → ${t('nav.cart')}`);
   });
   root.querySelector('[data-tryon]').addEventListener('click', () => {
     ctx.state.tryonProduct = p.id;
@@ -90,18 +97,21 @@ export async function render(root, ctx, id) {
 
   // ---- Return-risk prediction --------------------------------------------
   const riskBody = root.querySelector('#risk-body');
-  let chosenSize = null;
 
   async function loadRisk(size) {
+    if (size) {
+      chosenSize = size;
+      sizeChoice.set(p.id, size);
+    }
     riskBody.innerHTML = `<div class="empty">${esc(t('common.loading'))}</div>`;
     try {
       const r = await getJSON(`/api/return-risk/${p.id}?lang=${isZh() ? 'zh' : 'en'}${size ? `&size=${encodeURIComponent(size)}` : ''}`);
-      renderRisk(riskBody, r, loadRisk);
+      renderRisk(riskBody, r, loadRisk, sizeChoice.has(p.id));
     } catch {
       riskBody.innerHTML = `<div class="empty">${esc(t('common.retry'))}</div>`;
     }
   }
-  loadRisk(null);
+  loadRisk(chosenSize);
 
   // ---- Price forecast -----------------------------------------------------
   try {
@@ -159,10 +169,14 @@ async function loadStoreStock(host, productId) {
   }
 }
 
-function renderRisk(host, r, reload) {
+function renderRisk(host, r, reload, explicit = false) {
   const levelClass = `risk-${r.riskLevel}`;
   const levelLabel = t(`rr.${r.riskLevel}`);
   const runsLabel = r.runs === 'small' ? t('rr.runsSmall') : r.runs === 'large' ? t('rr.runsLarge') : t('rr.runsTrue');
+  // The API fills chosenSize with the shopper's usual size when nothing was picked,
+  // so only a size they actually tapped counts as a choice here. Otherwise the page
+  // would claim they chose a size they never did.
+  const picked = explicit ? r.chosenSize : null;
 
   host.innerHTML = `
     <div class="risk-card ${levelClass}">
@@ -185,7 +199,12 @@ function renderRisk(host, r, reload) {
       </div>
 
       <div class="size-pick">
-        ${['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((s) => `<button class="size-btn ${s === r.recommendedSize ? 'rec' : ''} ${s === r.chosenSize ? 'active' : ''}" data-size="${s}">${s}${s === r.recommendedSize ? ' ✓' : ''}</button>`).join('')}
+        ${['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((s) => `<button class="size-btn ${s === r.recommendedSize ? 'rec' : ''} ${s === picked ? 'active' : ''}" data-size="${s}">${s}${s === r.recommendedSize ? ' ✓' : ''}</button>`).join('')}
+      </div>
+      <div class="small" style="margin-top:10px" data-chosen>
+        ${picked
+          ? `${esc(t('rr.youChose'))} <strong style="color:var(--brand)">${esc(picked)}</strong>`
+          : `<span class="muted">${esc(t('rr.noChoice'))}</span>`}
       </div>
 
       <p class="small" style="margin-top:14px;color:var(--ink-2);line-height:1.6">💡 ${esc(r.advice)}</p>
@@ -230,7 +249,9 @@ function renderAdvisory(panel, f) {
     </div>
   `;
   panel.querySelector('[data-buy]').addEventListener('click', () => {
-    addToCart(f.productId, 1);
-    toast(t('nav.cart'));
+    // Carry whatever size was picked above, so "buy now" does not lose it either.
+    const size = sizeChoice.get(f.productId) || null;
+    addToCart(f.productId, 1, size);
+    toast(`${size ? `${size} · ` : ''}${t('nav.cart')}`);
   });
 }
