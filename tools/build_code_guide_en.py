@@ -659,6 +659,70 @@ python tools/eval_router.py                   # 15 questions, both routers""")
               "a held-out set — these 15 questions are the rule router's dev set too, so its 93.3% "
               "is optimistic and the comparison is not yet fair.")
 
+    # -------------------------------------------------------- 11 fairness
+    h1(doc, "11  Bias: does the score punish alternative styles?")
+    body(doc, "This was the sharpest question in the discussion. The honest answer is "
+              "yes, the original rule did — and measuring it turned up two outright bugs.")
+
+    h2(doc, "11.1  What the old rule got wrong")
+
+    code(doc, """# old
+if distinctHues > 3:      palette -= (n - 3) * 16
+if neutralShare < 0.12:   palette -= 12""")
+
+    body(doc, "That is not an aesthetic, it is minimalism. Heavy metal, shamazhite and "
+              "harajuku looks exceed three hues and fall under 12 % neutrals by "
+              "construction, so the rule marked them down for what they are.")
+
+    body(doc, "Measuring it exposed two worse problems:")
+
+    table(doc, ["Bug", "Effect"],
+          [["V > 0.95 was treated as neutral",
+            "every fully bright colour was discarded. A neon pink has max(r,g,b)=255, so V=1.0, so its hue never existed"],
+           ["cluster centres averaged arithmetically",
+            "a cluster straddling red (330 and 0) averaged to 165 — the opposite hue"]],
+          widths=[5.6, 9.4])
+
+    h2(doc, "11.2  Judge structure instead of restraint")
+
+    table(doc, ["Palette", "Verdict", "Score"],
+          [["one hue / all neutral", "monochrome / neutral", "100"],
+           ["two hues", "two-tone (black + red is a classic)", "95"],
+           ["three or more inside a 90 degree arc", "analogous (one family)", "94-100"],
+           ["three or more spread around the wheel", "scattered (no family)", "20-92"]],
+          widths=[5.4, 6.6, 3.0])
+
+    body(doc, "The difference that matters: a neon family (pink to red to orange to "
+              "yellow) now scores 95, while six randomly scattered hues still score 20. "
+              "The question is no longer how many colours, but whether they have a scheme.")
+
+    h2(doc, "11.3  Measured: six styles, same garments, colour only")
+
+    table(doc, ["Style", "Hues", "Verdict", "Old", "New"],
+          [["minimal (neutrals)", "0", "neutral", "97.3", "100"],
+           ["streetwear (dark + one accent)", "1", "monochrome", "100", "100"],
+           ["heavy metal (black + dark red)", "2", "two-tone", "100", "95"],
+           ["maximalist, coherent neon family", "2", "two-tone", "100", "95"],
+           ["maximalist, scattered random hues", "3", "scattered", "100", "20"],
+           ["formal (navy + grey + white)", "1", "monochrome", "100", "100"]],
+          widths=[6.0, 2.0, 3.6, 2.4, 2.4])
+
+    callout(doc, "Every style sat within 2.7 points of every other under the old rule: "
+                 "it was not biased so much as blind. A signal worth 20 % of the score "
+                 "that distinguishes nothing is a defect on its own.")
+
+    h2(doc, "11.4  The value judgement that remains, stated not hidden")
+
+    body(doc, "Preferring a coherent palette over a chaotic one is still a judgement, so:")
+
+    bullet(doc, "palette weight cut from 20 % to 10 %, style raised to 65 %")
+    bullet(doc, "the weight is one number in visual_search_service.py, easy to disagree with")
+    bullet(doc, "completeness is derived from the wardrobe: someone who never buys shoes is "
+                "not marked down for wearing none, and a dress satisfies both top and bottom")
+
+    body(doc, "Reproduce it with tools/eval_aesthetic_bias.py, which draws the six styles "
+              "and scores them under both rules.")
+
     doc.add_paragraph()
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
