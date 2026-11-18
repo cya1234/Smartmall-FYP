@@ -109,14 +109,20 @@ export async function render(root, ctx) {
       toast(isZh() ? `歡迎，${r.user.name}` : `Welcome, ${r.user.name}`);
       ctx.navigate('/');
     } catch (err) {
+      // The server's error key now survives (see api.js); map it to something a person
+      // can act on, in the wording of the form they were actually using.
       const map = {
         invalid_credentials: isZh() ? 'Email 或密碼不正確' : 'Wrong email or password',
-        email_taken: isZh() ? '這個 Email 已被使用' : 'That email is already registered',
+        email_taken: isZh() ? '這個 Email 已被使用，請直接登入' : 'That email is already registered — log in instead',
         password_too_short: isZh() ? '密碼至少 8 個字元' : 'Password must be at least 8 characters',
         invalid_email: isZh() ? 'Email 格式不正確' : 'That email does not look valid',
         too_many_attempts: isZh() ? '嘗試次數過多，請 5 分鐘後再試' : 'Too many attempts — try again in 5 minutes',
+        'Request failed (500)': isZh() ? '伺服器錯誤，請看終端機' : 'Server error — check the terminal',
       };
-      state.error = map[String(err.message)] || (isZh() ? '登入失敗' : 'Sign-in failed');
+      const fallback = state.mode === 'register'
+        ? (isZh() ? '註冊失敗' : 'Sign-up failed')
+        : (isZh() ? '登入失敗' : 'Log-in failed');
+      state.error = map[String(err.message)] || `${fallback} (${err.message})`;
       state.busy = false;
       paint();
     }
