@@ -32,6 +32,11 @@ export async function render(root, ctx) {
 
   // Real searches, recorded server-side. Missing is fine: an empty history just
   // means the card renders its empty state.
+  // What the shopper actually opens, as opposed to what they said they like.
+  let att = null;
+  try { att = await getJSON('/api/engagement?limit=4'); } catch { att = null; }
+  const attCats = att?.categories || [];
+
   let hist = null;
   try { hist = await getJSON('/api/history?limit=10'); } catch { hist = null; }
   const recent = (hist?.recentQueries || []).filter((h) => h.query && h.query !== '(image)');
@@ -41,6 +46,25 @@ export async function render(root, ctx) {
     <section class="container">
       <h1 class="section-title">${esc(t('mem.title'))}</h1>
       <p class="section-sub">${esc(t('mem.sub'))}</p>
+
+      <div class="card">
+        <div class="row-between" style="margin-bottom:10px">
+          <h3 style="margin:0">${esc(isZh() ? '👀 你最近常看' : '👀 What you keep opening')}</h3>
+          <span class="muted small">${esc(isZh()
+            ? `${att?.totals?.views ?? 0} 次瀏覽 · ${att?.totals?.carts ?? 0} 次加購`
+            : `${att?.totals?.views ?? 0} views · ${att?.totals?.carts ?? 0} add-to-cart`)}</span>
+        </div>
+        ${attCats.length ? `
+          <div class="chips">
+            ${attCats.map((c) => `<span class="chip ${c === attCats[0] ? 'active' : ''}">${esc(c.category)} · ${esc(String(c.score))}</span>`).join('')}
+          </div>
+          <p class="muted small" style="margin:10px 0 0">${esc(isZh()
+            ? '這些分類在搜尋結果中會被輕微優先顯示（最多 +20%）。'
+            : 'These categories get a small ranking nudge (up to +20 %).')}</p>`
+          : `<p class="muted small" style="margin:0">${esc(isZh()
+            ? '還沒有瀏覽紀錄 —— 多看幾件，這裡就會出現。'
+            : 'Nothing viewed yet — open a few products and this fills in.')}</p>`}
+      </div>
 
       <div class="card">
         <div class="row-between" style="margin-bottom:10px">

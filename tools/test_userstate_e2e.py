@@ -126,6 +126,18 @@ check("an electronics preference moves the earbuds up",
       "p029" in elec and elec.index("p029") < base.index("p029"),
       f"{base} -> {elec}")
 
+print("\n== click attention is exposed and bounded ==")
+code, att = call("/api/engagement")
+check("engagement endpoint answers", code == 200 and isinstance(att.get("categories"), list),
+      f"{len(att.get('categories') or [])} categories")
+cats = att.get("categories") or []
+check("categories are sorted by attention",
+      [c["score"] for c in cats] == sorted((c["score"] for c in cats), reverse=True),
+      [c["score"] for c in cats])
+check("counts are non-negative", all(c["views"] >= 0 and c["carts"] >= 0 for c in cats))
+check("totals are reported", isinstance(att.get("totals"), dict) and att["totals"].get("views", -1) >= 0,
+      att.get("totals"))
+
 print("\n== clearing ==")
 code, cleared = call("/api/history/clear", {})
 check("history cleared", code == 200 and call("/api/history")[1]["total"] == 0,

@@ -510,6 +510,38 @@ The endpoint sanitises what it accepts — lists truncated, non-strings dropped,
 clamped, incomplete pairs discarded — so a malformed request cannot write arbitrary
 structure into the state file. The test asserts all four.
 
+### Learning from clicks, not just answers
+
+The survey records what a shopper *claims* to like. `product_view` and `add_to_cart`
+events record what they actually open, and those already land in the analytics SQLite,
+so `lib/engagement.js` derives a **category-level** attention score from them:
+
+```
+attention(category) = views + 3 × add-to-cart        (last 30 days)
+boost               = 1 + 0.20 × tanh(attention / 8)
+```
+
+Category level rather than product level on purpose: one extra view of one jacket is
+noise, while "this shopper keeps opening outerwear" is a pattern — and per-product
+boosting starts a rich-get-richer loop where the top item is clicked because it is on
+top.
+
+The curve is bounded and monotonic: no amount of clicking can exceed +20 %, and a
+product with no history is untouched, so a search never drifts far from what the query
+asked for. `tools/test_engagement.mjs` asserts exactly those three properties.
+
+Three nudges now multiply the search score, and each is separately attributable:
+
+| Signal | Source | Effect |
+|---|---|---|
+| `preferenceBoost` | pairwise survey answers | per product, ±35 % |
+| `subcategoryAffinity` | welcome survey | category / style / colour, up to +25 % |
+| `attentionBoost` | views and carts | per category, up to +20 % |
+
+`GET /api/engagement` exposes the result, and the 我的 page shows it plainly —
+"👀 你最近常看 Apparel · 44" with a note that those categories get a small nudge. That
+matters: a personalisation the shopper cannot see is indistinguishable from a bug.
+
 ## Swapping in real AI
 
 The proposal's key idea — *decoupling standard web operations from high-dimensional AI

@@ -36,6 +36,7 @@ import { routeWithLLM, llmHealth, warmLLM } from './lib/agent/llmRouter.js';
 import {
   recordSearch, getHistory, clearHistory, saveOnboarding, getOnboarding, hasOnboarded,
 } from './lib/userState.js';
+import { attention, resetCache as resetEngagementCache } from './lib/engagement.js';
 import { startSession, analyzePhoto, submitReturn, getReturns as getReturnForms, returnStats, RETURN_REASONS } from './lib/support.js';
 import {
   trackEvent, issueCoupon, applyCoupon, getCoupon, getSummary, getRecentEvents, getCoupons,
@@ -255,6 +256,19 @@ async function handleApi(req, res, pathname) {
     return sendJson(res, 200, getHistory({
       days: Number(url.searchParams.get('days')) || 30,
       limit: Number(url.searchParams.get('limit')) || 12,
+    }));
+  }
+
+  // ---- What the shopper keeps looking at (implicit preference) --------------
+  if (parts[1] === 'engagement') {
+    if (method === 'POST' && parts[2] === 'reset') {
+      resetEngagementCache();
+      resetAnalytics();
+      return sendJson(res, 200, { ok: true });
+    }
+    const url = new URL(req.url, 'http://localhost');
+    return sendJson(res, 200, attention({
+      limit: Number(url.searchParams.get('limit')) || 4,
     }));
   }
 
