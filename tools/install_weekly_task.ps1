@@ -56,16 +56,27 @@ $settings = New-ScheduledTaskSettingsSet `
   -MultipleInstances IgnoreNew `
   -ExecutionTimeLimit (New-TimeSpan -Minutes 20)
 
-# StartWhenAvailable covers sleep; the logon trigger covers being switched off entirely.
+# Interactive logon type on purpose.
+#
+# Google Drive's virtual drive lives in the interactive session; a task that runs in a
+# background session can see the drive letter but is refused writes ("Access to the path
+# ... is denied"). Running in the user's own session also matches what this task is for:
+# a report for a person who is sitting at the machine.
+$principal = New-ScheduledTaskPrincipal `
+  -UserId "$env:USERDOMAIN\$env:USERNAME" `
+  -LogonType Interactive `
+  -RunLevel Limited
 
 Register-ScheduledTask -TaskName $Name -Action $action -Trigger @($weekly, $logon) `
-  -Settings $settings -Description "SmartMall weekly report: facts from git, document into the synced cloud folder, Telegram notification." `
+  -Settings $settings -Principal $principal `
+  -Description "SmartMall weekly report: facts from git, document into the synced cloud folder, Telegram notification." `
   -Force | Out-Null
 
 $t = Get-ScheduledTask -TaskName $Name
 Write-Host ""
 Write-Host "  registered: $($t.TaskName)"
 Write-Host "  state     : $($t.State)"
+Write-Host "  runs as   : interactive session of $env:USERNAME (needed to write to Google Drive)"
 Write-Host "  triggers  : Tuesday $At + at logon (catch-up, minimum 6 days apart)"
 Write-Host "  script    : $script"
 Write-Host "  log       : $(Join-Path $root 'reports\task.log')"

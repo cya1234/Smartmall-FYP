@@ -9,20 +9,34 @@
 ## 它是怎樣運作的
 
 ```
-Windows 排程任務
+Windows 排程任務（在使用者的登入 session 執行）
    ├── 逢星期二 20:00
    └── 每次登入時（若上次報告已超過 6 天 → 補跑）
         ↓
-tools/weekly_task.ps1
+tools/weekly_task.ps1          ← PowerShell 負責「複製到 Drive」和「發 Telegram」
         ↓
-tools/build_weekly_report.py
+tools/build_weekly_report.py   ← Python 負責「產生報告」
    ├── 從 git 讀事實（提交、程式碼行數、測試、商品數）
-   ├── 生成 Word 報告（6 頁：概況／進度／技術／問答／風險／待確認）
-   ├── 複製到 Google Drive 同步資料夾
-   └── 發 Telegram 訊息
+   └── 生成 Word 報告（6 頁）
 ```
 
-**為甚麼要「登入時補跑」**：你部電腦有時關著。單純的定時任務在你關機時會直接跳過，之後也不會補。所以加了一個登入觸發器，用「上次報告距今超過 6 天」做判斷，最壞情況是你下次開機時補發一份。
+### 為甚麼要分成 PowerShell + Python 兩層
+
+實測發現（用對照的排程任務驗證）：
+
+| 在排程任務中執行 | 寫入 Google Drive |
+|---|---|
+| PowerShell（英文檔名） | ✅ 可以 |
+| PowerShell（中文檔名） | ✅ 可以 |
+| **Python** | ❌ `Permission denied` |
+| **Python 啟動的 PowerShell** | ❌ 同樣被拒 |
+
+所以「複製檔案到 Drive」這一步交給 PowerShell，Python 只負責生成報告內容。
+另外排程任務必須設定為 **只在互動登入 session 執行**，因為 Google Drive 虛擬磁碟只在那個 session 可見。
+
+### 為甚麼要「登入時補跑」
+
+你部電腦有時關著。單純的定時任務在你關機時會直接跳過，之後也不會補。所以加了一個登入觸發器，用「上次報告距今超過 6 天」做判斷，最壞情況是你下次開機時補發一份。
 
 ---
 
@@ -32,9 +46,9 @@ tools/build_weekly_report.py
 
 1. 開始選單搜「Google Drive」→ 開啟
 2. 登入你的 Google 帳號
-3. 等它掛載出「My Drive」磁碟（通常係 `G:\My Drive`）
+3. 等它掛載出「我的雲端硬碟」磁碟（通常是 `G:\我的雲端硬碟`）
 
-> 如果唔想開著，報告會存在專案的 `reports\` 資料夾，Telegram 訊息會註明「未偵測到 Google Drive」。
+> 如果唔想開著，報告會存在專案的 `reports\` 資料夾，Telegram 訊息會註明「未偵測到 Google Drive 資料夾」。
 
 ### 第二步：建立 Telegram Bot
 
@@ -46,12 +60,11 @@ tools/build_weekly_report.py
    ```
    123456789:AAH4xK9pQrStUvWxYz0123456789abcdef
    ```
-   **複製佢。**
 
 ### 第三步：取得你的 chat id
 
-1. 在 Telegram 搜尋你自己剛剛建立的 bot（用上面那個 username）
-2. **按 Start** 或隨便傳一句話給它（例如 `hi`）
+1. 在 Telegram 搜尋你自己剛剛建立的 bot
+2. **按 Start 或隨便傳一句話給它**（例如 `hi`）
    > 這一步很重要 —— 唔傳訊息，bot 就唔知道要發給誰
 3. 用瀏覽器打開（把 `<TOKEN>` 換成你的 token）：
    ```
@@ -61,15 +74,12 @@ tools/build_weekly_report.py
 
 ### 第四步：填寫設定檔
 
-複製範本：
-
 ```powershell
 cd C:\Users\wpuil\Downloads\SmartMall
-Copy-Item tools\report_config.example.json .report\report.json
 notepad .report\report.json
 ```
 
-填入 token 和 chat_id：
+格式**必須是合法 JSON**（不能有 `#` 註解、不能有尾逗號）：
 
 ```json
 {
@@ -77,12 +87,19 @@ notepad .report\report.json
     "token": "123456789:AAH4xK9pQrStUvWxYz0123456789abcdef",
     "chat_id": "987654321"
   },
-  "drive_folder": ""
+  "drive_folder": "G:\\我的雲端硬碟\\FYP"
 }
 ```
 
-> `drive_folder` 留空會自動偵測。如果自動偵測唔到，填完整路徑，例如
-> `"G:\\My Drive\\SmartMall 週報"`
+> ⚠️ Windows 路徑要用**雙反斜線** `\\`，或者用 `/`。
+
+填完後驗證：
+
+```powershell
+.venv\Scripts\python.exe tools\repair_report_config.py
+```
+
+它會告訴你設定是否有效、哪些欄位已填。如果之前把範例檔連註解一起複製了，這個指令會自動修好並保留你已填的值。
 
 ### 第五步：註冊排程任務
 
@@ -100,27 +117,33 @@ notepad .report\report.json
 
 ## 測試
 
-**先本地測試（不發 Telegram、不寫 Drive）**：
+**只生成，不發送**：
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\weekly_task.ps1 -DryRun
 ```
 
-成功的話會在 `reports\` 見到 `SmartMall 週報 YYYY-MM-DD.docx`。
-
-**再測試真實發送**：
+**完整流程（真的寫 Drive + 發 Telegram）**：
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\weekly_task.ps1
 ```
 
-你應該即刻收到 Telegram 訊息。
-
-**檢查排程任務狀態**：
+**用排程任務本身測試（最接近真實）**：
 
 ```powershell
-Get-ScheduledTask -TaskName "SmartMall Weekly Report" | Select-Object TaskName, State
-Get-ScheduledTaskInfo -TaskName "SmartMall Weekly Report"
+Start-ScheduledTask -TaskName "SmartMall Weekly Report"
+Start-Sleep -Seconds 30
+Get-Content reports\task.log -Tail 15
+```
+
+成功的 log 長這樣：
+
+```
+[22:28:19] generated: SmartMall 週報 2026-11-24.docx
+[22:28:19] copied to Drive: G:\我的雲端硬碟\FYP\SmartMall 週報 2026-11-24.docx
+[22:28:20] telegram sent
+[22:28:20] run finished ok
 ```
 
 ---
