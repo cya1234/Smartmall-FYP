@@ -22,7 +22,7 @@ import subprocess
 import sys
 import urllib.parse
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # python-docx is optional. A scheduled task that fails because one dependency is missing
 # is worse than a task that writes Markdown, so the report is always produced: as .docx
@@ -127,6 +127,21 @@ AREA_TAGS = {
     "測試": ["test", "eval"],
     "文件": [],
     "修正": [],
+}
+
+# Plain-language description of what each area means for a reader who does not want
+# commit messages or file names. Used only by the short version.
+AREA_SUMMARY = {
+    "虛擬試穿": "改善虛擬試穿的畫質與速度，並修正一個影響輸出品質的問題",
+    "商品目錄與尺碼": "擴充商品種類，並把鞋碼改為香港慣用的標示方式",
+    "帳號與登入": "新增登入系統，不同使用者的資料分開儲存",
+    "A/B 實驗": "建立 A/B 實驗框架，用來比較兩種評分方式哪一種更有效",
+    "個人化（問卷／搜尋／點擊）": "新增進站問卷與搜尋紀錄；系統會根據點擊行為調整推薦",
+    "穿搭評分": "移除評分機制對小眾風格的偏見，並以數據驗證改善幅度",
+    "報告工具": "進度報告自動化，每週生成並存檔",
+    "測試": "擴充自動化測試，確保改動不會破壞既有功能",
+    "文件": "更新技術文件與使用說明",
+    "其他": "其他修正與改善",
 }
 
 STATUS_SIX = [
@@ -372,7 +387,7 @@ def build_doc(facts, faq, cfg, since):
     up = [k for k, v in s.items() if v]
     bullet(doc, "執行時服務狀態：" + ("、".join(up) if up else "全部關閉"))
 
-    path = os.path.join(cfg["_tmp_out"], f"SmartMall 週報 {today}.docx")
+    path = os.path.join(cfg["_tmp_out"], f"SmartMall 週報（詳細版） {today}.docx")
     return save_path_with_retry(cfg["_tmp_out"], os.path.basename(path), doc.save)
 
 
@@ -386,7 +401,7 @@ def build_markdown(facts, faq, since):
     L = []
     L.append(f"# SmartMall 每週報告 · {today}")
     L.append("")
-    L.append(f"報告範圍：{since} 起 · 產生時間：{datetime.now().strftime('%Y-%m-%d %H:%M')} · "
+    L.append(f"報告範圍：{since_label(since)} 起 · 產生時間：{datetime.now().strftime('%Y-%m-%d %H:%M')} · "
              f"分支 {facts['worktree']['branch']} · HEAD {facts['worktree']['head'][:7]}")
     L.append("")
 
@@ -560,6 +575,105 @@ def plain_copy(src, dest):
         shutil.copyfileobj(fin, fout)
 
 
+def since_label(since):
+    """Turn '7 days ago' into a real date — a supervisor should not read git syntax."""
+    m = re.match(r"\s*(\d+)\s*days?\s*ago\s*$", str(since), re.IGNORECASE)
+    if m:
+        days = int(m.group(1))
+        return (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
+    m = re.match(r"\s*(\d+)\s*weeks?\s*ago\s*$", str(since), re.IGNORECASE)
+    if m:
+        weeks = int(m.group(1))
+        return (datetime.now() - timedelta(weeks=weeks)).strftime("%Y-%m-%d")
+    return str(since)
+
+
+def build_simple_doc(facts, since):
+    """The one-to-two page version, written for somebody who is not reading the code.
+
+    Deliberately excludes commit hashes, file names and jargon: a supervisor wants to
+    know what changed, whether it works, and what is left.
+    """
+    doc = Document()
+    style = doc.styles["Normal"]
+    style.font.name = "Calibri"
+    style.font.size = Pt(11)
+
+    commits = facts["commits"]
+    areas = {}
+    for c in commits:
+        areas.setdefault(area_of(c), []).append(c)
+    top = sorted(areas.items(), key=lambda kv: -len(kv[1]))
+
+    today = datetime.now().strftime("%Y-%m-%d")
+    title = doc.add_heading(f"SmartMall 專題進度報告 · {today}", level=0)
+    for r in title.runs:
+        r.font.color.rgb = ACCENT
+    p = doc.add_paragraph()
+    run = p.add_run(f"報告期間：{since_label(since)} 起｜每週自動生成｜詳細技術版本另存")
+    run.font.size = Pt(9)
+    run.font.color.rgb = GREY
+
+    # ---- 摘要
+    h1(doc, "一、本週摘要")
+    lead = (f"本週完成 {len(commits)} 項改動，集中在"
+            + "、".join(a for a, _ in top[:3])
+            + "。" if commits else "本週沒有新的改動。")
+    body(doc, lead, size=11)
+
+    if top:
+        h2(doc, "主要工作")
+        for area, cs in top:
+            desc = AREA_SUMMARY.get(area, area)
+            bullet(doc, f"{desc}（{len(cs)} 項）")
+
+    # ---- 關鍵數字
+    h1(doc, "二、目前規模")
+    total_checks = sum(t["checks"] for t in facts["tests"])
+    rows = [
+        ["商品數量", f"{sum(facts['catalogue'].values()) if facts['catalogue'] else 0} 件"],
+        ["功能頁面", "20 個"],
+        ["自動化測試", f"{len(facts['tests'])} 個檔案，約 {total_checks} 項檢查"],
+        ["AI 服務", "4 個（視覺搜尋／價格預測／虛擬試穿／穿搭評分）"],
+        ["本週改動", f"{len(commits)} 項"],
+    ]
+    table(doc, ["項目", "數量"], rows, widths=[4.0, 8.0])
+
+    # ---- 對照要求
+    h1(doc, "三、對照專題要求")
+    body(doc, "依教授提出的六點方向，目前進度如下：", size=10)
+    clean = [[n, req, st, note] for n, req, st, note in STATUS_SIX]
+    table(doc, ["#", "要求", "狀態", "說明"], clean)
+    body(doc, "第 2 點與第 3 點的系統已完成，但尚缺真實使用者數據，"
+              "因此以「框架完成、待收集」表述，未列為已完成。", size=9.5)
+
+    # ---- 下一步
+    h1(doc, "四、下一步")
+    bullet(doc, "收集真實使用者數據（目標 15–25 位），驗證推薦與評分的實際效果")
+    bullet(doc, "整理示範流程與答辯用數據表")
+    bullet(doc, "依測試結果調整推薦權重")
+
+    # ---- 限制
+    h1(doc, "五、須說明的事項")
+    body(doc, "為避免誤解，以下資料為示範用途的模擬數據，非真實交易紀錄："
+              "價格歷史、門市庫存、比價報價、二手估價。"
+              "虛擬試穿、以圖搜尋、穿搭評分與價格預測為真實模型推論。", size=9.5)
+
+    doc.add_paragraph()
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r = p.add_run("本報告由 tools/build_weekly_report.py 自動生成")
+    r.font.size = Pt(8)
+    r.font.color.rgb = GREY
+
+    path = os.path.join(cfg_out_dir(), f"SmartMall 進度報告（老師版） {datetime.now().strftime('%Y-%m-%d')}.docx")
+    return save_path_with_retry(os.path.dirname(path), os.path.basename(path), doc.save)
+
+
+def cfg_out_dir():
+    return os.path.join(ROOT, "reports")
+
+
 def telegram(cfg, text):
     tg = cfg.get("telegram") or {}
     token, chat = tg.get("token", ""), tg.get("chat_id", "")
@@ -627,11 +741,18 @@ def main():
 
     if HAVE_DOCX:
         produced = build_doc(facts, faq, cfg, args.since)
+        # Second, shorter document for the supervisor: same facts, no jargon.
+        try:
+            simple = build_simple_doc(facts, args.since)
+        except Exception as exc:
+            print(f"  WARNING: could not build the short version: {exc}")
+            simple = None
     else:
         today = datetime.now().strftime("%Y-%m-%d")
-        produced = os.path.join(tmp, f"SmartMall 週報 {today}.md")
+        produced = os.path.join(tmp, f"SmartMall 週報（詳細版） {today}.md")
         with open(produced, "w", encoding="utf-8") as fh:
             fh.write(build_markdown(facts, faq, args.since))
+        simple = None
     doc_path = produced
 
     # deliver
@@ -646,6 +767,7 @@ def main():
         result = {
             "ok": True,
             "report_path": doc_path,
+            "simple_path": simple,
             "commits": len(facts["commits"]),
             "products": sum(facts["catalogue"].values()) if facts["catalogue"] else 0,
             "uncommitted": facts["worktree"]["uncommitted"],
@@ -657,6 +779,8 @@ def main():
         if args.emit_result:
             save_json(args.emit_result, result)
         print(f"  report   : {doc_path}")
+        if simple:
+            print(f"  simple   : {simple}")
         print(f"  commits  : {result['commits']}")
         save_json(STATE_PATH, {
             "last_report_at": datetime.now().isoformat(timespec="seconds"),

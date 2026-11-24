@@ -69,42 +69,60 @@ if (-not (Test-Path $resultPath)) {
   exit 0
 }
 $result = Get-Content $resultPath -Raw -Encoding utf8 | ConvertFrom-Json
-$reportPath = $result.report_path
-if (-not (Test-Path $reportPath)) { Write-Log "ERROR: report missing at $reportPath"; exit 1 }
-Write-Log ("generated: " + (Split-Path $reportPath -Leaf))
+Write-Log ("generated: " + (Split-Path $result.report_path -Leaf))
 
 # ---- 2. copy into the cloud folder ---------------------------------------
+function Copy-ReportTo {
+  param([string]$SourceFile, [string]$TargetDir)
+  $dest = Join-Path $TargetDir (Split-Path $SourceFile -Leaf)
+  if (Test-Path $dest) {
+    $stem = [System.IO.Path]::GetFileNameWithoutExtension($dest)
+    $ext = [System.IO.Path]::GetExtension($dest)
+    for ($i = 1; $i -lt 10; $i++) {
+      $candidate = Join-Path $TargetDir ("{0} ({1}){2}" -f $stem, $i, $ext)
+      if (-not (Test-Path $candidate)) { $dest = $candidate; break }
+    }
+  }
+  Copy-Item -LiteralPath $SourceFile -Destination $dest -Force -ErrorAction Stop
+  return $dest
+}
+
+$reportPath = $result.report_path
+$simplePath = $result.simple_path
+if (-not (Test-Path $reportPath)) { Write-Log "ERROR: report missing at $reportPath"; exit 1 }
+
 $where = '本機 reports/（未偵測到 Google Drive 資料夾）'
+$delivered = @()
 if (-not $DryRun -and $driveFolder -and (Test-Path $driveFolder)) {
   try {
-    $dest = Join-Path $driveFolder (Split-Path $reportPath -Leaf)
-    # If the name is taken (an earlier copy still open in Word), add a suffix.
-    if (Test-Path $dest) {
-      $stem = [System.IO.Path]::GetFileNameWithoutExtension($dest)
-      $ext = [System.IO.Path]::GetExtension($dest)
-      for ($i = 1; $i -lt 10; $i++) {
-        $candidate = Join-Path $driveFolder ("{0} ({1}){2}" -f $stem, $i, $ext)
-        if (-not (Test-Path $candidate)) { $dest = $candidate; break }
-      }
+    $null = Copy-ReportTo -SourceFile $reportPath -TargetDir $driveFolder
+    $delivered += (Split-Path $reportPath -Leaf)
+    if ($simplePath -and (Test-Path $simplePath)) {
+      $null = Copy-ReportTo -SourceFile $simplePath -TargetDir $driveFolder
+      $delivered += (Split-Path $simplePath -Leaf)
     }
-    Copy-Item -LiteralPath $reportPath -Destination $dest -Force -ErrorAction Stop
     $where = 'Google Drive'
-    Write-Log "copied to Drive: $dest"
+    Write-Log ("copied to Drive: " + ($delivered -join ' | '))
   } catch {
     $where = "本機 reports/（Drive 寫入失敗：$($_.Exception.Message.Split([Environment]::NewLine)[0])）"
     Write-Log ("WARNING: Drive copy failed: " + $_.Exception.Message.Split([Environment]::NewLine)[0])
   }
 } elseif (-not $DryRun) {
-  Write-Log "no drive folder configured; leaving the report local"
+  Write-Log "no drive folder configured; leaving the reports local"
 }
 
 # ---- 3. notify ------------------------------------------------------------
 $summary = @(
   "📊 SmartMall 週報已生成",
   "$($result.commits) 個提交 · $($result.products) 件商品",
-  "位置：$where",
-  "檔名：$(Split-Path $reportPath -Leaf)"
+  "位置：$where"
 )
+if ($delivered.Count -gt 0) {
+  foreach ($f in $delivered) { $summary += "・$f" }
+} else {
+  $summary += "・$(Split-Path $reportPath -Leaf)"
+  if ($simplePath) { $summary += "・$(Split-Path $simplePath -Leaf)" }
+}
 if ($result.uncommitted -gt 0) { $summary += "⚠️ 有 $($result.uncommitted) 個未提交檔案" }
 $text = $summary -join "`n"
 

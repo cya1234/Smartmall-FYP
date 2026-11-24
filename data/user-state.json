@@ -593,6 +593,20 @@
    "onboarding": null,
    "onboardedAt": null,
    "history": []
+  },
+  "5a57324a-e605-475c-b840-596db1cbbb6f": {
+   "onboarding": null,
+   "onboardedAt": null,
+   "history": [
+    {
+     "at": "2026-11-24T14:36:13.359Z",
+     "kind": "assistant",
+     "query": "Island wedding next month — what should I wear?",
+     "lang": "en",
+     "results": 0,
+     "productId": null
+    }
+   ]
   }
  }
 }
