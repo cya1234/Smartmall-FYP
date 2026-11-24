@@ -29,3 +29,7 @@ data/analytics.db-shm
 Thumbs.db
 .DS_Store
 *.log
+
+# Weekly report output and its local config (may hold a Telegram bot token)
+reports/
+.report/

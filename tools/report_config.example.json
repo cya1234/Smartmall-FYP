@@ -1,0 +1,23 @@
+# SmartMall 每週報告設定
+#
+# 複製這個檔案到：
+#   %USERPROFILE%\.smartmall\report.json
+#
+# 然後填入你的資料。這個檔案在專案外面，所以不會被提交上 GitHub。
+
+{
+  "_說明": "把下面兩項填好，報告就會自動傳到 Telegram。token 和 chat_id 的取得方法見 SETUP_WEEKLY_REPORT.md。",
+
+  "telegram": {
+    "token": "貼上你的 bot token，例如 123456789:AAH...",
+    "chat_id": "貼上你的 chat id，例如 987654321"
+  },
+
+  "_drive_folder_說明": "留空會自動偵測 Google Drive 桌面版的 'My Drive'。如果偵測不到，就填完整路徑，例如 G:\\My Drive\\SmartMall 週報",
+  "drive_folder": "",
+
+  "ollama": {
+    "enabled": false,
+    "model": "qwen2.5:3b-instruct"
+  }
+}
