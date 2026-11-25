@@ -1,0 +1,291 @@
+{
+ "segments": [
+  {
+   "id": "s1",
+   "hkd": 1
+  },
+  {
+   "id": "s2",
+   "hkd": 2
+  },
+  {
+   "id": "s3",
+   "hkd": 3
+  },
+  {
+   "id": "s5",
+   "hkd": 5
+  },
+  {
+   "id": "s8",
+   "hkd": 8
+  },
+  {
+   "id": "s10",
+   "hkd": 10
+  },
+  {
+   "id": "s12",
+   "hkd": 12
+  },
+  {
+   "id": "again",
+   "again": true
+  }
+ ],
+ "curve": [
+  {
+   "share": 0.0,
+   "weights": [
+    20.0,
+    22.0,
+    20.0,
+    16.0,
+    10.0,
+    6.0,
+    3.0,
+    3.0
+   ],
+   "cashPerSpin": 3.8,
+   "pAgain": 0.03,
+   "expectedTotal": 3.918,
+   "expectedSpins": 1.031
+  },
+  {
+   "share": 0.1,
+   "weights": [
+    19.0,
+    21.0,
+    19.0,
+    16.0,
+    10.4,
+    6.3,
+    3.2,
+    3.0
+   ],
+   "cashPerSpin": 3.908,
+   "pAgain": 0.0306,
+   "expectedTotal": 4.032,
+   "expectedSpins": 1.032
+  },
+  {
+   "share": 0.2,
+   "weights": [
+    18.0,
+    20.0,
+    18.0,
+    16.0,
+    10.9,
+    6.6,
+    3.4,
+    3.0
+   ],
+   "cashPerSpin": 4.025,
+   "pAgain": 0.0313,
+   "expectedTotal": 4.155,
+   "expectedSpins": 1.032
+  },
+  {
+   "share": 0.3,
+   "weights": [
+    17.0,
+    19.0,
+    17.0,
+    16.0,
+    11.4,
+    6.9,
+    3.6,
+    3.0
+   ],
+   "cashPerSpin": 4.147,
+   "pAgain": 0.0319,
+   "expectedTotal": 4.284,
+   "expectedSpins": 1.033
+  },
+  {
+   "share": 0.4,
+   "weights": [
+    16.0,
+    18.0,
+    16.0,
+    16.0,
+    11.8,
+    7.2,
+    3.8,
+    3.0
+   ],
+   "cashPerSpin": 4.27,
+   "pAgain": 0.0327,
+   "expectedTotal": 4.414,
+   "expectedSpins": 1.034
+  },
+  {
+   "share": 0.5,
+   "weights": [
+    15.0,
+    17.0,
+    15.0,
+    16.0,
+    12.2,
+    7.5,
+    4.0,
+    3.0
+   ],
+   "cashPerSpin": 4.399,
+   "pAgain": 0.0334,
+   "expectedTotal": 4.551,
+   "expectedSpins": 1.035
+  },
+  {
+   "share": 0.6,
+   "weights": [
+    14.0,
+    16.0,
+    14.0,
+    16.0,
+    12.7,
+    7.8,
+    4.2,
+    3.0
+   ],
+   "cashPerSpin": 4.538,
+   "pAgain": 0.0342,
+   "expectedTotal": 4.699,
+   "expectedSpins": 1.035
+  },
+  {
+   "share": 0.7,
+   "weights": [
+    13.0,
+    15.0,
+    13.0,
+    16.0,
+    13.2,
+    8.1,
+    4.4,
+    3.0
+   ],
+   "cashPerSpin": 4.684,
+   "pAgain": 0.035,
+   "expectedTotal": 4.854,
+   "expectedSpins": 1.036
+  },
+  {
+   "share": 0.8,
+   "weights": [
+    12.0,
+    14.0,
+    12.0,
+    16.0,
+    13.6,
+    8.4,
+    4.6,
+    3.0
+   ],
+   "cashPerSpin": 4.833,
+   "pAgain": 0.0359,
+   "expectedTotal": 5.012,
+   "expectedSpins": 1.037
+  },
+  {
+   "share": 0.9,
+   "weights": [
+    11.0,
+    13.0,
+    11.0,
+    16.0,
+    14.0,
+    8.7,
+    4.8,
+    3.0
+   ],
+   "cashPerSpin": 4.989,
+   "pAgain": 0.0368,
+   "expectedTotal": 5.18,
+   "expectedSpins": 1.038
+  },
+  {
+   "share": 1.0,
+   "weights": [
+    10.0,
+    12.0,
+    10.0,
+    16.0,
+    14.5,
+    9.0,
+    5.0,
+    3.0
+   ],
+   "cashPerSpin": 5.157,
+   "pAgain": 0.0377,
+   "expectedTotal": 5.359,
+   "expectedSpins": 1.039
+  }
+ ],
+ "atZeroShare": {
+  "share": 0.0,
+  "weights": [
+   20.0,
+   22.0,
+   20.0,
+   16.0,
+   10.0,
+   6.0,
+   3.0,
+   3.0
+  ],
+  "cashPerSpin": 3.8,
+  "pAgain": 0.03,
+  "expectedTotal": 3.918,
+  "expectedSpins": 1.031
+ },
+ "atFullShare": {
+  "share": 1.0,
+  "weights": [
+   10.0,
+   12.0,
+   10.0,
+   16.0,
+   14.5,
+   9.0,
+   5.0,
+   3.0
+  ],
+  "cashPerSpin": 5.157,
+  "pAgain": 0.0377,
+  "expectedTotal": 5.359,
+  "expectedSpins": 1.039
+ },
+ "breakEven": [
+  {
+   "margin": 80,
+   "surveysPerExtraSale": 14.9,
+   "requiredLiftPct": 6.7
+  },
+  {
+   "margin": 150,
+   "surveysPerExtraSale": 28.0,
+   "requiredLiftPct": 3.57
+  },
+  {
+   "margin": 200,
+   "surveysPerExtraSale": 37.3,
+   "requiredLiftPct": 2.68
+  },
+  {
+   "margin": 300,
+   "surveysPerExtraSale": 56.0,
+   "requiredLiftPct": 1.79
+  },
+  {
+   "margin": 500,
+   "surveysPerExtraSale": 93.3,
+   "requiredLiftPct": 1.07
+  }
+ ],
+ "notes": [
+  "Costs are coupons paid out, not revenue lost: a coupon only costs margin if it is redeemed.",
+  "The benchmark's information value is separate — see data/eval/personalisation-bench.json.",
+  "Two spins per session are allowed, so per-session cost is up to twice these figures."
+ ]
+}

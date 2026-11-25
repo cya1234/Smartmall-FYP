@@ -42,22 +42,22 @@ await check('matching category adds 1', () => {
   assert.equal(subcategoryAffinity({ category: 'Electronics' }, ACCT), 1);
 });
 
-await check('a matching style adds 0.5 (this is the bug that was fixed)', () => {
+await check('a matching style adds 0.63 (this is the bug that was fixed)', () => {
   const a = subcategoryAffinity({ category: 'Other', style: ['Minimal'] }, ACCT);
-  assert.equal(a, 0.5, `expected 0.5 for a style match, got ${a}`);
+  assert.equal(a, 0.63, `expected 0.63 for a style match, got ${a}`);
 });
 
 await check('style held as a plain string still matches', () => {
   const a = subcategoryAffinity({ category: 'Other', style: 'Minimal' }, ACCT);
-  assert.equal(a, 0.5, `got ${a}`);
+  assert.equal(a, 0.63, `got ${a}`);
 });
 
 await check('a different style adds nothing', () => {
   assert.equal(subcategoryAffinity({ category: 'Other', style: ['Bold'] }, ACCT), 0);
 });
 
-await check('matching colour adds 0.5', () => {
-  assert.equal(subcategoryAffinity({ category: 'Other', colorName: 'Graphite' }, ACCT), 0.5);
+await check('matching colour adds 0.42', () => {
+  assert.equal(subcategoryAffinity({ category: 'Other', colorName: 'Graphite' }, ACCT), 0.42);
 });
 
 await check('an avoided colour subtracts 1', () => {

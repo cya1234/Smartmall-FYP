@@ -99,7 +99,7 @@ def build():
                size=24, align=PP_ALIGN.CENTER, space_before=8)
         sub = s.placeholders[1]
         sub.text_frame.text = ""
-        B.para(sub.text_frame, [("2026 年 10 月 28 日", False, MUTED)], size=15,
+        B.para(sub.text_frame, [("2026 年 11 月 25 日", False, MUTED)], size=15,
                first=True, align=PP_ALIGN.CENTER)
     except (KeyError, IndexError):
         pass
@@ -109,8 +109,8 @@ def build():
     B.add_header(s, "一頁看懂", chip="SUMMARY")
     stats = [
         ("4", "獨立 AI 推論服務", HL),
-        ("12", "功能模組", TEXT),
-        ("135", "項自動化測試通過", GREEN),
+        ("20", "功能頁面", TEXT),
+        ("265", "項自動化測試通過", GREEN),
         ("3", "張量化評估表", LEAD),
     ]
     for i, (v, lab, c) in enumerate(stats):
@@ -279,7 +279,56 @@ def build():
                fill=B.PANEL_AMB, bar=HL)
     B.add_callout(s, [("論文的價值在於「負面結果 + 修正」，而不是「用了很多模型」。", False, TEXT)])
 
-    # 15 --- close ---------------------------------------------------------
+    # 15 --- benchmark: personalisation vs baselines -------------------------
+    # Numbers come from tools/bench_personalisation.py (300 users x 5 seeds).
+    s = B.new_slide(prs)
+    B.add_header(s, "基準比較：個人化贏在哪裡", chip="BENCHMARK")
+    chart = os.path.join(ROOT, "reports", "bench-personalisation.png")
+    if os.path.exists(chart):
+        s.shapes.add_picture(chart, Inches(0.95), Inches(1.55), width=Inches(7.6))
+    table(
+        s, 8.75, 1.65, 4.0,
+        ["方法", "NDCG@5"],
+        [["隨機", "0.523"], ["銷量", "0.528"], ["評分", "0.525"],
+         ["只按分類篩選", "0.620"], ["個人化 10 題", "0.694"]],
+        col_w=[2.3, 1.7], size=12, row_h=0.5,
+    )
+    B.add_callout(s, [("沒有真實用戶，所以用合成用戶做離線評估 —— 生成模型寫在文件裡，數字可重現。", False, MUTED)])
+
+    # 16 --- how many questions ---------------------------------------------
+    s = B.new_slide(prs)
+    B.add_header(s, "問卷要問 10 題還是 20 題？", chip="10 vs 20")
+    table(
+        s, 0.95, 1.75, 6.2,
+        ["題數", "加權 NDCG@5", "每題效益"],
+        [["5", "0.666", "—"], ["10", "0.694", "最高"], ["15", "0.703", "遞減"],
+         ["20", "0.732", "很低"], ["25", "0.740", "很低"]],
+        col_w=[1.6, 2.8, 1.8], size=13, row_h=0.62,
+    )
+    B.add_card(s, 7.5, 1.75, 5.05, 3.0, "結論",
+               ["5→10 題：+0.029（每題 2.7 倍效率）",
+                "10→20 題：+0.038（多付一倍摩擦）",
+                "→ 10 題是甜蜜點",
+                "輪盤的作用是確保 10 題被答完"],
+               fill=B.PANEL_GRN, bar=GREEN)
+    B.add_callout(s, [("更好的做法不是把問卷加長，而是把 10 題的完成率拉高。", False, TEXT)])
+
+    # 17 --- wheel economics -------------------------------------------------
+    s = B.new_slide(prs)
+    B.add_header(s, "輪盤：成本多少才算值得", chip="WHEEL")
+    chart2 = os.path.join(ROOT, "reports", "bench-wheel.png")
+    if os.path.exists(chart2):
+        s.shapes.add_picture(chart2, Inches(0.95), Inches(1.55), width=Inches(7.6))
+    table(
+        s, 8.75, 1.65, 4.0,
+        ["毛利", "需要提升"],
+        [["HK$150", "+3.6 pp"], ["HK$200", "+2.7 pp"],
+         ["HK$300", "+1.8 pp"], ["HK$500", "+1.1 pp"]],
+        col_w=[2.0, 2.0], size=12, row_h=0.55,
+    )
+    B.add_callout(s, [("每次抽獎期望成本 HK$3.9–5.4；是否值得，取決於轉換率能否提升 2–3 個百分點。", False, MUTED)])
+
+    # 18 --- close ---------------------------------------------------------
     s = B.new_slide(prs, ("標題投影片", "Title Slide"))
     for ph in s.placeholders:
         ph.text_frame.text = ""

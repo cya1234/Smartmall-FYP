@@ -14,10 +14,34 @@
     },
     "pairs": []
    },
-   "onboardedAt": "2026-11-18T14:53:52.224Z",
+   "onboardedAt": "2026-11-25T10:51:06.510Z",
    "history": [
     {
-     "at": "2026-11-18T14:53:53.423Z",
+     "at": "2026-11-25T10:51:07.030Z",
+     "kind": "text",
+     "query": "滑雪",
+     "lang": "zh",
+     "results": 5,
+     "productId": null
+    },
+    {
+     "at": "2026-11-25T10:51:07.054Z",
+     "kind": "assistant",
+     "query": "我下個月要去海島婚禮，穿什麼好？",
+     "lang": "zh",
+     "results": 0,
+     "productId": null
+    },
+    {
+     "at": "2026-11-25T10:51:07.211Z",
+     "kind": "visual",
+     "query": "a blue ski jacket",
+     "lang": "zh",
+     "results": 12,
+     "productId": null
+    },
+    {
+     "at": "2026-11-25T10:51:09.897Z",
      "kind": "assistant",
      "query": "海島婚禮穿什麼",
      "lang": "zh",
@@ -25,7 +49,7 @@
      "productId": null
     },
     {
-     "at": "2026-11-18T14:53:53.434Z",
+     "at": "2026-11-25T10:51:09.900Z",
      "kind": "visual",
      "query": "a red dress",
      "lang": "zh",
@@ -608,12 +632,42 @@
     }
    ]
   },
-  "test-acct": {
+  "test-onboarding-rank": {
    "onboarding": null,
    "onboardedAt": null,
    "history": []
   },
-  "test-onboarding-rank": {
+  "42b83ed1-3d60-4e27-b6f9-7777a91c4a86": {
+   "onboarding": {
+    "categories": [
+     "Electronics"
+    ],
+    "styles": [
+     "Minimal"
+    ],
+    "colours": [],
+    "avoidColours": [],
+    "occasions": [],
+    "materials": [],
+    "budget": {
+     "min": null,
+     "max": null
+    },
+    "pairs": []
+   },
+   "onboardedAt": "2026-11-25T10:51:07.842Z",
+   "history": [
+    {
+     "at": "2026-11-25T10:51:07.863Z",
+     "kind": "assistant",
+     "query": "alice secret query",
+     "lang": "zh",
+     "results": 0,
+     "productId": null
+    }
+   ]
+  },
+  "7174c87f-9a50-485c-a2c3-178e1ba6bd62": {
    "onboarding": null,
    "onboardedAt": null,
    "history": []
