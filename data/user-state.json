@@ -607,6 +607,16 @@
      "productId": null
     }
    ]
+  },
+  "test-acct": {
+   "onboarding": null,
+   "onboardedAt": null,
+   "history": []
+  },
+  "test-onboarding-rank": {
+   "onboarding": null,
+   "onboardedAt": null,
+   "history": []
   }
  }
 }
